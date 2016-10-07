@@ -1,7 +1,7 @@
 /**
  * \file Distancier.hpp
  * \brief Donnees de base utiles à la résolution du TSP (Distancier)
- * \author Dorian D. & Jocelin C.	TEST
+ * \author Dorian D. & Jocelin C.
  */
 
 #ifndef DISTANCIER
