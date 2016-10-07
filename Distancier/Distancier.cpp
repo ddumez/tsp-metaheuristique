@@ -107,7 +107,7 @@ void Distancier::parser(const string f) {
 }
 
 int main() {
-	Distancier d(string("../ouest.txt"));
+	Distancier d(string("../Datas/distancier20.dat"));
 	d.afficher();
 	return 0;
 }
