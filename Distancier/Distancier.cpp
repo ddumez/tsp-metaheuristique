@@ -102,7 +102,7 @@ void Distancier::parser(const string f) {
 			}
 	// Sinon on renvoie une erreur
 		} else {
-			cerr << "The file " << f << " couldn't be open" << endl;
+			cerr << "The file \"" << f << "\" could not be open" << endl;
 		}
 }
 

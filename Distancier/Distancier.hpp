@@ -4,8 +4,8 @@
  * \author Dorian D. & Jocelin C.
  */
 
-#ifndef DISTANCIER
-#define DISTANCIER
+#ifndef DISTANCIER_HPP
+#define DISTANCIER_HPP
 
 using namespace std;
 
@@ -62,4 +62,4 @@ class Distancier {
 			void parser(const string f);
 };
 
-#endif //DISTANCIER
+#endif //DISTANCIER_HPP
