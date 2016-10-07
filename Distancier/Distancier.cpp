@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
 #include "Distancier.hpp"
 
@@ -14,6 +15,19 @@ using namespace std;
 
 Distancier::Distancier(const string f) {	
 	parser(f);
+	
+	this->d = new double *[this->N];
+	
+	for (int i = 0; i < this->N; ++i) {
+		this->d[i] = new double[this->N];
+		for (int j = 0; j < this->N; ++j) {
+			if (i == j) {
+				this->d[i][j] = 0;
+			} else {
+				this->d[i][j] = pythagore(this->c[i], this->c[j]);
+			}
+		}
+	}
 }
 
 //----------------------------------------------------------------------
@@ -21,7 +35,12 @@ Distancier::Distancier(const string f) {
 //----------------------------------------------------------------------
 
 Distancier::~Distancier() {
-	
+	for (int i = 0; i < this->N; ++i) {
+		delete[] this->d[i];
+	}
+	delete[] this->d;
+	delete[] this->c;
+	delete[] this->villes;
 }
 
 //----------------------------------------------------------------------
@@ -29,14 +48,14 @@ Distancier::~Distancier() {
 //----------------------------------------------------------------------
 void Distancier::afficher() const {
 	
-	for (int i = 0; i < this->N; ++i) {
-		cout << this->villes[i] << "\t" << endl;
-	}
+	//~ for (int i = 0; i < this->N; ++i) {
+		//~ cout << this->villes[i] << "\t";
+	//~ }
 	
 	for (int i = 0; i < this->N; ++i) {
 		cout << endl;
 		for (int j = 0; j < this->N; ++j) {
-			cout << d[i][j] << "\t";
+			cout << this->d[i][j] << "\t";
 		}
 	}
 	cout << endl;
@@ -76,14 +95,11 @@ void Distancier::parser(const string f) {
 				sline >> y;
 				size = x.length() + y.length() + 2;
 				line.erase(0, size);
-				this->villes[i] = line;
 				
-				cout << x << endl;
-				cout << y << endl;
-				cout << this->villes[i] << endl << endl;
+				this->c[i].x = atof(x.c_str());
+				this->c[i].y = atof(y.c_str());
+				this->villes[i] = line;
 			}
-		
-		// Initialisation du distancier
 	// Sinon on renvoie une erreur
 		} else {
 			cerr << "The file " << f << " couldn't be open" << endl;
@@ -92,5 +108,6 @@ void Distancier::parser(const string f) {
 
 int main() {
 	Distancier d(string("../ouest.txt"));
+	d.afficher();
 	return 0;
 }
