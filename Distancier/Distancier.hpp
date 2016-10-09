@@ -51,7 +51,21 @@ class Distancier {
 			
 	// Methodes
 		public :
-			
+			/**
+			* \brief donne la distance entre la ville i et la ville j
+			*
+			* \param[in] i l'indice de la première ville
+			* \param[in] j l'indice de la deuxieme ville
+			* \return la distance euclidienne entre i et j
+			*/
+			double getdistance(const int i, const int j) const;
+
+			/**
+			* \brief donne le nombre de ville
+			*
+			* \return le nombre de ville dans le distancier
+			*/
+			int getN() const;
 		private :
 			/**
 			 * \brief Lit un fichier pour initialiser les coordonnées du

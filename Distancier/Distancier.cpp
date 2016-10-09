@@ -65,6 +65,14 @@ void Distancier::afficher() const {
 // METHODES
 //----------------------------------------------------------------------
 
+double Distancier::getdistance(const int i, const int j) const {
+	return this->d[i][j];
+}
+
+int Distancier::getN() const {
+	return this->N;
+}
+
 void Distancier::parser(const string f) {
 	// Ouverture du fichier
 		ifstream file(f.c_str());
