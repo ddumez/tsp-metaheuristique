@@ -1,5 +1,5 @@
 CC = gpp
-SOURCES = ./RGSC/RGSC.cpp ./Distancier/Distancier.cpp
+SOURCES = ./RGSC/RGSC.cpp ./Distancier/Distancier.cpp ./code\ fournit.cpp
 CFLAGS = -Wall -g
 .PHONY = clean
 
@@ -10,3 +10,4 @@ main: $(SOURCES:.cpp=.o)
 clean: 
 	rm ./RGSC/*.o
 	rm ./Distancier/*.o
+	rm ./*.o
