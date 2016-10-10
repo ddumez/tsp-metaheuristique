@@ -1,5 +1,5 @@
 CC = g++
-SOURCES = ./RGSC/RGSC.cpp ./Distancier/Distancier.cpp ./code\ fourni.cpp
+SOURCES = ./RGSC/RGSC.cpp ./Distancier/Distancier.cpp ./code_fourni.cpp
 CFLAGS = -Wall -g
 .PHONY = clean
 

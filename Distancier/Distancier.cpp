@@ -24,7 +24,7 @@ Distancier::Distancier(const string f) {
 			if (i == j) {
 				this->d[i][j] = 0;
 			} else {
-				this->d[i][j] = pythagore(this->c[i], this->c[j]);
+				this->d[i][j] = Distancier::pythagore(this->c[i], this->c[j]);
 			}
 		}
 	}
@@ -73,6 +73,10 @@ int Distancier::getN() const {
 	return this->N;
 }
 
+void Distancier::affichevillei (const int i) const {
+	cout<<this->villes->at(i);
+}
+
 void Distancier::parser(const string f) {
 	// Ouverture du fichier
 		ifstream file(f.c_str());
@@ -112,4 +116,8 @@ void Distancier::parser(const string f) {
 		} else {
 			cerr << "The file \"" << f << "\" could not be open" << endl;
 		}
+}
+
+double Distancier::pythagore(const point a, const point b) {
+	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }

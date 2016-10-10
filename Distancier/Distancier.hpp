@@ -7,16 +7,15 @@
 #ifndef DISTANCIER_HPP
 #define DISTANCIER_HPP
 
+#include <string>
+#include <cmath>
+
 using namespace std;
 
 typedef struct point {
 	double x;
 	double y;
 } point;
-
-double pythagore(const point a, const point b) {
-	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
-}
 
 class Distancier {
 	// Attributs
@@ -66,6 +65,13 @@ class Distancier {
 			* \return le nombre de ville dans le distancier
 			*/
 			int getN() const;
+			
+			/**
+			* \brief affiche le nom de la i eme ville
+			*
+			* \param[in] i le numero de la ville a afficher
+			*/
+			void affichevillei (const int i) const;
 		private :
 			/**
 			 * \brief Lit un fichier pour initialiser les coordonnées du
@@ -74,6 +80,16 @@ class Distancier {
 			 * \ref Distancier::Distancier()
 			 */
 			void parser(const string f);
+			
+			/**
+			* \brief calcule la distance euclidienne entre a et b
+			*
+			* \param[in] a le premier point
+			* \param[in] b le deuxieme point
+			* \return la distance euclidienne entre a et b
+			*/
+			static double pythagore(const point a, const point b);
+
 };
 
 #endif //DISTANCIER_HPP
