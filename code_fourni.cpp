@@ -22,8 +22,8 @@ void construireSolNNH(int * sol, const Distancier * const dist, int *zSol) {
 	// calcule la distance min de la ville i a toutes les autres villes
 	for (i=0; i<n-1; ++i) {
 		jmin = i+1;
-		min = dist->getdistance( sol[i] , sol[j] );
-		  
+		min = dist->getdistance( sol[i] , sol[i+1] );
+
 		for (j=i+2; j<n; ++j) {
 		//localise le min sur une ligne de la matrice triangulaire superieure
 			if (dist->getdistance( sol[i] , sol[j] ) < min) {
@@ -31,9 +31,9 @@ void construireSolNNH(int * sol, const Distancier * const dist, int *zSol) {
 				jmin = j;
 			}
 		}
-		  
+
 		*zSol += min;
-		
+
 		// echange entre la ville i+1 et jmin dans la solution
 		tmp = sol[i+1];
 		sol[i+1] = sol[jmin];
@@ -111,16 +111,17 @@ void ameliorerSol2OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 void afficheSol(const int * const sol, const Distancier * const dist) {
 	for (int k=0; k<dist->getN(); ++k) {
 		cout<<sol[k]<<" : ";
-		dist->affichevillei(k);
+		dist->affichevillei(k);		
 		cout<<" - ";
 	}
-
+	
 	// dernier segments qui revient a la ville de depart
 	cout<<sol[0]<<" : ";
 	dist->affichevillei(0);
 
 	//longueur totale
 	cout<<"\n longueur : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
+
 }
 
 

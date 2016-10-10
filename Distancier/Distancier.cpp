@@ -74,7 +74,7 @@ int Distancier::getN() const {
 }
 
 void Distancier::affichevillei (const int i) const {
-	cout<<this->villes->at(i);
+	cout<<this->villes[i];
 }
 
 void Distancier::parser(const string f) {
