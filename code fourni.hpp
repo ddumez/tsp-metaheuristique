@@ -1,13 +1,13 @@
 /**
- * \file code fournit.hpp
+ * \file code fourni.hpp
  * \brief algorithmes fournit : nnh et 2-opt
  * \author Dorian D. & Jocelin C. par code de Xavier G.
  */
 
 #include "./Distancier/Distancier.hpp"
 
-#ifndef FOURNIT_HPP
-#define FOURNIT_HPP
+#ifndef FOURNI_HPP
+#define FOURNI_HPP
 
 /**
 * \brief utilise l'heuristique NNH pour construire une solution initiale
@@ -37,4 +37,4 @@ int calculerLongueurCircuitSol(const int * sol, const Distancier const * dist);
 void ameliorerSol2OPT(int * sol, const Distancier const * dist, int *zSol, bool *improved);
 
 
-#endif //FOURNIT_HPP
+#endif //FOURNI_HPP

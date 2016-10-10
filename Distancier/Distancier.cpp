@@ -113,9 +113,3 @@ void Distancier::parser(const string f) {
 			cerr << "The file \"" << f << "\" could not be open" << endl;
 		}
 }
-
-int main() {
-	Distancier d(string("../Datas/distancier20.dat"));
-	d.afficher();
-	return 0;
-}

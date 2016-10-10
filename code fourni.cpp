@@ -1,4 +1,4 @@
-#include "code fournit.hpp"
+#include "code fourni.hpp"
 #include "./Distancier/Distancier.hpp"
 
 void construireSolNNH(int * sol, const Distancier const * dist, int *zSol) {
