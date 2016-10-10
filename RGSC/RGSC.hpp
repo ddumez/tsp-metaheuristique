@@ -48,8 +48,17 @@ class RGSC {
 		public :
 			~RGSC();
 			
-	// Methodes
+	// AffichageS
 		public :
+			void afficherPreferences();
+	
+	// Methodes
+		private :
+			void allouerCouples();
+			void initialiserPreferences();
+			
+		public :
+			int getN();
 };
 
 

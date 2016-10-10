@@ -7,6 +7,7 @@
 
 #include "./Distancier/Distancier.hpp"
 #include "code_fourni.hpp"
+#include "RGSC/RGSC.hpp"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ int main() {
     	cout<<"solution amelioré par 2-opt : "<<endl;
     	afficheSol(sol, &dist);
 		
+		RGSC rgsc(&dist);
 	//fin
 	delete(sol);
 return 0;

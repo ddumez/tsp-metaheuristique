@@ -41,7 +41,7 @@ class Distancier {
 			 */
 			~Distancier();
 			
-	// Affichage
+	// Affichages
 		public :
 			/**
 			 * \brief Affiche le distancier
