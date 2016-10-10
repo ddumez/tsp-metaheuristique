@@ -19,14 +19,14 @@
 #ifndef RGSC_HPP
 #define RGSC_HPP
 
-typedef struct circuit {
-	couple c1;
-	couple c2;
-} circuit;
+#include "../Distancier/Distancier.hpp"
 
 typedef struct couple {
-	int v1;
-	int v2;
+	int c1;
+	int c2;
+	int v1;	// Extremitée de C1 qui n'est pas reliée
+	int v2;	// Extremitée de C2 qui n'est pas reliée
+	double longueur;
 } couple;
 
 using namespace std;
@@ -34,10 +34,24 @@ using namespace std;
 class RGSC {
 	// Attributs
 		private :
-			int nbGroupe;
-			couple *couples; /**Les indices des villes aux extrémités qui sont dans le même groupe**/
+			int nbMariage;
+			Distancier *D;
+			couple **couples; /**Des couples d'indices, les indices correspondant à ceux de l'itération précédente**/
 			int **preferences; /**Les préférences des groupes (dans l'ordre décroissant)**/
 				// Bien mettre à jour les préférences en fonction de la formation des groupes
+	
+	// Constructeurs
+		public :
+			RGSC(Distancier *D);
+			
+	// Destructeur
+		public :
+			~RGSC();
+			
+	// Methodes
+		public :
 };
+
+
 
 #endif //RGSC_HPP
