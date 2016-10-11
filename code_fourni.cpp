@@ -111,7 +111,7 @@ void ameliorerSol2OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 void afficheSol(const int * const sol, const Distancier * const dist) {
 	for (int k=0; k<dist->getN(); ++k) {
 		cout<<sol[k]<<" : ";
-		dist->afficheVillei(k);		
+		dist->afficheVillei(sol[k]);		
 		cout<<" - ";
 	}
 	

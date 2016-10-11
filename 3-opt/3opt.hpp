@@ -4,10 +4,10 @@
  * \author Dorian D. & Jocelin C.
  */
 
-#ifndef 3OPT_HPP
-#define 3OPT_HPP
+#ifndef TROISOPT_HPP
+#define TROISOPT_HPP
 
-#include "./Distancier/Distancier.hpp"
+#include "../Distancier/Distancier.hpp"
 
 /**
 * \brief améliore la solution actuelle à l'aide du 3-opt
@@ -18,5 +18,14 @@
 * \param[out] improved indique si la solution a été amélioré
 */
 void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool *improved);
+
+/**
+* \brief inverse le sens du parcour entre les etapes i et j
+*
+* \param[in,out] sol la solution a modifie
+* \param[in] i le debut de la portion a inverser
+* \param[in] j la fin de la portion a inverser
+*/
+void inverseSens(int * sol, const int i, const int j);
 
 #endif //3OPT_HPP
