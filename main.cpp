@@ -19,25 +19,28 @@ int main() {
 		bool improved = false;
 		
 	//début
-		//test du distancier
-		cout<<"distancier : "<<endl;
-		dist.afficher();
-		
-		//test du NNH
-		cout<<"calcul NNH"<<endl;
-		construireSolNNH(sol, &dist, &zsol);
-		cout<<"solution de NNH : "<<endl;
-		afficheSol(sol, &dist);
-		
-		//test du 2-opt
-		cout<<"calcul 2-opt"<<endl;
-		do{
-			ameliorerSol2OPT(sol, &dist, &zsol, &improved);
-    	} while (improved);
-    	cout<<"solution amelioré par 2-opt : "<<endl;
-    	afficheSol(sol, &dist);
+		//~ //test du distancier
+		//~ cout<<"distancier : "<<endl;
+		//~ dist.afficher();
+		//~ 
+		//~ //test du NNH
+		//~ cout<<"calcul NNH"<<endl;
+		//~ construireSolNNH(sol, &dist, &zsol);
+		//~ cout<<"solution de NNH : "<<endl;
+		//~ afficheSol(sol, &dist);
+		//~ 
+		//~ //test du 2-opt
+		//~ cout<<"calcul 2-opt"<<endl;
+		//~ do{
+			//~ ameliorerSol2OPT(sol, &dist, &zsol, &improved);
+    	//~ } while (improved);
+    	//~ cout<<"solution amelioré par 2-opt : "<<endl;
+    	//~ afficheSol(sol, &dist);
 		
 		RGSC rgsc(&dist);
+		rgsc.afficherPreferences();
+		cout << endl;
+		rgsc.afficherCouples();
 	//fin
 	delete(sol);
 return 0;

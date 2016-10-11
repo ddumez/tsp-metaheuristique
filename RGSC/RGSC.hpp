@@ -20,14 +20,20 @@
 #define RGSC_HPP
 
 #include "../Distancier/Distancier.hpp"
+#include <vector>
 
 typedef struct couple {
-	int c1;
-	int c2;
+	int c1;	// Premier couple marié
+	int c2; // Deuxième couple marié
 	int v1;	// Extremitée de C1 qui n'est pas reliée
 	int v2;	// Extremitée de C2 qui n'est pas reliée
 	double longueur;
 } couple;
+
+typedef struct preference {
+	int destination;		// indice du couple vers lequel on se dirige
+	int extremiteDominante;
+} preference;
 
 using namespace std;
 
@@ -38,9 +44,10 @@ class RGSC {
 			int iteration;
 			Distancier *D;
 			couple **couples; /**Des couples d'indices, les indices correspondant à ceux de l'itération précédente**/
-			int **preferences; /**Les préférences des groupes (dans l'ordre décroissant)**/
-			int **extremiteDominante;
-			int *tailles;
+			vector<vector<preference> > preferences; /**Les préférences des groupes (dans l'ordre décroissant)**/
+			vector<int> tailles;
+			
+			int iterationSort;
 	
 	// Constructeurs
 		public :
@@ -53,17 +60,22 @@ class RGSC {
 	// AffichageS
 		public :
 			void afficherPreferences();
+			void afficherPreferences(const int i);
+			void afficherCouples();
+			void afficherCouples(const int i);
 	
 	// Methodes
 		private :
-			void allouerCouples();
+			void calculerTailles();
+			void initialiserCouples();
 			void initialiserPreferences();
-			void triFusionPreferences(const int i);
-			void trierPreferences();
+			void triPreferences();
+			bool plusPres(const int depart, const int v1, const int v2) const;
+			void marier();
 			
 		public :
 			int getN() const;
-			int getDistance(const int v1, const int v2) const;
+			double getDistance(const int v1, const int v2) const;
 };
 
 
