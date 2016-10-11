@@ -35,10 +35,12 @@ class RGSC {
 	// Attributs
 		private :
 			int nbMariage;
+			int iteration;
 			Distancier *D;
 			couple **couples; /**Des couples d'indices, les indices correspondant à ceux de l'itération précédente**/
 			int **preferences; /**Les préférences des groupes (dans l'ordre décroissant)**/
-				// Bien mettre à jour les préférences en fonction de la formation des groupes
+			int **extremiteDominante;
+			int *tailles;
 	
 	// Constructeurs
 		public :
@@ -56,9 +58,12 @@ class RGSC {
 		private :
 			void allouerCouples();
 			void initialiserPreferences();
+			void triFusionPreferences(const int i);
+			void trierPreferences();
 			
 		public :
-			int getN();
+			int getN() const;
+			int getDistance(const int v1, const int v2) const;
 };
 
 

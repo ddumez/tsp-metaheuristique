@@ -57,7 +57,7 @@ class Distancier {
 			* \param[in] j l'indice de la deuxieme ville
 			* \return la distance euclidienne entre i et j
 			*/
-			double getdistance(const int i, const int j) const;
+			double getDistance(const int i, const int j) const;
 
 			/**
 			* \brief donne le nombre de ville
@@ -71,7 +71,7 @@ class Distancier {
 			*
 			* \param[in] i le numero de la ville a afficher
 			*/
-			void affichevillei (const int i) const;
+			void afficheVillei (const int i) const;
 		private :
 			/**
 			 * \brief Lit un fichier pour initialiser les coordonnées du

@@ -65,7 +65,7 @@ void Distancier::afficher() const {
 // METHODES
 //----------------------------------------------------------------------
 
-double Distancier::getdistance(const int i, const int j) const {
+double Distancier::getDistance(const int i, const int j) const {
 	return this->d[i][j];
 }
 
@@ -73,7 +73,7 @@ int Distancier::getN() const {
 	return this->N;
 }
 
-void Distancier::affichevillei (const int i) const {
+void Distancier::afficheVillei (const int i) const {
 	cout<<this->villes[i];
 }
 

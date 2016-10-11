@@ -12,6 +12,7 @@ using namespace std;
 
 RGSC::RGSC(Distancier *D) {
 	this->D = D;
+	this->iteration = -1;
 	
 	allouerCouples();
 	initialiserPreferences();
@@ -31,6 +32,7 @@ RGSC::~RGSC() {
 		delete[] this->preferences[i];
 	}
 	delete[] this->preferences;
+	delete[] tailles;	/// Ou les conserver pour les utiliser ?
 }
 
 //----------------------------------------------------------------------
@@ -51,6 +53,7 @@ void RGSC::afficherPreferences() {
 // METHODES
 //----------------------------------------------------------------------
 
+/// ALLOUER MEMOIRE COUPLES
 void RGSC::allouerCouples() {
 	int N = getN();
 	
@@ -80,29 +83,51 @@ void RGSC::allouerCouples() {
 		this->couples[i] = new couple [tailles[i]];
 		//~ cout << i << " : taille : " << tailles[i] << endl;
 	}
-	
-	// Suppression du tableau stockant le nombre de couples à chaque itération
-	delete[] tailles;	/// Ou les conserver pour les utiliser ?
 }
 
+
+/// ALLOUER MEMOIRE ET INITIALISER PREFERENCES (avant formation couples)
 void RGSC::initialiserPreferences() {
 	int N = getN();
 	
 	// Allocation mémoire du tableau des préférences
 	this->preferences = new int * [N];
+	this->extremiteDominante = new int * [N];
 	
 	for (int i = 0; i < N; ++i) {
 		this->preferences[i] = new int [N];
+		this->extremiteDominante[i] = new int [N];
 	}
 	
-	// TRIBULLE OU TRI-INSERTION ?
+	// TRIFUSION OU TRI-INSERTION ?
 	for (int i = 0; i < N; ++i) { ///	TODO
 		for (int j = 0; j < N; ++j) {
-			this->preferences[i][j] = 0;	// tribulle je suppose
+			this->preferences[i][j] = j;
+			this->extremiteDominante[i][j] = i;
 		}
 	}
 }
 
-int RGSC::getN() {
+/// TRI FUSION
+void RGSC::triFusionPreferences(const int i) {
+	
+}
+
+/// TRIER LES PREFERENCES
+void RGSC::trierPreferences() {
+	int N;
+	
+	if (iteration == -1) {
+		N = this->D->getN();
+	} else {
+		N = tailles[iteration];
+	}
+}
+
+int RGSC::getN() const {
 	return this->D->getN();
+}
+
+int RGSC::getDistance(const int v1, const int v2) const {
+	return D->getDistance(v1, v2);
 }

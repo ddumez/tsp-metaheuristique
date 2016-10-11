@@ -18,12 +18,12 @@ void construireSolNNH(int * sol, const Distancier const * dist, int *zSol) {
 	// calcule la distance min de la ville i a toutes les autres villes
 	for (i=0; i<n-1; ++i) {
 		jmin = i+1;
-		min = dist->getdistance( sol[i] , sol[j] );
+		min = dist->getDistance( sol[i] , sol[j] );
 		  
 		for (j=i+2; j<n; ++j) {
 		//localise le min sur une ligne de la matrice triangulaire superieure
-			if (getdistance( sol[i] , sol[j] ) < min) {
-				min = getdistance( sol[i] , sol[j] );
+			if (getDistance( sol[i] , sol[j] ) < min) {
+				min = getDistance( sol[i] , sol[j] );
 				jmin = j;
 			}
 		}
@@ -37,7 +37,7 @@ void construireSolNNH(int * sol, const Distancier const * dist, int *zSol) {
 	}
 
 	// Ferme le chemin pour former un circuit
-    *zSol += dist->getdistance( sol[jmin] , sol[0] );
+    *zSol += dist->getDistance( sol[jmin] , sol[0] );
 }
 
 int calculerLongueurCircuitSol(const int * sol, const Distancier const * dist) {
@@ -45,11 +45,11 @@ int calculerLongueurCircuitSol(const int * sol, const Distancier const * dist) {
 
 	// les distances i a j depuis ville depart
 	for (int k = dist->getN(); k > 0; --k) {
-		zSol += dist->getdistance( sol[k] , sol[k-1]);
+		zSol += dist->getDistance( sol[k] , sol[k-1]);
 	}
 
 	// dernier segments qui revient a la ville de depart à la ville d'arrivé
-	zSol += dist->getdistance( sol[dist->getN()-1] , sol[0]);
+	zSol += dist->getDistance( sol[dist->getN()-1] , sol[0]);
 
 	return zSol;
 }
@@ -70,8 +70,8 @@ void ameliorerSol2OPT(int * sol, const Distancier const * dist, int *zSol, bool 
 		  jD=(i+j+2) % taille;
 		  jF=(i+j+3) % taille;
 		        
-		  d1 = dist->getdistance( sol[iD] , sol[iF] ) + dist->getdistance( sol[jD] , sol[jF] );
-		  d2 = dist->getdistance( sol[iD] , sol[jD] ) + dist->getdistance( sol[iF] , sol[jF] );
+		  d1 = dist->getDistance( sol[iD] , sol[iF] ) + dist->getDistance( sol[jD] , sol[jF] );
+		  d2 = dist->getDistance( sol[iD] , sol[jD] ) + dist->getDistance( sol[iF] , sol[jF] );
 
 			if (d1>d2) {
 				// amelioration detectee
