@@ -58,9 +58,9 @@ void RGSC::afficherCouples(const int i) {
 	
 	for (int j = 0; j < N; ++j) {
 		c = this->couples[i][j];
-		cout << j << ":\t" << c.v1 << "(" << c.c1<<"-"<<c.c2<<")"<<c.v2<< " | ";
+		cout << j << ":\t" << c.v1 << " (" << c.c1 << "|" << c.c2 << ") " << c.v2 << endl;
 	}
-	cout << endl;
+	
 }
 
 //----------------------------------------------------------------------
@@ -96,11 +96,11 @@ void RGSC::initialiserCouples() {
 	couple c;
 	
 	for (int i = 0; i < N; ++i) {
-		c = this->couples[0][i];
 		c.c1 = i;
 		c.c2 = -1;
 		c.v1 = i;
 		c.v2 = -1;
+		this->couples[0][i] = c;
 	}
 }
 
@@ -155,6 +155,14 @@ bool RGSC::plusPres(const int depart, const int v1, const int v2) const {
 }
 
 void RGSC::marier() {
+	int nbCouple = this->tailles[iteration];
+	bool **mariage;
+	
+	
+	while (!fini) {
+		
+	}
+	
 	this->iteration = this->iteration+1;
 }
 
