@@ -155,9 +155,15 @@ bool RGSC::plusPres(const int depart, const int v1, const int v2) const {
 }
 
 void RGSC::marier() {
+	int nbCouple = this->tailles[iteration];
+	bool **mariage;
+	
+	
+	while (!fini) {
+		
+	}
+	
 	this->iteration = this->iteration+1;
-	
-	
 }
 
 int RGSC::getN() const {
