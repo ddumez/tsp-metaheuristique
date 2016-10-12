@@ -30,6 +30,13 @@ typedef struct couple {
 	double longueur;
 } couple;
 
+typedef struct coupleInt {
+	int c1;	// Indice du couple dans la liste des couples résultant de l'itération d'avant
+	int c2; // Indice du couple "" "" "" avec lequel c1 est uni.
+	int indPref; // L'indice de la dernière préférence de sa liste à laquelle il a fait une demande d'union.
+	bool aDemande; // Vrai si le couple c1 a été l'instigateur de la demande d'union avec c2. (faux sinon)
+} coupleInt;
+
 typedef struct preference {
 	int destination;		// indice du couple vers lequel on se dirige
 	int extremiteDominante;
@@ -42,8 +49,10 @@ class RGSC {
 		private :
 			int nbMariage;
 			int iteration;
+			int couplesRestant;
 			Distancier *D;
 			couple **couples; /**Des couples d'indices, les indices correspondant à ceux de l'itération précédente**/
+			coupleInt *couplesInt; /**Les couples actuellement en construction dans l'itération courante de l'algorithme du mariage**/
 			vector<vector<preference> > preferences; /**Les préférences des groupes (dans l'ordre décroissant)**/
 			vector<int> tailles;
 			
@@ -57,12 +66,13 @@ class RGSC {
 		public :
 			~RGSC();
 			
-	// AffichageS
+	// Affichages
 		public :
 			void afficherPreferences();
 			void afficherPreferences(const int i);
 			void afficherCouples();
 			void afficherCouples(const int i);
+			void afficherCouplesInt() const;
 	
 	// Methodes
 		private :
@@ -71,11 +81,15 @@ class RGSC {
 			void initialiserPreferences();
 			void triPreferences();
 			bool plusPres(const int depart, const int v1, const int v2) const;
-			void marier();
+			void initialiserCouplesInt();
+			void desallouerCouplesInt();
+			bool accepteUnion(const coupleInt c1, const coupleInt c2) const;
+			void unir(const int c1, const int c2);
 			
 		public :
 			int getN() const;
 			double getDistance(const int v1, const int v2) const;
+			void marier();
 };
 
 
