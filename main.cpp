@@ -52,6 +52,7 @@ int main() {
 		cout << endl;
 		rgsc.afficherCouples();
 		rgsc.marier();
+		cout << endl;
 		rgsc.afficherCouplesInt();
 	//fin
 	delete(sol);
