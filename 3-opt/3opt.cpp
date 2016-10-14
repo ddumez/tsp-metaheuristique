@@ -18,17 +18,18 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 	//debut
 		*improved = false;
 
-		for(i = 0; i<taille-5; ++i) {
-			for(j = i+2; j<taille-3; ++j) {
-				for(n = j+2; n<taille-1; ++n) {
+		for (i = 0; i < taille; ++i) {
+			for (j = 0; j < taille-5; ++j) {
+				for(n = 0; n < taille-6-j; ++n) {
+
 					//calcul de iD, iF, jD, jF, nD, nF
-					iD = i;
-					iF = i+1;
-					jD = j;
-					jF = j+1;
-					nD = n;
-					nF = n+1;
-		
+					iD= i % taille;
+					iF= (i+1) % taille;
+					jD= (i+j+2) % taille;
+					jF= (i+j+3) % taille;
+					nD = (i+j+n+4) % taille;
+					nF = (i+j+n+5) % taille; 
+
 					//calcul des distances des diferents parcours
 					d[0] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
 					d[1] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
@@ -130,22 +131,17 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 void inverseSens(int * sol, const int ii, const int j, const int n) {
 	int tmp;
 	int i = ii-1;//pour retomber sur l'algo d'inversion donne
-	if (i < j) {
-		for (int k=1; k<=(j-(i+2))/2; k++) {
-			tmp = sol[i+1+k];
-			sol[i+1+k] = sol[j-k];
+	if (i-1 < j) {
+		for (int k=1; k<=(j-(i+1))/2; k++) {
+			tmp = sol[i+k];
+			sol[i+k] = sol[j-k];
 			sol[j-k] = tmp;
 		}
 	} else {
-		/*for (int k=1; k<=(n-(i-j)-2)/2; k++) {
-			tmp = sol[(i+1+k)%n];
-			sol[(i+1+k)%n] = sol[(n+j-k)%n];
-			sol[(n+j-k)%n] = tmp;
-		}*/
-		for (int k=1; k<=(i-(j+2))/2; k++) {
+		for (int k=1; k<=((i-1)-(j+2))/2; k++) {
 			tmp = sol[j+1+k];
-			sol[j+1+k] = sol[i-k];
-			sol[i-k] = tmp;
+			sol[j+1+k] = sol[i-1-k];
+			sol[i-1-k] = tmp;
 		}
 	}
 }
