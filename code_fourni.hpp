@@ -16,7 +16,7 @@
 * \param[in] dist le distancier
 * \param[out] zSol taille de la solution trouvé
 */
-void construireSolNNH(int * sol, const Distancier * const dist, int *zSol);
+void construireSolNNH(int * sol, const Distancier * const dist);
 
 /**
 * \brief calcule la taille du circuit
@@ -31,10 +31,9 @@ int calculerLongueurCircuitSol(const int * sol, const Distancier * const dist);
 *
 * \param[in,out] sol le tableau qui contien l'ordre de parcour des villes
 * \param[in] dist le distancier
-* \param[in,out] zSol la taille de la solution
 * \param[out] improved indique si la solution a été amélioré
 */
-void ameliorerSol2OPT(int * sol, const Distancier * const dist, int *zSol, bool *improved);
+void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved);
 
 /**
 * \brief affiche la solution dans le terminal

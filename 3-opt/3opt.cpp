@@ -3,9 +3,11 @@
 #include "3opt.hpp"
 #include "../Distancier/Distancier.hpp"
 
+#include "../code_fourni.hpp"
+
 using namespace std;
 
-void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool *improved) {
+void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) {
 	//variable
 		int iD, iF, jD, jF, nD, nF; //indice dans la solution des arretes consideres
 		const int taille = dist->getN();
@@ -14,17 +16,19 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 		int tmp1, tmp2, tmp3, tmp4;
 
 	//debut
-		for(i = 0; i<taille; ++i) {
-			for(j = 0; j<taille-3; ++j) {
-				for(n = 0; n<taille-5; ++n) {
-					//calcul de iD, iF, jD, jF, nD, nF
-					iD = i % taille;
-					iF = (i+1) % taille;
-					jD = (i+j+2) % taille;
-					jF = (i+j+3) % taille;
-					nD = (i+j+n+4) % taille;
-					nF = (i+j+n+5) % taille;
+		*improved = false;
 
+		for(i = 0; i<taille-5; ++i) {
+			for(j = i+2; j<taille-3; ++j) {
+				for(n = j+2; n<taille-1; ++n) {
+					//calcul de iD, iF, jD, jF, nD, nF
+					iD = i;
+					iF = i+1;
+					jD = j;
+					jF = j+1;
+					nD = n;
+					nF = n+1;
+		
 					//calcul des distances des diferents parcours
 					d[0] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
 					d[1] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
@@ -41,31 +45,31 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 						if(d[k] < d[min]) {min = k;}
 					}
 
+
 					//application du meilleur parcour
 					switch(min) {
 						case 0:
 								//on ne change rien
-								*improved = false;
 							break;
 						case 1: //2-opt
 								tmp1 = sol[jD];
 								sol[jD] = sol[iF];
 								sol[iF] = tmp1;
-								inverseSens(sol, iF, jD);
+								inverseSens(sol, iF, jD, taille);
 								*improved = true;
 							break;
 						case 2: //2-opt
 								tmp1 = sol[nD];
 								sol[nD] = sol[jF];
 								sol[jF] = tmp1;
-								inverseSens(sol, jF, nD);
+								inverseSens(sol, jF, nD, taille);
 								*improved = true;
 							break;
 						case 3: //2-opt
 								tmp1 = sol[iD];
 								sol[iD] = sol[nF];
 								sol[nF] = tmp1;
-								inverseSens(sol, nF, iD);
+								inverseSens(sol, nF, iD, taille);			
 								*improved = true;
 							break;
 						case 4:
@@ -77,7 +81,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 								sol[jF] = tmp2;
 								sol[nD] = tmp3;
 								sol[jD] = tmp4;
-								inverseSens(sol, jF, nD);
+								inverseSens(sol, jF, nD, taille);							
 								*improved = true;
 							break;
 						case 5:
@@ -88,8 +92,8 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 								sol[nD] = tmp1;
 								sol[jF] = tmp2;
 								sol[iF] = tmp3;
-								sol[jD] = tmp4;
-								inverseSens(sol, iF, jD);
+								sol[jD] = tmp4;		
+								inverseSens(sol, iF, jD, taille);			
 								*improved = true;
 							break;
 						case 6:
@@ -100,8 +104,8 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 								sol[jD] = tmp1;
 								sol[iD] = tmp2;
 								sol[nF] = tmp3;
-								sol[iF] = tmp4;
-								inverseSens(sol, iF, jD);
+								sol[iF] = tmp4;		
+								inverseSens(sol, iF, jD, taille);				
 								*improved = true;
 							break;
 						case 7:
@@ -113,7 +117,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 								sol[nD] = tmp2;
 								sol[iF] = tmp3;
 								sol[jD] = tmp4;
-								*improved = true;
+								*improved = true;		
 							break;
 					}
 				}
@@ -123,19 +127,25 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 }
 
 
-void inverseSens(int * sol, const int i, const int j) {
+void inverseSens(int * sol, const int ii, const int j, const int n) {
 	int tmp;
-	if (i > j) {
-		for(int parc = i; parc<j; ++parc) {
-			tmp = sol[parc];
-			sol[parc] = sol[j-parc];
-			sol[j-parc] = tmp;
+	int i = ii-1;//pour retomber sur l'algo d'inversion donne
+	if (i < j) {
+		for (int k=1; k<=(j-(i+2))/2; k++) {
+			tmp = sol[i+1+k];
+			sol[i+1+k] = sol[j-k];
+			sol[j-k] = tmp;
 		}
-	} else { //if (j<i) 
-		for(int parc = j; parc<i; ++parc) {
-			tmp = sol[parc];
-			sol[parc] = sol[j-parc];
-			sol[j-parc] = tmp;
+	} else {
+		/*for (int k=1; k<=(n-(i-j)-2)/2; k++) {
+			tmp = sol[(i+1+k)%n];
+			sol[(i+1+k)%n] = sol[(n+j-k)%n];
+			sol[(n+j-k)%n] = tmp;
+		}*/
+		for (int k=1; k<=(i-(j+2))/2; k++) {
+			tmp = sol[j+1+k];
+			sol[j+1+k] = sol[i-k];
+			sol[i-k] = tmp;
 		}
 	}
 }

@@ -5,13 +5,11 @@
 
 using namespace std;
 
-void construireSolNNH(int * sol, const Distancier * const dist, int *zSol) {
+void construireSolNNH(int * sol, const Distancier * const dist) {
 	int i,j;
 	int n = dist->getN();
 	int min, jmin;
 	int tmp;
-
-	*zSol = 0  ; // longueur du circuit hamiltonien
 
 	//initialise la solution avec un circuit qui correspond a la permutation identite
 	//plus facile pour connaire les villes restantes
@@ -32,16 +30,11 @@ void construireSolNNH(int * sol, const Distancier * const dist, int *zSol) {
 			}
 		}
 
-		*zSol += min;
-
 		// echange entre la ville i+1 et jmin dans la solution
 		tmp = sol[i+1];
 		sol[i+1] = sol[jmin];
 		sol[jmin] = tmp;
 	}
-
-	// Ferme le chemin pour former un circuit
-    *zSol += dist->getDistance( sol[jmin] , sol[0] );
 }
 
 int calculerLongueurCircuitSol(const int * sol, const Distancier * const dist) {
@@ -58,7 +51,7 @@ int calculerLongueurCircuitSol(const int * sol, const Distancier * const dist) {
 	return zSol;
 }
 
-void ameliorerSol2OPT(int * sol, const Distancier * const dist, int *zSol, bool *improved) {
+void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) {
 	int i,j,k,tmp;
 	int iD, iF, jD, jF;
 	int d1, d2;
@@ -100,10 +93,7 @@ void ameliorerSol2OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 						sol[(taille+jD-k)%taille] = tmp;
 					}
 				}
-				        
-				*zSol = calculerLongueurCircuitSol(sol, dist);
 			} // Fin traitement suite amelioration detectee
-
 		}
 	}
 }

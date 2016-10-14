@@ -17,7 +17,7 @@
 * \param[in,out] zSol la taille de la solution
 * \param[out] improved indique si la solution a été amélioré
 */
-void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool *improved);
+void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved);
 
 /**
 * \brief inverse le sens du parcour entre les etapes i et j
@@ -25,7 +25,8 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, int *zSol, bool 
 * \param[in,out] sol la solution a modifie
 * \param[in] i le debut de la portion a inverser
 * \param[in] j la fin de la portion a inverser
+* \param[in] n le nombre de ville
 */
-void inverseSens(int * sol, const int i, const int j);
+void inverseSens(int * sol, const int i, const int j, const int n);
 
 #endif //3OPT_HPP
