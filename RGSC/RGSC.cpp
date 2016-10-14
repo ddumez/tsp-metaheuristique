@@ -256,22 +256,52 @@ void RGSC::marier() {
 	//~ bool **mariage;
 	bool fini = false;
 	
+	/// Tout le monde fait une demande
 	for (i = 0; i < nbCouple; ++i) {
 		cInt1 = this->couplesInt[i];
 		j = 1;
 		indC2 = this->preferences[i][j].destination;
 		cInt2 = this->couplesInt[indC2];
-		while (!accepteUnion(cInt1, cInt2)) {
+		while (!accepteUnion(cInt1, cInt2) && j < nbCouple) {
 			indC2 = this->preferences[i][j].destination;
 			cInt2 = this->couplesInt[indC2];
-			cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl; 
+			cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl;
+			afficherCouplesInt();
 			j = j + 1;
 		}
 		cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
 		unir(i, this->preferences[i][j].destination);
-		cInt1.indPref = j;
+		this->couplesInt[i].indPref = j;
 		
 		afficherCouplesInt();
+	}
+	
+	cout << endl << "SECOND PART : " << this->couplesRestant << endl;
+	
+	/// Ceux qui ont perdu leur couple font une nouvelle demande jusqu'à ce qu'un couple au plus soit non uni
+	while (this->couplesRestant > 1) {	// On recommence s'il reste plus d'un couple
+		i = 0;
+		
+		while (this->couplesRestant > 1) {	// On les marie dans l'ordre tant qu'il reste plus d'un couple
+		cInt1 = this->couplesInt[i];
+			
+			if (cInt1.c2 == -1) {	// unir c1 avec le prochain de sa lite s'il n'est pas déjà en couple
+				j = cInt1.indPref + 1;
+				indC2 = this->preferences[i][j].destination;
+				cInt2 = this->couplesInt[indC2];
+				
+				while (!accepteUnion(cInt1, cInt2)) {
+					indC2 = this->preferences[i][j].destination;
+					cInt2 = this->couplesInt[indC2];
+					cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl; 
+					j = j + 1;
+				}
+				cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
+				unir(i, this->preferences[i][j].destination);
+				cInt1.indPref = j;
+			}			
+			i = i + 1;
+		}
 	}
 	
 	//~ this->iteration = this->iteration+1;

@@ -35,6 +35,7 @@ typedef struct coupleInt {
 	int c2; // Indice du couple "" "" "" avec lequel c1 est uni.
 	int indPref; // L'indice de la dernière préférence de sa liste à laquelle il a fait une demande d'union.
 	bool aDemande; // Vrai si le couple c1 a été l'instigateur de la demande d'union avec c2. (faux sinon)
+	/// aDemande inutile ?
 	bool estCopie; // Vrai si lui ou son mari a été recopié
 } coupleInt;
 
