@@ -21,7 +21,7 @@ int main() {
 	//début
 
 		dist.afficher();
-
+/*
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
 		construireSolNNH(sol, &dist);
@@ -44,17 +44,20 @@ int main() {
     	} while (improved);
     	cout<<"solution ameliorée par 3-opt : "<<endl;
     	afficheSol(sol, &dist);
-		
+*/
 
-/*
+
+
+
 		RGSC rgsc(&dist);
 		rgsc.afficherPreferences();
 		cout << endl;
 		rgsc.afficherCouples();
-		rgsc.marier();
+		rgsc.construireCircuit();
 		cout << endl;
-		rgsc.afficherCouplesInt();
-*/
+		rgsc.afficherCouplesInt();cout << endl;
+		rgsc.afficherCouples(0);
+
 	//fin
 	delete(sol);
 

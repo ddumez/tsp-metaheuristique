@@ -30,6 +30,8 @@ typedef struct couple {
 	double longueur;
 } couple;
 
+/// Il y a un moyen de se passer de faire un couple intermédiaire ?
+/// (intuitivement oui)
 typedef struct coupleInt {
 	int c1;	// Indice du couple dans la liste des couples résultant de l'itération d'avant
 	int c2; // Indice du couple "" "" "" avec lequel c1 est uni.
@@ -40,8 +42,8 @@ typedef struct coupleInt {
 } coupleInt;
 
 typedef struct preference {
-	int destination;		// indice du couple vers lequel on se dirige
-	int extremiteDominante;
+	int destination;			// indice du couple vers lequel on se dirige
+	int extremiteDominante;		// indice de la ville la plus proche de l'autre couple
 } preference;
 
 using namespace std;
@@ -88,11 +90,12 @@ class RGSC {
 			bool accepteUnion(const coupleInt c1, const coupleInt c2) const;
 			void unir(const int c1, const int c2);
 			void sauvegarderCouples();
+			void marier();
 			
 		public :
 			int getN() const;
 			double getDistance(const int v1, const int v2) const;
-			void marier();
+			void construireCircuit();
 };
 
 

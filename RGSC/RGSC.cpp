@@ -197,7 +197,7 @@ bool RGSC::accepteUnion(const coupleInt c1, const coupleInt c2) const {
 		int prefCourante;
 		
 		while (!fini) {
-			//~ cout << "preferences["<<indC2Gauche<<"]["<<i<<"].destination"<<endl;
+			//cout << "preferences["<<indC2Gauche<<"]["<<i<<"].destination"<<endl;
 			prefCourante = this->preferences[indC2Gauche][i].destination;
 			if (prefCourante == mariActuel) {
 				fini = true;
@@ -212,36 +212,49 @@ bool RGSC::accepteUnion(const coupleInt c1, const coupleInt c2) const {
 	}
 }
 
+
+
+
 void RGSC::unir(int indC1, int indC2) { // c1 demande à s'unir avec c2
 	coupleInt c1 = this->couplesInt[indC1];
 	coupleInt c2 = this->couplesInt[indC2];
 	
 	c1.aDemande = true;
 
-	if (c2.c2 == c1.c1) {
+	if (c2.c2 == c1.c1) {	// S'ils sont déjà mariés ensemble on passe
 		c1.aDemande = 1;
-	} else {
-		if (c1.c2 != -1) {
+	} else {				// Sinon on regarde comment les marier
+		if (c1.c2 != -1) {	// Si c1 est déjà en couple
 			this->couplesInt[c1.c2].c2 = -1;
-			this->couplesRestant = this->couplesRestant + 2;
+			this->couplesRestant = this->couplesRestant + 1;
+		} else {
+			this->couplesRestant = this->couplesRestant - 1;
 		}
 		c1.c2 = indC2;
 
-			if (c2.c2 != -1) {
-			this->couplesInt[c2.c1].c2 = -1;
-			this->couplesRestant = this->couplesRestant + 2;
+		if (c2.c2 != -1) {
+			this->couplesInt[c2.c2].c2 = -1;
+			this->couplesRestant = this->couplesRestant + 1;
+		} else {
+			this->couplesRestant = this->couplesRestant - 1;
 		}
-		c2.c2 = indC1;	
-
-		this->couplesRestant = this->couplesRestant - 2;
+		c2.c2 = indC1;
 	}
 	
 	this->couplesInt[indC1] = c1;
 	this->couplesInt[indC2] = c2;
 }
 
+// Place les couples temporaires dans les nouveaux couples
 void RGSC::sauvegarderCouples() {
+	int iter = this->iteration;				// L'itération qui vient d'être calculée
+	int nbCouple = this->tailles[iter-1];	// Le nombre de couples qu'on a marié entre eux
 	
+}
+
+void RGSC::construireCircuit() {
+	marier();
+	sauvegarderCouples();
 }
 
 void RGSC::marier() {
@@ -258,22 +271,25 @@ void RGSC::marier() {
 	
 	/// Tout le monde fait une demande
 	for (i = 0; i < nbCouple; ++i) {
+		afficherCouplesInt();
 		cInt1 = this->couplesInt[i];
 		j = 1;
 		indC2 = this->preferences[i][j].destination;
 		cInt2 = this->couplesInt[indC2];
-		while (!accepteUnion(cInt1, cInt2) && j < nbCouple) {
+		while (!accepteUnion(cInt1, cInt2) && (j < nbCouple)) {
+			cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl;
+			
+			j = j + 1;
 			indC2 = this->preferences[i][j].destination;
 			cInt2 = this->couplesInt[indC2];
-			cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl;
-			afficherCouplesInt();
-			j = j + 1;
 		}
-		cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
-		unir(i, this->preferences[i][j].destination);
-		this->couplesInt[i].indPref = j;
+		if (j < nbCouple) {
+			cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
+			unir(i, this->preferences[i][j].destination);
+			this->couplesInt[i].indPref = j;
+		}
 		
-		afficherCouplesInt();
+		//~ afficherCouplesInt();
 	}
 	
 	cout << endl << "SECOND PART : " << this->couplesRestant << endl;
@@ -282,29 +298,32 @@ void RGSC::marier() {
 	while (this->couplesRestant > 1) {	// On recommence s'il reste plus d'un couple
 		i = 0;
 		
-		while (this->couplesRestant > 1) {	// On les marie dans l'ordre tant qu'il reste plus d'un couple
+		while (i < nbCouple) {	// On les marie dans l'ordre tant qu'il reste plus d'un couple
 		cInt1 = this->couplesInt[i];
+		cout << i << ": couplesRestant = " << this->couplesRestant << endl;
 			
 			if (cInt1.c2 == -1) {	// unir c1 avec le prochain de sa lite s'il n'est pas déjà en couple
 				j = cInt1.indPref + 1;
 				indC2 = this->preferences[i][j].destination;
 				cInt2 = this->couplesInt[indC2];
 				
-				while (!accepteUnion(cInt1, cInt2)) {
+				while (!accepteUnion(cInt1, cInt2) && (j < nbCouple)) {
+					cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl;
+					
+					j = j + 1;
 					indC2 = this->preferences[i][j].destination;
 					cInt2 = this->couplesInt[indC2];
-					cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl; 
-					j = j + 1;
 				}
-				cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
-				unir(i, this->preferences[i][j].destination);
-				cInt1.indPref = j;
-			}			
+				if (j < nbCouple) {
+					cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
+					afficherCouplesInt();
+					unir(i, this->preferences[i][j].destination);
+					cInt1.indPref = j;
+				}
+			}
 			i = i + 1;
 		}
 	}
-	
-	//~ this->iteration = this->iteration+1;
 }
 
 int RGSC::getN() const {
