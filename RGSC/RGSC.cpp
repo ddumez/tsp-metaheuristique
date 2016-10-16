@@ -107,6 +107,7 @@ void RGSC::initialiserCouples() {
 		c.c2 = -1;
 		c.v1 = i;
 		c.v2 = -1;
+		c.longueur = 0;
 		this->couples[0][i] = c;
 	}
 }
@@ -127,6 +128,10 @@ void RGSC::initialiserPreferences() {
 	}
 	
 	triPreferences();
+}
+
+void RGSC::creerPreferencesCouples() {
+	//int N = this->D
 }
 
 void RGSC::triPreferences() {
@@ -246,15 +251,76 @@ void RGSC::unir(int indC1, int indC2) { // c1 demande à s'unir avec c2
 }
 
 // Place les couples temporaires dans les nouveaux couples
-void RGSC::sauvegarderCouples() {
+void RGSC::sauvegarderCouples() { cout << "COCO" <<endl;
 	int iter = this->iteration;				// L'itération qui vient d'être calculée
-	int nbCouple = this->tailles[iter-1];	// Le nombre de couples qu'on a marié entre eux
+	int nbCouple = this->tailles[iter];		// Le nombre de couples créés
+	int i = 0;
+	int n = 0;
+	coupleInt cInt;
+	couple c;
+	int v1, v2, v11, v12, v21, v22;
+	double dist, dist2;
 	
+	while (n < nbCouple) {
+		cInt = this->couplesInt[i];
+		
+		if (cInt.c2 == -1) {
+			this->couples[iter][i] = this->couples[iter-1][i];
+			n = n + 1;
+		} else if (cInt.c1 < cInt.c2) {
+			c.c1 = cInt.c1;
+			c.c2 = cInt.c2;
+			
+			
+			// Debut truc dégueulasse à faire dans sa propre fonction ou trouver un autre moyen de le faire
+			v11 = this->couples[iter-1][c.c1].v1;
+			v12 = this->couples[iter-1][c.c1].v2;
+			v21 = this->couples[iter-1][c.c2].v1;
+			v22 = this->couples[iter-1][c.c2].v2;
+			v1 = v11;
+			v2 = v21;
+			
+			cout << "v11 "<<v11<<"\tv12 "<<v12<<"\tv21 "<<v21<<"\tv22 "<<v22<<endl;
+			
+			dist = getDistance(v11, v21);
+			
+			if ((v22 != -1) && (getDistance(v11, v22) < dist)) {	// Si d(v11, v22) < d(v11, v21)
+				dist = getDistance(v11, v22);
+				v2 = v22;
+			}
+			
+			if ((v12 != -1) && (getDistance(v12, v21) < dist)) { // Si d(v12, v21) < MIN(d(v11, v21), d(v11, v22))
+				dist = getDistance(v12, v21);
+				v1 = v12;
+				v2 = v21;
+			}
+			
+			if ((v12 != -1) && (v22 != -1) && (getDistance(v12, v22) < dist)) {	// Si d(v12, v22) est inférieure aux autres
+				dist = getDistance(v12, v22);
+				v1 = v12;
+				v2 = v22;
+			}
+			// Fin truc dégueulasse
+			
+			
+			c.v1 = v1;
+			c.v2 = v2;
+			c.longueur = dist + this->couples[iter-1][c.c1].longueur + this->couples[iter-1][c.c2].longueur;
+			
+			this->couples[iter][n] = c;
+			
+			n = n + 1;
+		}
+		i = i + 1;
+	}
+	delete [] this->couplesInt;
 }
 
 void RGSC::construireCircuit() {
 	marier();
 	sauvegarderCouples();
+	//~ marier();
+	//~ sauvegarderCouples();
 }
 
 void RGSC::marier() {

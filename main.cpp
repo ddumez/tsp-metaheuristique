@@ -55,8 +55,9 @@ int main() {
 		rgsc.afficherCouples();
 		rgsc.construireCircuit();
 		cout << endl;
-		rgsc.afficherCouplesInt();cout << endl;
-		rgsc.afficherCouples(0);
+		//~ rgsc.afficherCouplesInt();cout << endl;
+		rgsc.afficherCouples(0);cout << endl;
+		rgsc.afficherCouples(1);
 
 	//fin
 	delete(sol);

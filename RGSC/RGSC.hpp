@@ -83,6 +83,7 @@ class RGSC {
 			void calculerTailles();
 			void initialiserCouples();
 			void initialiserPreferences();
+			void creerPreferencesCouples();
 			void triPreferences();
 			bool plusPres(const int depart, const int v1, const int v2) const;
 			void initialiserCouplesInt();
