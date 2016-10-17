@@ -73,7 +73,7 @@ int main() {
 		rgsc.afficherCouples(0);cout << endl;
 		rgsc.afficherCouples(1);
 */
->>>>>>> 32b868ae46d905d7509d85dfbbaf7048f02ab266
+
 	//fin
 	delete(sol);
 
