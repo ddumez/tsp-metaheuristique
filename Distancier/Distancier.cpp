@@ -61,6 +61,14 @@ void Distancier::afficher() const {
 	cout << endl;
 }
 
+void Distancier::affichepourglpk() const {
+	for(int i = 0; i<this->N; ++i) {
+		for(int j = 0; j<this->N; ++j) {
+			if(i != j) {cout<<"\t"<<i+1<<"\t"<<j+1<<"\t"<<d[i][j]<<endl;}
+		}
+	}
+}
+
 //----------------------------------------------------------------------
 // METHODES
 //----------------------------------------------------------------------

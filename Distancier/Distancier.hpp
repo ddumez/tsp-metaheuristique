@@ -20,10 +20,10 @@ typedef struct point {
 class Distancier {
 	// Attributs
 		private :
-			int N;				/**Le nombre de villes*/
-			string *villes;		/**Les noms des villes*/
-			point *c;			/**Les coordonnées des villes*/
-			double **d;			/**Les distances entre chaque paire de villes*/
+			int N;				/*!<Le nombre de villes*/
+			string *villes;		/*!<Les noms des villes*/
+			point *c;			/*!<Les coordonnées des villes*/
+			double **d;			/*!<Les distances entre chaque paire de villes*/
 			
 	// Constructeurs
 		public :
@@ -47,6 +47,11 @@ class Distancier {
 			 * \brief Affiche le distancier
 			 */
 			void afficher() const;
+
+			/**
+			* \brief affiche le distancier pour glpk
+			*/
+			void affichepourglpk() const;
 			
 	// Methodes
 		public :
