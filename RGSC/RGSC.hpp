@@ -23,27 +23,27 @@
 #include <vector>
 
 typedef struct couple {
-	int c1;	// Premier couple marié
-	int c2; // Deuxième couple marié
-	int v1;	// Extremitée de C1 qui n'est pas reliée
-	int v2;	// Extremitée de C2 qui n'est pas reliée
+	int c1;	/*!<Premier couple marié */
+	int c2; /*!<Deuxième couple marié */
+	int v1;	/*!<Extremitée de C1 qui n'est pas reliée */
+	int v2;	/*!<Extremitée de C2 qui n'est pas reliée */
 	double longueur;
 } couple;
 
 /// Il y a un moyen de se passer de faire un couple intermédiaire ?
 /// (intuitivement oui)
 typedef struct coupleInt {
-	int c1;	// Indice du couple dans la liste des couples résultant de l'itération d'avant
-	int c2; // Indice du couple "" "" "" avec lequel c1 est uni.
-	int indPref; // L'indice de la dernière préférence de sa liste à laquelle il a fait une demande d'union.
-	bool aDemande; // Vrai si le couple c1 a été l'instigateur de la demande d'union avec c2. (faux sinon)
+	int c1;	/*!<Indice du couple dans la liste des couples résultant de l'itération d'avant */
+	int c2; /*!<Indice du couple "" "" "" avec lequel c1 est uni. */
+	int indPref; /*!<L'indice de la dernière préférence de sa liste à laquelle il a fait une demande d'union. */
+	bool aDemande; /*!<Vrai si le couple c1 a été l'instigateur de la demande d'union avec c2. (faux sinon) */
 	/// aDemande inutile ?
-	bool estCopie; // Vrai si lui ou son mari a été recopié
+	bool estCopie; /*!<Vrai si lui ou son mari a été recopié */
 } coupleInt;
 
 typedef struct preference {
-	int destination;			// indice du couple vers lequel on se dirige
-	int extremiteDominante;		// indice de la ville la plus proche de l'autre couple
+	int destination;			/*!<indice du couple vers lequel on se dirige */
+	int extremiteDominante;		/*!<indice de la ville la plus proche de l'autre couple */
 } preference;
 
 using namespace std;
@@ -55,9 +55,9 @@ class RGSC {
 			int iteration;
 			int couplesRestant;
 			Distancier *D;
-			couple **couples; /**Des couples d'indices, les indices correspondant à ceux de l'itération précédente**/
-			coupleInt *couplesInt; /**Les couples actuellement en construction dans l'itération courante de l'algorithme du mariage**/
-			vector<vector<preference> > preferences; /**Les préférences des groupes (dans l'ordre décroissant)**/
+			couple **couples; /*!<Des couples d'indices, les indices correspondant à ceux de l'itération précédente**/
+			coupleInt *couplesInt; /*!<Les couples actuellement en construction dans l'itération courante de l'algorithme du mariage**/
+			vector<vector<preference> > preferences; /*!<Les préférences des groupes (dans l'ordre décroissant)**/
 			vector<int> tailles;
 			
 			int iterationSort;

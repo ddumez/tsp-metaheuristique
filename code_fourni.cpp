@@ -107,7 +107,7 @@ void afficheSol(const int * const sol, const Distancier * const dist) {
 	
 	// dernier segments qui revient a la ville de depart
 	cout<<sol[0]<<" : ";
-	dist->afficheVillei(0);
+	dist->afficheVillei(sol[0]);
 
 	//longueur totale
 	cout<<"\n longueur : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
