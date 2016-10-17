@@ -56,8 +56,9 @@ int main() {
 		rgsc.construireCircuit();
 		cout << endl;
 		//~ rgsc.afficherCouplesInt();cout << endl;
-		rgsc.afficherCouples(0);cout << endl;
-		rgsc.afficherCouples(1);
+		cout << "COCORICO" << endl;
+		rgsc.afficherCouplesRecursif();
+		
 
 	//fin
 	delete(sol);

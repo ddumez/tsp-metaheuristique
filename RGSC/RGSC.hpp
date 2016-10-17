@@ -74,6 +74,7 @@ class RGSC {
 		public :
 			void afficherPreferences();
 			void afficherPreferences(const int i);
+			void afficherCouplesRecursif();
 			void afficherCouples();
 			void afficherCouples(const int i);
 			void afficherCouplesInt() const;
@@ -83,8 +84,9 @@ class RGSC {
 			void calculerTailles();
 			void initialiserCouples();
 			void initialiserPreferences();
-			void creerPreferencesCouples();
+			void genererPreferencesCouples();
 			void triPreferences();
+			void triPreferencesGeneral();
 			bool plusPres(const int depart, const int v1, const int v2) const;
 			void initialiserCouplesInt();
 			void desallouerCouplesInt();
