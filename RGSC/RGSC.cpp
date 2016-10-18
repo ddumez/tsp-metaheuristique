@@ -18,7 +18,7 @@ RGSC::RGSC(Distancier *D) {
 	
 	calculerTailles();
 	initialiserCouples();
-	initialiserPreferences();
+	genererPreferences();
 }
 
 //----------------------------------------------------------------------
@@ -33,47 +33,38 @@ RGSC::~RGSC() {
 // AFFICAHGES
 //----------------------------------------------------------------------
 void RGSC::afficherPreferences() {
-	afficherPreferences(this->iteration);
+	int nbCouple = this->tailles[this->iteration];
+	preference p;
+	
+	for (int i = 0; i < nbCouple; ++i) {
+		cout<<i<<": ";
+		for (int j = 0; j < nbCouple; ++j) {
+			p = this->preferences[i][j];
+			cout<<"[destination="<<p.destination<<"|distance="<<p.distance<<"|v1="<<p.v1<<"|v2="<<p.v2<<"]"<<endl;
+		}
+	}
 }
 
 void RGSC::afficherPreferences(const int i) {
-	int N = this->tailles[i];
-	
-	for (int i = 0; i < N; ++i) {
-		cout << i << " :\t";
-		for (int j = 0; j < N; ++j) {
-			cout << "("<< preferences[i][j].extremiteDominante << "," << preferences[i][j].destination << ") | ";
-		}
-		cout << endl;
-	}
 }
 
 void RGSC::afficherCouplesRecursif() {
-	for (int i = 0; i <= this->iteration; ++i) {
-		afficherCouples(i); cout << endl;
-	}
 }
 
 void RGSC::afficherCouples() {
-	afficherCouples(this->iteration);
-}
-
-void RGSC::afficherCouples(const int i) {
+	int i = this->iteration;
 	int N = this->tailles[i];
 	couple c;
 	
+	cout << "tailles["<<this->iteration<<"]="<<this->tailles[this->iteration]<<endl;
 	for (int j = 0; j < N; ++j) {
 		c = this->couples[i][j];
-		cout << j << ":\t" << c.v1 << " (" << c.c1 << "|" << c.c2 << ") " << c.v2 << endl;
+		cout<<i<<": [c1="<<c.c1<<"|c2="<<c.c2<<"|v1="<<c.v1<<"|v2="<<c.v2<<"|ext1="<<c.ext1<<"|ext2="<<c.ext2<<"|indPref="<<c.indPref<<"|longueur="<<c.longueur<<"]"<<endl;
 	}
+	cout << endl;
 }
 
-void RGSC::afficherCouplesInt() const {
-	coupleInt c;
-	for (int i = 0; i < this->tailles[this->iteration-1]; ++i) {
-		c = this->couplesInt[i];
-		cout << i <<":\t"<<c.c1<< " | "<<c.c2<<"\tpref="<<c.indPref<<"\taDemande="<<c.aDemande<<" aCopie="<<c.estCopie<<endl;
-	}
+void RGSC::afficherCouples(const int i) {
 }
 
 //----------------------------------------------------------------------
@@ -98,93 +89,34 @@ void RGSC::calculerTailles() {
 }
 
 void RGSC::initialiserCouples() {
-	int nIteration = this->nbMariage;
+	int nbMariage = this->nbMariage;
+	int taille;
 	
-	this->couples = new couple * [nIteration];
-	for (int i = 0; i < nIteration; ++i) {
-		this->couples[i] = new couple [this->tailles[i]];
+	// On alloue toute la mémoire nécessaire
+	this->couples = new couple * [nbMariage];
+	for (int i = 0; i < nbMariage; ++i) {
+		taille = this->tailles[i];
+		this->couples[i] = new couple [taille];
 	}
 	
-	int N = getN();
+	// Initialisation de la première ligne du tableau
+	int N = D->getN();
 	couple c;
-	
 	for (int i = 0; i < N; ++i) {
 		c.c1 = i;
 		c.c2 = -1;
-		c.v1 = i;
+		c.v1 = -1;
 		c.v2 = -1;
+		c.ext1 = i;
+		c.ext2 = -1;
+		c.indPref = 0;
 		c.longueur = 0;
 		this->couples[0][i] = c;
 	}
 }
 
-
-/// ALLOUER MEMOIRE ET INITIALISER PREFERENCES (avant formation couples)
-void RGSC::initialiserPreferences() {
-	int N = this->D->getN();
-	preference tmp;
+void RGSC::genererPreferences() {
 	
-	for (int i = 0; i < N; ++i) {
-		preferences.push_back(vector<preference>());
-		for (int j = 0; j < N; ++j) {
-			tmp.destination = j;
-			tmp.extremiteDominante = i;
-			preferences.at(i).push_back(tmp);
-		}
-	}
-	
-	triPreferences();
-}
-
-void RGSC::genererPreferencesCouples() {
-	preferences.clear();
-	int iter = this->iteration;
-	int N = this->tailles[iter];
-	preference tmp;
-	couple c1, c2;
-	int v1, v11, v12, v21, v22;
-	double dist;
-	
-	for (int i = 0; i < N; ++i) {	// Pour chaque sous-couple
-		preferences.push_back(vector<preference>());
-		c1 = this->couples[iter][i];
-		for (int j = 0; j < N; ++j) {	// Pour chaque autre sous couple
-			c2 = this->couples[iter][j];
-			
-			// Debut truc dégueulasse à faire dans sa propre fonction ou trouver un autre moyen de le faire
-			v11 = c1.v1;
-			v12 = c1.v2;
-			v21 = c2.v1;
-			v22 = c2.v2;
-			v1 = v11;
-			
-			//~ cout << "v11 "<<v11<<"\tv12 "<<v12<<"\tv21 "<<v21<<"\tv22 "<<v22<<endl;
-			
-			dist = getDistance(v11, v21);
-			
-			if ((v22 != -1) && (getDistance(v11, v22) < dist)) {	// Si d(v11, v22) < d(v11, v21)
-				dist = getDistance(v11, v22);
-			}
-			
-			if ((v12 != -1) && (getDistance(v12, v21) < dist)) { 	// Si d(v12, v21) < MIN(d(v11, v21), d(v11, v22))
-				dist = getDistance(v12, v21);
-				v1 = v12;
-			}
-			
-			if ((v12 != -1) && (v22 != -1) && (getDistance(v12, v22) < dist)) {	// Si d(v12, v22) est inférieure aux autres
-				dist = getDistance(v12, v22);
-				v1 = v12;
-			}
-			// Fin truc dégueulasse
-			
-			//~ cout << "COCO" << j << endl;
-			tmp.destination = j;
-			tmp.extremiteDominante = v1;
-			preferences.at(i).push_back(tmp);
-		}
-	}
-	
-	triPreferencesGeneral();
 }
 
 void RGSC::triPreferences() {
@@ -213,298 +145,19 @@ void RGSC::triPreferences() {
 	}
 }
 
-void RGSC::triPreferencesGeneral() {
-	int iter = this->iteration;
-	int N = this->tailles[iter];
-	preference prefJ1, prefJ0;
-	couple c0, c1;
-	double dist0, dist1;
-	//~ int v1, v21, v22;
-	
-	// Pour chaque sous-couple
-	for (int i = 0; i < N; ++i) {
-		bool fini = false;
-		// Tant que le tableau n'est pas trié
-		while (!fini) {
-			//~ afficherPreferences(); cout << endl;
-			prefJ0 = this->preferences.at(i).at(0);
-			c0 = this->couples[iter][prefJ0.destination];
-			fini = true;
-
-			dist0 = getDistance(prefJ0.extremiteDominante, c0.v1);
-			if ((c0.v2 != -1) && (getDistance(prefJ0.extremiteDominante, c0.v2) < dist0)) {
-				dist0 = getDistance(prefJ0.extremiteDominante, c0.v2);
-			}
-			//~ cout << "COCORICO" << endl;
-			for (int j = 1; j < N; ++j) {
-				prefJ1 = this->preferences.at(i).at(j);
-				c1 = this->couples[iter][prefJ1.destination];
-				
-				dist1 = getDistance(prefJ1.extremiteDominante, c1.v1);
-				if ((c1.v2 != -1) && (getDistance(prefJ1.extremiteDominante, c1.v2) < dist1)) {
-					dist1 = getDistance(prefJ1.extremiteDominante, c1.v2);
-				}
-				//~ cout << "i: "<<i<<" j: "<<j<<" (d0="<<dist0<<" |d1="<<dist1<<")"<<endl;
-				if (dist1 < dist0) {//cout << "CHANGEMENT" << endl;
-					fini = false;
-					this->preferences.at(i).at(j-1) = prefJ1;
-					this->preferences.at(i).at(j) = prefJ0;
-				} else {//cout << "NUPE NUPE NUPE NUPE NUPE" << endl;
-					prefJ0 = prefJ1;
-					dist0 = dist1;
-				}
-			}
-		}
-	}
+void RGSC::plusProchesV1V2(const couple c1, const couple c2, int *v1, int *v2) const {
+	int v11, v12, v21, v22;
+	//~ v11 = ext1.
 }
 
 bool RGSC::plusPres(const int depart, const int v1, const int v2) const {
-	//~ cout << "dist("<<depart<<","<<v2<<")="<<getDistance(depart, v2) << " / ";
-	//~ cout << "dist("<<depart<<","<<v1<<")="<<getDistance(depart, v1)<<endl;
 	return (getDistance(depart, v1) < getDistance(depart, v2));
 }
 
-void RGSC::initialiserCouplesInt() {
-	int iter = this->iteration - 1;
-	int taille = this->tailles[iter];
-	coupleInt cInt;
-	this->couplesRestant = taille;
-	cout << "taille["<<iter<<"]=" << taille << endl;
-	cout << "WTF THIS SEGMENTATION FAULT ?" << endl;
-	this->couplesInt = new coupleInt[taille];
-	cout << "taille["<<iter<<"]=" << taille << endl;
-	for (int i = 0; i < taille; ++i) {
-		cInt.c1 = i;
-		cInt.c2 = -1;
-		cInt.indPref = 0;
-		cInt.aDemande = false;
-		cInt.estCopie = false;
-		this->couplesInt[i] = cInt;
-	}
+bool RGSC::accepteUnion(const couple c1, const couple c2) const {
 }
-
-void RGSC::desallouerCouplesInt() {
-	delete [] this->couplesInt;
-}
-
-bool RGSC::accepteUnion(const coupleInt c1, const coupleInt c2) const {
-	int mariActuel = c2.c2;
-	
-	if ((mariActuel == -1) || (mariActuel == c1.c1)) {
-		return true;
-	} else {
-		bool fini = false;
-		bool accepte = false;
-		int indC2Gauche = c2.c1;
-		int indC1Gauche = c1.c1;
-		int i = 1;
-		int prefCourante;
-		
-		while (!fini) {
-			//cout << "preferences["<<indC2Gauche<<"]["<<i<<"].destination"<<endl;
-			prefCourante = this->preferences[indC2Gauche][i].destination;
-			if (prefCourante == mariActuel) {
-				fini = true;
-			} else if (prefCourante ==  indC1Gauche) {
-				fini = true;
-				accepte = true;
-			}
-			i = i + 1;
-		}
-		
-		return accepte;
-	}
-}
-
-
-
 
 void RGSC::unir(int indC1, int indC2) { // c1 demande à s'unir avec c2
-	coupleInt c1 = this->couplesInt[indC1];
-	coupleInt c2 = this->couplesInt[indC2];
-	
-	c1.aDemande = true;
-
-	if (c2.c2 == c1.c1) {	// S'ils sont déjà mariés ensemble on passe
-		c1.aDemande = 1;
-	} else {				// Sinon on regarde comment les marier
-		if (c1.c2 != -1) {	// Si c1 est déjà en couple
-			this->couplesInt[c1.c2].c2 = -1;
-			this->couplesRestant = this->couplesRestant + 1;
-		} else {
-			this->couplesRestant = this->couplesRestant - 1;
-		}
-		c1.c2 = indC2;
-
-		if (c2.c2 != -1) {
-			this->couplesInt[c2.c2].c2 = -1;
-			this->couplesRestant = this->couplesRestant + 1;
-		} else {
-			this->couplesRestant = this->couplesRestant - 1;
-		}
-		c2.c2 = indC1;
-	}
-	
-	this->couplesInt[indC1] = c1;
-	this->couplesInt[indC2] = c2;
-}
-
-// Place les couples temporaires dans les nouveaux couples
-void RGSC::sauvegarderCouples() {
-	int iter = this->iteration;				// L'itération qui vient d'être calculée
-	int nbCouple = this->tailles[iter];		// Le nombre de couples créés
-	int i = 0;
-	int n = 0;
-	coupleInt cInt;
-	couple c;
-	int v1, v2, v11, v12, v21, v22;
-	double dist, dist2;
-	
-	while (n < nbCouple) {
-		cInt = this->couplesInt[i];
-		
-		if (cInt.c2 == -1) {
-			this->couples[iter][i] = this->couples[iter-1][i];
-			n = n + 1;
-		} else if (cInt.c1 < cInt.c2) {
-			c.c1 = cInt.c1;
-			c.c2 = cInt.c2;
-			
-			
-			// Debut truc dégueulasse à faire dans sa propre fonction ou trouver un autre moyen de le faire
-			v11 = this->couples[iter-1][c.c1].v1;
-			v12 = this->couples[iter-1][c.c1].v2;
-			v21 = this->couples[iter-1][c.c2].v1;
-			v22 = this->couples[iter-1][c.c2].v2;
-			v1 = v11;
-			v2 = v21;
-			
-			//~ cout << "v11 "<<v11<<"\tv12 "<<v12<<"\tv21 "<<v21<<"\tv22 "<<v22<<endl;
-			
-			dist = getDistance(v11, v21);
-			
-			if ((v22 != -1) && (getDistance(v11, v22) < dist)) {	// Si d(v11, v22) < d(v11, v21)
-				dist = getDistance(v11, v22);
-				v2 = v22;
-			}
-			
-			if ((v12 != -1) && (getDistance(v12, v21) < dist)) { // Si d(v12, v21) < MIN(d(v11, v21), d(v11, v22))
-				dist = getDistance(v12, v21);
-				v1 = v12;
-				v2 = v21;
-			}
-			
-			if ((v12 != -1) && (v22 != -1) && (getDistance(v12, v22) < dist)) {	// Si d(v12, v22) est inférieure aux autres
-				dist = getDistance(v12, v22);
-				v1 = v12;
-				v2 = v22;
-			}
-			// Fin truc dégueulasse
-			
-			
-			c.v1 = v1;
-			c.v2 = v2;
-			c.longueur = dist + this->couples[iter-1][c.c1].longueur + this->couples[iter-1][c.c2].longueur;
-			
-			this->couples[iter][n] = c;
-			
-			n = n + 1;
-		}
-		i = i + 1;
-	}
-	delete [] this->couplesInt;
-}
-
-void RGSC::construireCircuit() {
-	marier();
-	sauvegarderCouples();
-	genererPreferencesCouples();
-	
-	marier();
-	sauvegarderCouples();
-	genererPreferencesCouples();
-	
-	marier();
-	sauvegarderCouples();
-	genererPreferencesCouples();
-	
-	cout << "AVANT MARIAGE" << endl;
-	marier();
-	cout << "APRES MARIAGE" << endl;
-	sauvegarderCouples();
-	cout << "APRES SAUVEGARDE COUPLE" << endl;
-	genererPreferencesCouples();
-	cout << "APRES GENERATION DES PREFERENCES" << endl;
-}
-
-void RGSC::marier() {cout << "DEBUT MARIAGE" << endl;
-	this->iteration = this->iteration + 1;
-	initialiserCouplesInt();
-	
-	int i, j;
-	int indC2;
-	coupleInt cInt1, cInt2;
-	
-	int nbCouple = this->tailles[this->iteration-1];
-	//~ bool **mariage;
-	bool fini = false;
-	
-	/// Tout le monde fait une demande
-	for (i = 0; i < nbCouple; ++i) {
-		afficherCouplesInt();
-		cInt1 = this->couplesInt[i];
-		j = 1;
-		indC2 = this->preferences[i][j].destination;
-		cInt2 = this->couplesInt[indC2];
-		while (!accepteUnion(cInt1, cInt2) && (j < nbCouple)) {
-			cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl;
-			
-			j = j + 1;
-			indC2 = this->preferences[i][j].destination;
-			cInt2 = this->couplesInt[indC2];
-		}
-		if (j < nbCouple) {
-			cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
-			unir(i, this->preferences[i][j].destination);
-			this->couplesInt[i].indPref = j;
-		}
-		
-		//~ afficherCouplesInt();
-	}
-	
-	cout << endl << "SECOND PART : " << this->couplesRestant << endl;
-	
-	/// Ceux qui ont perdu leur couple font une nouvelle demande jusqu'à ce qu'un couple au plus soit non uni
-	while (this->couplesRestant > 1) {	// On recommence s'il reste plus d'un couple
-		i = 0;
-		
-		while (i < nbCouple) {	// On les marie dans l'ordre tant qu'il reste plus d'un couple
-		cInt1 = this->couplesInt[i];
-		cout << i << ": couplesRestant = " << this->couplesRestant << endl;
-			
-			if (cInt1.c2 == -1) {	// unir c1 avec le prochain de sa lite s'il n'est pas déjà en couple
-				j = cInt1.indPref + 1;
-				indC2 = this->preferences[i][j].destination;
-				cInt2 = this->couplesInt[indC2];
-				
-				while (!accepteUnion(cInt1, cInt2) && (j < nbCouple)) {
-					cout << "pas d'union " << cInt1.c1 << " - " << cInt2.c1 << endl;
-					
-					j = j + 1;
-					indC2 = this->preferences[i][j].destination;
-					cInt2 = this->couplesInt[indC2];
-				}
-				if (j < nbCouple) {
-					cout << "unir " << cInt1.c1 << " - " << cInt2.c1 << endl;
-					afficherCouplesInt();
-					unir(i, this->preferences[i][j].destination);
-					cInt1.indPref = j;
-				}
-			}
-			i = i + 1;
-		}
-	}
-	cout << "FIN MARIAGE" << endl;
 }
 
 int RGSC::getN() const {

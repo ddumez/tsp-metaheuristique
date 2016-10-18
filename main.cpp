@@ -16,13 +16,13 @@ using namespace std;
 int main() {
 	//variables
 		clock_t t;
-		Distancier dist ("./Datas/ouest.dat");
+		Distancier dist ("./Datas/distancier20.dat");
 		int * sol = new int[dist.getN()];
 		bool improved = false;
 		
 	//début
 
-		//dist.afficher();
+		/*//dist.afficher();
 
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
@@ -53,26 +53,13 @@ int main() {
     	cout<<"solution ameliorée par 3-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
 
-    	//dist.affichepourglpk();
+    	//dist.affichepourglpk();*/
 
 
-/*
+
 		RGSC rgsc(&dist);
-		rgsc.afficherPreferences();
-		cout << endl;
 		rgsc.afficherCouples();
-		rgsc.construireCircuit();
-		cout << endl;
-		//~ rgsc.afficherCouplesInt();cout << endl;
-<<<<<<< HEAD
-		cout << "COCORICO" << endl;
-		rgsc.afficherCouplesRecursif();
-		
 
-=======
-		rgsc.afficherCouples(0);cout << endl;
-		rgsc.afficherCouples(1);
-*/
 
 	//fin
 	delete(sol);

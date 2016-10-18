@@ -23,27 +23,21 @@
 #include <vector>
 
 typedef struct couple {
-	int c1;	/*!<Premier couple marié */
+	int c1;	/*!<Premier couple marié (son indice dans le tableau de l'itération précédente) */
 	int c2; /*!<Deuxième couple marié */
-	int v1;	/*!<Extremitée de C1 qui n'est pas reliée */
-	int v2;	/*!<Extremitée de C2 qui n'est pas reliée */
+	int v1;	/*!<Ville de C1 qui est reliée */
+	int v2;	/*!<Ville de C2 qui est reliée */
+	int ext1; /*!<Extremitée de C1 qui n'est pas reliée */
+	int ext2; /*!<Extremitée de C2 qui n'est pas reliée */
+	int indPref; /*!<L'indice de la dernière préférence de sa liste à laquelle il a fait une demande d'union. */
 	double longueur;
 } couple;
 
-/// Il y a un moyen de se passer de faire un couple intermédiaire ?
-/// (intuitivement oui)
-typedef struct coupleInt {
-	int c1;	/*!<Indice du couple dans la liste des couples résultant de l'itération d'avant */
-	int c2; /*!<Indice du couple "" "" "" avec lequel c1 est uni. */
-	int indPref; /*!<L'indice de la dernière préférence de sa liste à laquelle il a fait une demande d'union. */
-	bool aDemande; /*!<Vrai si le couple c1 a été l'instigateur de la demande d'union avec c2. (faux sinon) */
-	/// aDemande inutile ?
-	bool estCopie; /*!<Vrai si lui ou son mari a été recopié */
-} coupleInt;
-
 typedef struct preference {
 	int destination;			/*!<indice du couple vers lequel on se dirige */
-	int extremiteDominante;		/*!<indice de la ville la plus proche de l'autre couple */
+	int distance;
+	int v1;		/*!<indice de la ville de C1 la plus proche du couple C2*/
+	int v2;		/*!<indice de la ville de C2 la plus proche du couple C1*/
 } preference;
 
 using namespace std;
@@ -56,11 +50,8 @@ class RGSC {
 			int couplesRestant;
 			Distancier *D;
 			couple **couples; /*!<Des couples d'indices, les indices correspondant à ceux de l'itération précédente**/
-			coupleInt *couplesInt; /*!<Les couples actuellement en construction dans l'itération courante de l'algorithme du mariage**/
 			vector<vector<preference> > preferences; /*!<Les préférences des groupes (dans l'ordre décroissant)**/
 			vector<int> tailles;
-			
-			int iterationSort;
 	
 	// Constructeurs
 		public :
@@ -77,22 +68,17 @@ class RGSC {
 			void afficherCouplesRecursif();
 			void afficherCouples();
 			void afficherCouples(const int i);
-			void afficherCouplesInt() const;
 	
 	// Methodes
 		private :
 			void calculerTailles();
 			void initialiserCouples();
-			void initialiserPreferences();
-			void genererPreferencesCouples();
+			void genererPreferences();
 			void triPreferences();
-			void triPreferencesGeneral();
 			bool plusPres(const int depart, const int v1, const int v2) const;
-			void initialiserCouplesInt();
-			void desallouerCouplesInt();
-			bool accepteUnion(const coupleInt c1, const coupleInt c2) const;
+			void plusProchesV1V2(const couple c1, const couple c2, int *v1, int *v2) const;
+			bool accepteUnion(const couple c1, const couple c2) const;
 			void unir(const int c1, const int c2);
-			void sauvegarderCouples();
 			void marier();
 			
 		public :
