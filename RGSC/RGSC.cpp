@@ -291,7 +291,7 @@ void RGSC::marier() {
 		indPref = 0;
 		
 		while ((indPref < nbSC) && (!fini)){
-			indC2 = this->preferences[i][indPref];
+			//~ indC2 = this->preferences[i][indPref];
 			c2 = this->couples[this->iteration][indC2];
 		}
 	}
