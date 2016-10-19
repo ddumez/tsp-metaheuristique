@@ -35,7 +35,7 @@ typedef struct couple {
 
 typedef struct preference {
 	int destination;			/*!<indice du couple vers lequel on se dirige */
-	int distance;
+	double distance;
 	int v1;		/*!<indice de la ville de C1 la plus proche du couple C2*/
 	int v2;		/*!<indice de la ville de C2 la plus proche du couple C1*/
 } preference;
@@ -74,9 +74,9 @@ class RGSC {
 			void calculerTailles();
 			void initialiserCouples();
 			void genererPreferences();
-			void triPreferences();
+			void trierPreferences();
 			bool plusPres(const int depart, const int v1, const int v2) const;
-			void plusProchesV1V2(const couple c1, const couple c2, int *v1, int *v2) const;
+			int plusProchesV1V2(const couple c1, const couple c2, int *v1, int *v2, double *dist) const;
 			bool accepteUnion(const couple c1, const couple c2) const;
 			void unir(const int c1, const int c2);
 			void marier();
@@ -85,6 +85,7 @@ class RGSC {
 			int getN() const;
 			double getDistance(const int v1, const int v2) const;
 			void construireCircuit();
+			double getDistance(const couple c1, const couple c2) const;
 };
 
 

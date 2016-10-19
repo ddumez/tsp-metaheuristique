@@ -59,6 +59,7 @@ int main() {
 
 		RGSC rgsc(&dist);
 		rgsc.afficherCouples();
+		rgsc.afficherPreferences();
 
 
 	//fin
