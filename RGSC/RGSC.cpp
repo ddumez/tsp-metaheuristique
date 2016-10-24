@@ -18,7 +18,7 @@ RGSC::RGSC(Distancier *D) {
 	
 	calculerTailles();
 	initialiserCouples();
-	genererPreferences();
+	//~ genererPreferences();
 }
 
 //----------------------------------------------------------------------
@@ -169,7 +169,7 @@ void RGSC::trierPreferences() {
 	}
 }
 
-// Renvoie le nombre de sous-couples en plus ou en moins si union (-2, -1, 0, 1, 2)
+// Renvoie le nombre de sous-couples à marier en plus ou en moins si union (-2, -1, 0, 1, 2)
 int RGSC::plusProchesV1V2(const couple c1, const couple c2, int *v1, int *v2, double *shortest) const {
 	int cas = -2;
 	int v11, v12, v21, v22;
@@ -272,12 +272,27 @@ bool RGSC::accepteUnion(const couple c1, const couple c2) const {
 void RGSC::unir(int indC1, int indC2) {
 	couple c1 = this->couples[this->iteration][indC1];
 	couple c2 = this->couples[this->iteration][indC2];
-	//plusProchesV1V2();
+	
+}
+
+void RGSC::unir(int indC1, int indC2, int v1, int v2, double dist) {
+	cout << "iter = " << this->iteration << endl;
+	couple c1 = this->couples[this->iteration][indC1];
+	couple c2 = this->couples[this->iteration][indC2];
+	
+	// RENDU ICI
+	
+	if (c1.v2 == -1) {
+		
+	}
+	c1.v2 = v1;
+	c1.v2 = v2;
 }
 
 void RGSC::marier() {
 	genererPreferences();
 	int nbSC = this->tailles[this->iteration];
+	int cas;
 	this->couplesRestant = nbSC;
 	int indPref, indC2;
 	int *v1, *v2;
@@ -290,13 +305,24 @@ void RGSC::marier() {
 		c1 = this->couples[this->iteration][i];
 		indPref = 0;
 		
-		while ((indPref < nbSC) && (!fini)){
-			//~ indC2 = this->preferences[i][indPref];
+		while ((indPref < nbSC) && (!fini)){	// Si on a pas tout testé et qu'on a pas trouvé de solution
+			indC2 = this->preferences[i][indPref].destination;
 			c2 = this->couples[this->iteration][indC2];
+			cas = plusProchesV1V2(c1, c2, v1, v2, dist);
+			if ((c1.v2 == -1) || (*dist < getDistance(c1.v1, c1.v2))) {
+				unir(i, indC2, *v1, *v2, *dist);
+				this->couplesRestant = this->couplesRestant + cas;
+			} else {
+				indPref = indPref + 1;
+			}
 		}
 	}
 	
 	this->iteration = this->iteration + 1;
+}
+
+void RGSC::construireCircuit() {
+	marier();
 }
 
 int RGSC::getN() const {
