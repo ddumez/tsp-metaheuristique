@@ -25,6 +25,7 @@
 typedef struct couple {
 	int c1;	/*!<Premier couple marié (son indice dans le tableau de l'itération précédente) */
 	int c2; /*!<Deuxième couple marié */
+	int compagnon; /*!<Indice dans l'itération actuelle (en cours de construction) du couple avec lequel il est uni*/
 	int v1;	/*!<Ville de C1 qui est reliée */
 	int v2;	/*!<Ville de C2 qui est reliée */
 	int ext1; /*!<Extremitée de C1 qui n'est pas reliée */
@@ -80,6 +81,7 @@ class RGSC {
 			bool accepteUnion(const couple c1, const couple c2) const;
 			void unir(const int c1, const int c2);
 			void unir(int indC1, int indC2, int v1, int v2, double dist);
+			void initNextIter();
 			void marier();
 			
 		public :

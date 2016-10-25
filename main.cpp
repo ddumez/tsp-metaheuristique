@@ -58,9 +58,12 @@ int main() {
 
 
 		RGSC rgsc(&dist);
+		cout<<endl<<"COUPLES"<<endl;
 		rgsc.afficherCouples();
 		rgsc.construireCircuit();
-		rgsc.afficherPreferences();
+		cout<<endl<<"COUPLES"<<endl;
+		rgsc.afficherCouples();
+		//~ rgsc.afficherPreferences();
 
 
 	//fin
