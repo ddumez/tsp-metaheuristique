@@ -10,19 +10,20 @@
 #include "code_fourni.hpp"
 #include "./3-opt/3opt.hpp"
 #include "RGSC/RGSC.hpp"
+#include "vnd.hpp"
 
 using namespace std;
 
 int main() {
 	//variables
 		clock_t t;
-		Distancier dist ("./Datas/distancier20.dat");
+		Distancier dist ("./Datas/ouest.dat");
 		int * sol = new int[dist.getN()];
 		bool improved = false;
 		
 	//début
 
-		/*//dist.afficher();
+		//dist.afficher();
 
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
@@ -53,15 +54,24 @@ int main() {
     	cout<<"solution ameliorée par 3-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
 
-    	//dist.affichepourglpk();*/
+    	//test du vnd avec 2 et 3 opt
+    	construireSolNNH(sol, &dist);
+    	cout<<"calcul vnd"<<endl;
+    	t = clock();
+		vnd(sol, &dist);
+    	t = clock() - t;
+    	cout<<"solution ameliorée par vnd (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
+    	afficheSol(sol, &dist);
+
+    	//dist.affichepourglpk();
 
 
-
+/*
 		RGSC rgsc(&dist);
 		rgsc.afficherCouples();
 		rgsc.construireCircuit();
 		rgsc.afficherPreferences();
-
+*/
 
 	//fin
 	delete(sol);
