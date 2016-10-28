@@ -17,12 +17,12 @@ using namespace std;
 int main() {
 	//variables
 		clock_t t;
-		Distancier dist ("./Datas/ouest.dat");
+		Distancier dist ("./Datas/distancier20.dat");
 		int * sol = new int[dist.getN()];
 		bool improved = false;
 		
 	//début
-
+/*
 		//dist.afficher();
 
 		//test du NNH
@@ -65,21 +65,10 @@ int main() {
 
     	//dist.affichepourglpk();
 
-
-/*
-		RGSC rgsc(&dist);
-		cout<<endl<<"COUPLES"<<endl;
-		rgsc.afficherCouples();
-		rgsc.construireCircuit();
-<<<<<<< HEAD
-		cout<<endl<<"COUPLES"<<endl;
-		rgsc.afficherCouples();
-		//~ rgsc.afficherPreferences();
-
-=======
-		rgsc.afficherPreferences();
 */
->>>>>>> 6e5fe62d186f685ce45f4726e27543d0c2c9245f
+
+		RGSC rgsc(&dist);
+		rgsc.construireCircuit();
 
 	//fin
 	delete(sol);

@@ -23,13 +23,14 @@
 #include <vector>
 
 typedef struct couple {
-	int c1;	/*!<Premier couple marié (son indice dans le tableau de l'itération précédente) */
-	int c2; /*!<Deuxième couple marié */
+	int c1;	/*!<Indice du premier couple marié dans l'itération précédente */
+	int c2; /*!<Indice du deuxième couple marié dans l'itération précédente */
 	int compagnon; /*!<Indice dans l'itération actuelle (en cours de construction) du couple avec lequel il est uni*/
 	int v1;	/*!<Ville de C1 qui est reliée */
 	int v2;	/*!<Ville de C2 qui est reliée */
 	int ext1; /*!<Extremitée de C1 qui n'est pas reliée */
 	int ext2; /*!<Extremitée de C2 qui n'est pas reliée */
+	int vDom; /*!<Ville la plus proche du compagnon */
 	int indPref; /*!<L'indice de la dernière préférence de sa liste à laquelle il a fait une demande d'union. */
 	double longueur;
 } couple;
