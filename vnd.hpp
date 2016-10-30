@@ -37,4 +37,30 @@ bool deuxoptconverge(int * sol, const Distancier * const dist);
 */
 bool troisoptconverge(int * sol, const Distancier * const dist);
 
+/**
+* \brief applique la meaheuristique vnd sur cette solution
+*
+* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] dist le distancier
+*/
+void vndPPD(int * sol, const Distancier * const dist);
+
+/**
+* \brief utilise 2-opt sur sol jusqu'a un min local
+*
+* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] dist le distancier
+* \return si la solution a ete ameliore
+*/
+bool deuxoptPPDconverge(int * sol, const Distancier * const dist);
+
+/**
+* \brief utilise 3-opt sur sol jusqu'a un min local
+*
+* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] dist le distancier
+* \return si la solution a ete ameliore
+*/
+bool troisoptPPDconverge(int * sol, const Distancier * const dist);
+
 #endif

@@ -48,25 +48,18 @@ Distancier::~Distancier() {
 //----------------------------------------------------------------------
 void Distancier::afficher() const {
 	
-	//~ for (int i = 0; i < this->N; ++i) {
-		//~ cout << this->villes[i] << "\t";
-	//~ }
+	cout<<"\t";
+	for (int i = 0; i < this->N; ++i) {
+		cout << this->villes[i] << "\t";
+	}
 	
 	for (int i = 0; i < this->N; ++i) {
-		cout << endl;
+		cout << "\n" <<this->villes[i]<<"\t";
 		for (int j = 0; j < this->N; ++j) {
 			cout << this->d[i][j] << "\t";
 		}
 	}
 	cout << endl;
-}
-
-void Distancier::affichepourglpk() const {
-	for(int i = 0; i<this->N; ++i) {
-		for(int j = 0; j<this->N; ++j) {
-			if(i != j) {cout<<"\t"<<i+1<<"\t"<<j+1<<"\t"<<d[i][j]<<endl;}
-		}
-	}
 }
 
 //----------------------------------------------------------------------

@@ -9,7 +9,7 @@
 #include "./Distancier/Distancier.hpp"
 #include "code_fourni.hpp"
 #include "./3-opt/3opt.hpp"
-#include "RGSC/RGSC.hpp"
+//#include "RGSC/RGSC.hpp"
 #include "vnd.hpp"
 
 using namespace std;
@@ -22,8 +22,8 @@ int main() {
 		bool improved = false;
 		
 	//début
-/*
-		//dist.afficher();
+
+		dist.afficher();
 
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
@@ -54,6 +54,28 @@ int main() {
     	cout<<"solution ameliorée par 3-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
 
+    	//test du 2-opt plus profonde descente
+		construireSolNNH(sol, &dist);
+		cout<<"calcul 2-opt PPD"<<endl;
+		t = clock();
+		do{
+			ameliorerSol2OptPPD(sol, &dist, &improved);
+    	} while (improved);
+    	t = clock() - t;
+    	cout<<"solution ameliorée par 2-opt PPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
+    	afficheSol(sol, &dist);
+
+    	//test du 2-opt plus profonde descente
+		construireSolNNH(sol, &dist);
+		cout<<"calcul 3-opt PPD"<<endl;
+		t = clock();
+		do{
+			ameliorerSol3OptPPD(sol, &dist, &improved);
+    	} while (improved);
+    	t = clock() - t;
+    	cout<<"solution ameliorée par 3-opt PPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
+    	afficheSol(sol, &dist);
+
     	//test du vnd avec 2 et 3 opt
     	construireSolNNH(sol, &dist);
     	cout<<"calcul vnd"<<endl;
@@ -63,13 +85,22 @@ int main() {
     	cout<<"solution ameliorée par vnd (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
 
+    	//test du vnd avec 2 et 3 opt
+    	construireSolNNH(sol, &dist);
+    	cout<<"calcul vndPPD"<<endl;
+    	t = clock();
+		vndPPD(sol, &dist);
+    	t = clock() - t;
+    	cout<<"solution ameliorée par vndPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
+    	afficheSol(sol, &dist);
+
     	//dist.affichepourglpk();
 
-*/
 
+/*
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit();
-
+*/
 	//fin
 	delete(sol);
 

@@ -24,7 +24,7 @@ void construireSolNNH(int * sol, const Distancier * const dist);
 * \param[in] sol la solution
 * \param[in] dist le distancier
 */
-int calculerLongueurCircuitSol(const int * sol, const Distancier * const dist);
+int calculerLongueurCircuitSol(const int * const sol, const Distancier * const dist);
 
 /**
 * \brief améliore la solution actuelle à l'aide du 2-opt
@@ -34,6 +34,15 @@ int calculerLongueurCircuitSol(const int * sol, const Distancier * const dist);
 * \param[out] improved indique si la solution a été amélioré
 */
 void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved);
+
+/**
+* \brief améliore la solution actuelle à l'aide du 2-opt en plus profonde descence
+*
+* \param[in,out] sol le tableau qui contien l'ordre de parcour des villes, après la meileure solution dans le voisinage
+* \param[in] dist le distancier
+* \param[out] improved indique si la solution a été amélioré
+*/
+void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improved);
 
 /**
 * \brief affiche la solution dans le terminal

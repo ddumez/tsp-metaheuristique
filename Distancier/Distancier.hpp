@@ -48,10 +48,6 @@ class Distancier {
 			 */
 			void afficher() const;
 
-			/**
-			* \brief affiche le distancier pour glpk
-			*/
-			void affichepourglpk() const;
 			
 	// Methodes
 		public :
