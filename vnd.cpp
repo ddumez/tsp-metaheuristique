@@ -47,12 +47,10 @@ void vndPPD(int * sol, const Distancier * const dist) {
 }
 
 bool deuxoptPPDconverge(int * sol, const Distancier * const dist) {
-cout<<"deuxoptPPDconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 	bool improved = true;
 	int k = 0;
 	do{
 		ameliorerSol2OptPPD(sol, dist, &improved);
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
     	++k;
     } while (improved);
     return 1 != k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
@@ -64,6 +62,7 @@ cout<<"troisoptPPDconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 	int k = 0;
 	do{
 		ameliorerSol3OptPPD(sol, dist, &improved);
+cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
 		++k;
     } while (improved);
 	return 1 != k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
