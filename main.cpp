@@ -25,7 +25,7 @@ int main() {
 		
 	//début
 
-		dist.afficher();
+		//dist.afficher();
 
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
@@ -65,7 +65,7 @@ int main() {
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
 
-    	//test du 2-opt plus profonde descente
+    	//test du 3-opt plus profonde descente
 		construireSolNNH(sol, &dist);
 		cout<<"calcul 3-opt PPD"<<endl;
 		t = clock();
@@ -74,7 +74,7 @@ int main() {
     	cout<<"solution ameliorée par 3-opt PPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-
+*/
     	//test du vnd avec 2 et 3 opt
     	construireSolNNH(sol, &dist);
     	cout<<"calcul vnd"<<endl;
@@ -84,7 +84,7 @@ int main() {
     	cout<<"solution ameliorée par vnd (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-
+/*
     	//test du vnd avec 2 et 3 opt plus profonde descente
     	construireSolNNH(sol, &dist);
     	cout<<"calcul vndPPD"<<endl;
@@ -94,7 +94,7 @@ int main() {
     	cout<<"solution ameliorée par vndPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-
+*/
         //test du vns avec 2 et 3 opt
         construireSolNNH(sol, &dist);
         cout<<"calcul vns"<<endl;
@@ -104,7 +104,7 @@ int main() {
         cout<<"solution ameliorée par vns (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
         afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-
+/*
         //test du vns avec 2 et 3 opt plus profonde descente
         construireSolNNH(sol, &dist);
         cout<<"calcul vnsPPD"<<endl;

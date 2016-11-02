@@ -12,34 +12,28 @@ void vnd(int * sol, const Distancier * const dist) {
 	bool improved = true;
 	do {
 		deuxoptconverge(sol, dist);
-		cout<<"avant 3opt : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 		ameliorerSol3OPT( sol, dist, &improved);
-		cout<<"après 3opt : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 	} while (improved);
 }
 
 bool deuxoptconverge(int * sol, const Distancier * const dist) {
-cout<<"deuxoptconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 	bool improved = true;
 	int k = 0;
 	do{
 		ameliorerSol2OPT(sol, dist, &improved);
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
     	++k;
     } while (improved);
-    return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+    return 1 != k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
 }
 
 bool troisoptconverge(int * sol, const Distancier * const dist) {
-cout<<"troisoptconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 	bool improved = true;
 	int k = 0;
 	do{
 		ameliorerSol3OPT(sol, dist, &improved);
 		++k;
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
     } while (improved);
-	return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+	return 1 != k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
 }
 
 void vndPPD(int * sol, const Distancier * const dist) {
@@ -61,7 +55,7 @@ cout<<"deuxoptPPDconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
     	++k;
     } while (improved);
-    return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+    return 1 != k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
 }
 
 bool troisoptPPDconverge(int * sol, const Distancier * const dist) {
@@ -71,7 +65,6 @@ cout<<"troisoptPPDconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 	do{
 		ameliorerSol3OptPPD(sol, dist, &improved);
 		++k;
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
     } while (improved);
-	return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+	return 1 != k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
 }

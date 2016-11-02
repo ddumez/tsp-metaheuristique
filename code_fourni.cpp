@@ -161,7 +161,6 @@ double zSol = calculerLongueurCircuitSol(sol, dist);
 			}
 		}
 
-cout<<"compare : "<<zSol + zdiff<<" et "<<calculerLongueurCircuitSol(sol, dist)<<endl; 
 	}
 }
 

@@ -60,7 +60,6 @@ int * vns(int * sol, const Distancier * const dist) {
 			} else {
 				k = 1;	//on a amélioré
 			}
-
 		} while (! stop);
 	//fin
 

@@ -21,7 +21,6 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 		for (i = 0; i < taille; ++i) {
 			for (j = 0; j < taille-5; ++j) {
 				for(n = 0; n < taille-6-j; ++n) {
-
 					//calcul de iD, iF, jD, jF, nD, nF
 					iD= i % taille;
 					iF= (i+1) % taille;
@@ -46,7 +45,6 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 						if(d[k] < d[min]) {min = k;}
 					}
 
-
 					//application du meilleur parcour
 					switch(min) {
 						case 0:
@@ -70,7 +68,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 								tmp1 = sol[iD];
 								sol[iD] = sol[nF];
 								sol[nF] = tmp1;
-								inverseSens(sol, nF, iD, taille);			
+								inverseSens(sol, nF, iD, taille);
 								*improved = true;
 							break;
 						case 4:
@@ -82,7 +80,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 								sol[jF] = tmp2;
 								sol[nD] = tmp3;
 								sol[jD] = tmp4;
-								inverseSens(sol, jF, nD, taille);							
+								inverseSens(sol, jF, nD, taille);
 								*improved = true;
 							break;
 						case 5:
@@ -94,7 +92,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 								sol[jF] = tmp2;
 								sol[iF] = tmp3;
 								sol[jD] = tmp4;		
-								inverseSens(sol, iF, jD, taille);			
+								inverseSens(sol, iF, jD, taille);
 								*improved = true;
 							break;
 						case 6:
@@ -106,7 +104,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 								sol[iD] = tmp2;
 								sol[nF] = tmp3;
 								sol[iF] = tmp4;		
-								inverseSens(sol, iF, jD, taille);				
+								inverseSens(sol, iF, jD, taille);
 								*improved = true;
 							break;
 						case 7:
@@ -118,7 +116,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 								sol[nD] = tmp2;
 								sol[iF] = tmp3;
 								sol[jD] = tmp4;
-								*improved = true;		
+								*improved = true;
 							break;
 					}
 				}
@@ -186,7 +184,6 @@ void ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improve
 
 		//application du meilleur movement trouve
 		if(*improved) {
-double zsol = calculerLongueurCircuitSol(sol, dist);
 			//re-calcul des indices
 			iD = ibest % taille;
 			iF = (ibest+1) % taille;
@@ -213,7 +210,7 @@ double zsol = calculerLongueurCircuitSol(sol, dist);
 						tmp1 = sol[iD];
 						sol[iD] = sol[nF];
 						sol[nF] = tmp1;
-						inverseSens(sol, nF, iD, taille);			
+						inverseSens(sol, nF, iD, taille);
 					break;
 				case 4:
 						tmp1 = sol[nD];
@@ -259,14 +256,12 @@ double zsol = calculerLongueurCircuitSol(sol, dist);
 						sol[jD] = tmp4;
 					break;
 			}
-cout<<"compare : "<<zsol + zdiff<<" et "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 		}
 	//fin
 }
 
-void inverseSens(int * sol, const int ii, const int j, const int n) {
+void inverseSens(int * sol, const int i, const int j, const int n) {
 	int tmp;
-	int i = ii-1;//pour retomber sur l'algo d'inversion donne
 	if (i-1 < j) {
 		for (int k=1; k<=(j-(i+1))/2; k++) {
 			tmp = sol[i+k];
