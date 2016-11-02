@@ -11,7 +11,7 @@ void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved) 
 	//variable
 		int iD, iF, jD, jF, nD, nF; //indice dans la solution des arretes consideres
 		const int taille = dist->getN();
-		int d[8];
+		double d[8];
 		int i,j,n,k, min;
 		int tmp1, tmp2, tmp3, tmp4;
 
@@ -132,14 +132,11 @@ void ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improve
 	//variable
 		int iD, iF, jD, jF, nD, nF; //indice dans la solution des arretes consideres
 		const int taille = dist->getN();
-		int d[8];
+		double d[8];
 		int i,j,n,k, min;
 		int tmp1, tmp2, tmp3, tmp4;
 		int ibest, jbest, nbest, mbest;
-
-
-		int zbest = calculerLongueurCircuitSol(sol, dist);
-		const int zsol = zbest; //au debut c'est la meme chose
+		double zdiff = 0;
 	
 	//debut
 		*improved = false;
@@ -173,11 +170,11 @@ void ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improve
 					}
 
 					//test si c'est un meilleur mouvement
-					if (zsol - d[0] + d[min] < zbest) {
+					if (- d[0] + d[min] < zdiff) {
 						*improved = true;
 
 						//enregistrement de la meilleure solution actuele
-						zbest = zsol - d[0] + d[min];
+						zdiff = - d[0] + d[min];
 						ibest = i;
 						jbest = j;
 						nbest = n;
@@ -189,6 +186,7 @@ void ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improve
 
 		//application du meilleur movement trouve
 		if(*improved) {
+double zsol = calculerLongueurCircuitSol(sol, dist);
 			//re-calcul des indices
 			iD = ibest % taille;
 			iF = (ibest+1) % taille;
@@ -261,6 +259,7 @@ void ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improve
 						sol[jD] = tmp4;
 					break;
 			}
+cout<<"compare : "<<zsol + zdiff<<" et "<<calculerLongueurCircuitSol(sol, dist)<<endl;
 		}
 	//fin
 }

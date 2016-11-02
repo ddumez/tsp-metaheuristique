@@ -24,7 +24,7 @@ void construireSolNNH(int * sol, const Distancier * const dist);
 * \param[in] sol la solution
 * \param[in] dist le distancier
 */
-int calculerLongueurCircuitSol(const int * const sol, const Distancier * const dist);
+double calculerLongueurCircuitSol(const int * const sol, const Distancier * const dist);
 
 /**
 * \brief améliore la solution actuelle à l'aide du 2-opt

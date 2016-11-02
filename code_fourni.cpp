@@ -8,7 +8,8 @@ using namespace std;
 void construireSolNNH(int * sol, const Distancier * const dist) {
 	int i,j;
 	int n = dist->getN();
-	int min, jmin;
+	double min; 
+	int jmin;
 	int tmp;
 
 	//initialise la solution avec un circuit qui correspond a la permutation identite
@@ -37,24 +38,23 @@ void construireSolNNH(int * sol, const Distancier * const dist) {
 	}
 }
 
-int calculerLongueurCircuitSol(const int * const sol, const Distancier * const dist) {
-	int  zSol = 0; // longueur du circuit hamiltonien
+double calculerLongueurCircuitSol(const int * const sol, const Distancier * const dist) {
+	double zSol = 0; // longueur du circuit hamiltonien
 
 	// les distances i a j depuis ville depart
-	for (int k = dist->getN(); k > 0; --k) {
+	for (int k = dist->getN()-1; k > 0; --k) {
 		zSol += dist->getDistance( sol[k] , sol[k-1]);
 	}
 	
 	// dernier segments qui revient a la ville de depart à la ville d'arrivé
 	zSol += dist->getDistance( sol[dist->getN()-1] , sol[0]);
-
 	return zSol;
 }
 
 void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) {
 	int i,j,k,tmp;
 	int iD, iF, jD, jF;
-	int d1, d2;
+	double d1, d2;
 	const int taille = dist->getN();
 
 	*improved = false;
@@ -73,7 +73,7 @@ void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) 
 			if (d1>d2) {
 				// amelioration detectee
 				*improved = true; // notifie que une amelioration est detectee
-				       
+
 				//application du changement 
 				tmp = sol[iF];
 				sol[iF] = sol[jD];
@@ -104,8 +104,7 @@ void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improve
 	int d1, d2;
 	const int taille = dist->getN();
 
-	int zbest = calculerLongueurCircuitSol(sol, dist);
-	const int zsol = zbest; //au debut c'est la meme chose
+	double zdiff = 0; 
 	int ibest, jbest;
 
 	*improved = false;
@@ -122,19 +121,20 @@ void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improve
 			d1 = dist->getDistance( sol[iD] , sol[iF] ) + dist->getDistance( sol[jD] , sol[jF] );
 			d2 = dist->getDistance( sol[iD] , sol[jD] ) + dist->getDistance( sol[iF] , sol[jF] );
 
-			if (zsol - d1 + d2 < zbest) {
+			if (- d1 + d2 < zdiff) {
 				// amelioration detectee
 				*improved = true; // notifie que une amelioration est detectee
 				 
 				//on note la modification
 				ibest = i; jbest = j;
-				zbest = zsol - d1 + d2; //on calcule le nouveau score relativement a celui de sol
+				zdiff = - d1 + d2; //on calcule le nouveau score relativement a celui de sol
 			} // Fin traitement suite amelioration detectee
 		}
 	}
 
 	//application de la meilleure modification trouvee
-	if (*improved) {      
+	if (*improved) {
+double zSol = calculerLongueurCircuitSol(sol, dist);      
 		//re-calcul des indices
 		iD=ibest %taille;
 		iF=(ibest+1)%taille;
@@ -160,6 +160,8 @@ void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improve
 				sol[(taille+jD-k)%taille] = tmp;
 			}
 		}
+
+cout<<"compare : "<<zSol + zdiff<<" et "<<calculerLongueurCircuitSol(sol, dist)<<endl; 
 	}
 }
 
