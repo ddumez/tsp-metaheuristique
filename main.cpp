@@ -9,7 +9,7 @@
 #include "./Distancier/Distancier.hpp"
 #include "code_fourni.hpp"
 #include "./3-opt/3opt.hpp"
-//#include "RGSC/RGSC.hpp"
+#include "RGSC/RGSC.hpp"
 #include "vnd.hpp"
 
 using namespace std;
@@ -23,7 +23,7 @@ int main() {
 		
 	//début
 
-		dist.afficher();
+		/*dist.afficher();
 
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
@@ -94,13 +94,13 @@ int main() {
     	cout<<"solution ameliorée par vndPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
 
-    	//dist.affichepourglpk();
+    	//dist.affichepourglpk();*/
 
 
-/*
+
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit();
-*/
+
 	//fin
 	delete(sol);
 
