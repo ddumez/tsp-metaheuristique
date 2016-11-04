@@ -14,53 +14,55 @@
 /**
 * \brief applique la meaheuristique vnd sur cette solution
 *
-* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] sol la solution sur laquelle on travaille
 * \param[in] dist le distancier
+* \retunr la meilleure solution trouve par vnd
 */
-void vnd(int * sol, const Distancier * const dist);
+int * vnd(int * sol, const Distancier * const dist);
 
 /**
 * \brief utilise 2-opt sur sol jusqu'a un min local
 *
-* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] sol la solution sur laquelle on travaille
 * \param[in] dist le distancier
-* \return si la solution a ete ameliore
+* \return la meilleure solution trouve par une succession de 2opt
 */
-bool deuxoptconverge(int * sol, const Distancier * const dist);
+int * deuxoptconverge(int * sol, const Distancier * const dist);
 
 /**
 * \brief utilise 3-opt sur sol jusqu'a un min local
 *
-* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] sol la solution sur laquelle on travaille
 * \param[in] dist le distancier
-* \return si la solution a ete ameliore
+* \return la meillure solution trouve
 */
-bool troisoptconverge(int * sol, const Distancier * const dist);
+int * troisoptconverge(int * sol, const Distancier * const dist);
 
 /**
 * \brief applique la meaheuristique vnd sur cette solution
 *
-* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] sol la solution sur laquelle on travaille
 * \param[in] dist le distancier
+* \return la meilleure solution trouve
 */
-void vndPPD(int * sol, const Distancier * const dist);
+int * vndPPD(int * sol, const Distancier * const dist);
 
 /**
 * \brief utilise 2-opt sur sol jusqu'a un min local
 *
-* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] sol la solution sur laquelle on travaille
 * \param[in] dist le distancier
-* \return si la solution a ete ameliore
+* \return la meillure solution trouve
 */
-bool deuxoptPPDconverge(int * sol, const Distancier * const dist);
+int * deuxoptPPDconverge(int * sol, const Distancier * const dist);
 
 /**
 * \brief utilise 3-opt sur sol jusqu'a un min local
 *
-* \param[in,out] sol la solution sur laquelle on travaille
+* \param[in] sol la solution sur laquelle on travaille
 * \param[in] dist le distancier
-* \return si la solution a ete ameliore
+* \return la meilleure solution trouve
 */
-bool troisoptPPDconverge(int * sol, const Distancier * const dist);
+int * troisoptPPDconverge(int * sol, const Distancier * const dist);
 
 #endif

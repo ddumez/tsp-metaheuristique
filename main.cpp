@@ -38,37 +38,37 @@ int main() {
 		//test du 2-opt
 		cout<<"calcul 2-opt"<<endl;
 		t = clock();
-		deuxoptconverge(sol, &dist);
+		sol = deuxoptconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 2-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-/*
+
     	//test du 3-opt
     	construireSolNNH(sol, &dist);
     	cout<<"calcul 3-opt"<<endl;
     	t = clock();
-		troisoptconverge(sol, &dist);
+		sol = troisoptconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 3-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-*/
+
     	//test du 2-opt plus profonde descente
 		construireSolNNH(sol, &dist);
 		cout<<"calcul 2-opt PPD"<<endl;
 		t = clock();
-		deuxoptPPDconverge(sol, &dist);
+		sol = deuxoptPPDconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 2-opt PPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-/*
+
     	//test du 3-opt plus profonde descente
 		construireSolNNH(sol, &dist);
 		cout<<"calcul 3-opt PPD"<<endl;
 		t = clock();
-		troisoptPPDconverge(sol, &dist);
+		sol = troisoptPPDconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 3-opt PPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
@@ -78,7 +78,7 @@ int main() {
     	construireSolNNH(sol, &dist);
     	cout<<"calcul vnd"<<endl;
     	t = clock();
-		vnd(sol, &dist);
+		sol = vnd(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par vnd (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
@@ -88,7 +88,7 @@ int main() {
     	construireSolNNH(sol, &dist);
     	cout<<"calcul vndPPD"<<endl;
     	t = clock();
-		vndPPD(sol, &dist);
+		sol = vndPPD(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par vndPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
@@ -113,7 +113,7 @@ int main() {
         cout<<"solution ameliorée par vnsPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
         afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-*/
+
 
 
 /*

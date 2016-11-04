@@ -51,7 +51,7 @@ double calculerLongueurCircuitSol(const int * const sol, const Distancier * cons
 	return zSol;
 }
 
-void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) {
+int * ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) {
 	int i,j,k,tmp;
 	int iD, iF, jD, jF;
 	double d1, d2;
@@ -96,9 +96,10 @@ void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) 
 			} // Fin traitement suite amelioration detectee
 		}
 	}
+	return sol;
 }
 
-void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improved) {	
+int * ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improved) {	
 	int i,j,k,tmp;
 	int iD, iF, jD, jF;
 	double d1, d2;
@@ -160,6 +161,7 @@ void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improve
 			}
 		}
 	}
+	return sol;
 }
 
 void afficheSol(const int * const sol, const Distancier * const dist) {
