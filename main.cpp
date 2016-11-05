@@ -20,6 +20,11 @@ int main() {
 		clock_t t;
 		Distancier dist ("./Datas/distancier20.dat");
 		//Distancier dist ("./Datas/ouest.dat");
+        //Distancier dist ("./Datas/a280.dat"); //z best sol : 2579
+        //Distancier dist ("./Datas/att48.dat"); //z best sol : 10628
+        //Distancier dist ("./Datas/berlin52.dat"); //z best sol : 7542
+        //Distancier dist ("./Datas/ch130.dat"); //z best sol : 6110
+        //Distancier dist ("./Datas/ch150.dat"); //z best sol : 6528
         int * sol = new int[dist.getN()];
 		bool improved = false;
 		
