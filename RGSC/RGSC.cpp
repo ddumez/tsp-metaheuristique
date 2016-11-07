@@ -85,11 +85,12 @@ void RGSC::afficherCouples(const int i) {
 /// ALLOUER MEMOIRE COUPLES
 void RGSC::calculerTailles() {
 	int N = this->D->getN();
-	this->nbMariage = 1; // = 0;
+	this->nbMariage = 2; // = 0;
 	
 	this->tailles.push_back(N);
 	while (N > 1) {
 		this->tailles.push_back(N);
+		cout << "N="<<N<<endl;
 		if (N%2==0) {
 			N = N / 2;
 		} else {
@@ -97,6 +98,8 @@ void RGSC::calculerTailles() {
 		}
 		this->nbMariage = this->nbMariage + 1;
 	}
+	this->tailles.push_back(N);
+	cout << "nbMariage="<< this->nbMariage << endl;
 }
 
 void RGSC::initialiserCouples() {
@@ -252,19 +255,17 @@ void RGSC::unir(int indC1, int indC2, int v1, int v2, double dist) {
 	
 	if (c1.compagnon != -1) {	// si c1 est déjà uni
 		compagnon = this->couples[this->iteration][c1.compagnon];
-		c1.longueur = c1.longueur - getDistance(c1.vDom, compagnon.vDom);
+		//~ c1.longueur = c1.longueur - getDistance(c1.vDom, compagnon.vDom);
 		compagnon.compagnon = -1;
 		compagnon.vDom = -1;
-		compagnon.longueur = 0;
 		this->couples[this->iteration][c1.compagnon] = compagnon;
 		avancement = avancement + 2;
 	}
 	if (c2.compagnon != -1) {	// si c2 est déjà uni
 		compagnon = this->couples[this->iteration][c2.compagnon];
-		c2.longueur = c2.longueur - getDistance(c2.vDom, compagnon.vDom);
+		//~ c2.longueur = c2.longueur - getDistance(c2.vDom, compagnon.vDom);
 		compagnon.compagnon = -1;
 		compagnon.vDom = -1;
-		compagnon.longueur = 0;
 		this->couples[this->iteration][c2.compagnon] = compagnon;
 		avancement = avancement + 2;
 	}
@@ -273,12 +274,38 @@ void RGSC::unir(int indC1, int indC2, int v1, int v2, double dist) {
 	c2.compagnon = indC1;
 	c1.vDom = v1;
 	c2.vDom = v2;
-	c1.longueur = c1.longueur + dist;
-	c2.longueur = c1.longueur;
 	
 	this->couples[this->iteration][indC1] = c1;
 	this->couples[this->iteration][indC2] = c2;
 	this->couplesRestant = this->couplesRestant + avancement;
+}
+
+void RGSC::fermerCircuit() {
+	couple c1 = this->couples[this->iteration][0];
+	couple c2 = this->couples[this->iteration][1];
+	int v11, v12, v21, v22;
+	v11 = c1.ext1;
+	v12 = c1.ext2;
+	v21 = c2.ext1;
+	v22 = c2.ext2;
+	long dist11 = getDistance(c1.ext1, c2.ext1);
+	long dist12 = getDistance(c1.ext1, c2.ext2);
+	long dist21 = getDistance(c1.ext2, c2.ext1);
+	long dist22 = getDistance(c1.ext2, c2.ext2);
+	
+	if (dist11+dist22 < dist12+dist21) {
+		unir(0, 1, v11, v21, dist11);
+	} else {
+		unir(0, 1, v11, v22, dist12);
+	}
+	
+	initNextIter();
+	
+	if (dist11+dist22 < dist12+dist21) {
+		unir(0, 0, v12, v22, dist22);
+	} else {
+		unir(0, 0, v12, v21, dist21);
+	}
 }
 
 void RGSC::marier() {
@@ -295,7 +322,7 @@ void RGSC::marier() {
 			indPref = c1.indPref;
 			uni = false;
 			
-			//~ afficherCouples();
+			afficherCouples();
 
 			while ((!uni) && (indPref < nbSC)) {	// Tant que c1 n'est pas relié et qu'on a pas tout essayé
 				//~ cout << endl;
@@ -318,6 +345,7 @@ void RGSC::marier() {
 				}
 			}
 			this->couples[iter][indC1].indPref = indPref + 1;
+			/// ALGORITHME NON CONVERGENT ??????
 		}
 	}
 }
@@ -336,7 +364,7 @@ void RGSC::initNextIter() {
 			//~ cout << "nouv.c1="<<nouv.c1<<endl;
 			nouv.c2 = -1;
 			nouv.compagnon = -1;
-			nouv.v1 = c.vDom;
+			nouv.v1 = c.vDom;	/// Ou -1 ?
 			nouv.v2 = -1;
 			nouv.ext1 = c.ext1;
 			nouv.ext2 = c.ext2;
@@ -355,8 +383,16 @@ void RGSC::initNextIter() {
 			nouv.compagnon = -1;
 			nouv.v1 = c.vDom;
 			nouv.v2 = compagnon.vDom;
-			(c.ext1 == c.vDom) ? : nouv.ext1=c.ext2; nouv.ext1=c.ext1;
-			(compagnon.ext1 == compagnon.vDom) ? : nouv.ext2=compagnon.ext2; nouv.ext2=compagnon.ext1;
+			if ((c.ext1 != c.vDom) || (c.ext2 == -1)) {
+				nouv.ext1 = c.ext1;
+			} else {
+				nouv.ext1 = c.ext2;
+			}
+			if ((compagnon.ext1 != compagnon.vDom) || (compagnon.ext2 == -1)) {
+				nouv.ext2 = compagnon.ext1;
+			} else {
+				nouv.ext2 = compagnon.ext2;
+			}
 			nouv.vDom = -1;
 			nouv.indPref = 1;
 			nouv.longueur = c.longueur + compagnon.longueur + getDistance(nouv.v1, nouv.v2);
@@ -369,25 +405,15 @@ void RGSC::initNextIter() {
 }
 
 void RGSC::construireCircuit() {
-	initNextIter();
-	genererPreferences();
-	marier();
-	cout << "COCO" << endl;
-	initNextIter();
-	genererPreferences();
-	marier();
 	
+	for (int i = 3; i < nbMariage; ++i) {
+		cout << i << endl;
+		initNextIter();
+		genererPreferences();
+		marier();
+	}
 	initNextIter();
-	genererPreferences();
-	marier();
-	
-	initNextIter();
-	genererPreferences();
-	marier();
-	
-	initNextIter();
-	genererPreferences();
-	marier();
+	fermerCircuit();
 	
 	afficherCouples();
 }

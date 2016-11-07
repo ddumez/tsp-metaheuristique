@@ -80,9 +80,10 @@ class RGSC {
 			bool plusPres(const int depart, const int v1, const int v2) const;
 			void plusProchesV1V2(const couple c1, const couple c2, int *v1, int *v2, double *dist) const;
 			bool accepteUnion(const couple c1, const couple c2) const;
-			void unir(const int c1, const int c2);
+			//~ void unir(const int c1, const int c2);
 			void unir(int indC1, int indC2, int v1, int v2, double dist);
 			void initNextIter();
+			void fermerCircuit();
 			void marier();
 			
 		public :

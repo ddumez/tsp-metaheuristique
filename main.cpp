@@ -18,28 +18,23 @@ using namespace std;
 int main() {
 	//variables
 		clock_t t;
-<<<<<<< HEAD
 		Distancier dist ("./Datas/distancier20.dat");
 		//Distancier dist ("./Datas/ouest.dat");
-=======
 		//Distancier dist ("./Datas/distancier20.dat");
 		//Distancier dist ("./Datas/ouest.dat");
         //Distancier dist ("./Datas/att48.dat"); //z best sol : 10628
-        Distancier dist ("./Datas/berlin52.dat"); //z best sol : 7542
+        //Distancier dist ("./Datas/berlin52.dat"); //z best sol : 7542
         //Distancier dist ("./Datas/ch130.dat"); //z best sol : 6110
         //Distancier dist ("./Datas/ch150.dat"); //z best sol : 6528
         //Distancier dist ("./Datas/a280.dat"); //z best sol : 2579
->>>>>>> 74eb319fd671fec972645e297f38ebef55af79f6
         int * sol = new int[dist.getN()];
 		bool improved = false;
 		
 	//début
-<<<<<<< HEAD
 /*
 		dist.afficher();
-=======
+
 		//dist.afficher();
->>>>>>> 74eb319fd671fec972645e297f38ebef55af79f6
 
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
@@ -128,12 +123,13 @@ int main() {
         cout<<"solution ameliorée par vnsPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
         afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-
+*/
 
 
 
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit();
+		//~ dist.afficher();
 
 	//fin
 	delete(sol);
