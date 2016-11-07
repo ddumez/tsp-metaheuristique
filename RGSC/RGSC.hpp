@@ -90,6 +90,7 @@ class RGSC {
 			void fermerCircuit();
 			void marier();
 			void deroulerSolution(int *sol) const;
+			void deleteCouples();
 			
 		public :
 			int getN() const;

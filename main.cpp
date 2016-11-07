@@ -23,10 +23,10 @@ int main() {
 		//Distancier dist ("./Datas/distancier20.dat"); //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); //pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
-        //Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
+        Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
         //Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
-        Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
+        //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
 		bool improved = false;
         double sumz, maxz, minz, zsol;;
@@ -40,7 +40,7 @@ int main() {
 		cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
 
 		//test du NNH
-		cout<<"calcul NNH"<<endl;
+/*		cout<<"calcul NNH"<<endl;
 		t = clock();
 		construireSolNNH(sol, &dist);
 		t = clock() - t;
@@ -48,7 +48,7 @@ int main() {
 //		afficheSol(sol, &dist);
 //      cout<<"\n"<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
-
+*/
 		//test du 2-opt
 		cout<<"calcul 2-opt"<<endl;
 		t = clock();
@@ -59,10 +59,11 @@ int main() {
 //      cout<<"\n"<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
         delete(sol);
-
+		
     	//test du 3-opt
         sol = new int[dist.getN()];
-    	construireSolNNH(sol, &dist);
+///    	construireSolNNH(sol, &dist);
+    	rgsc.construireCircuit(sol);
     	cout<<"calcul 3-opt"<<endl;
     	t = clock();
 		sol = troisoptconverge(sol, &dist);
@@ -75,7 +76,8 @@ int main() {
 
     	//test du 2-opt plus profonde descente
         sol = new int[dist.getN()];
-		construireSolNNH(sol, &dist);
+///		construireSolNNH(sol, &dist);
+		rgsc.construireCircuit(sol);
 		cout<<"calcul 2-opt PPD"<<endl;
 		t = clock();
 		sol = deuxoptPPDconverge(sol, &dist);
@@ -88,7 +90,8 @@ int main() {
 
     	//test du 3-opt plus profonde descente
         sol = new int[dist.getN()];
-		construireSolNNH(sol, &dist);
+///		construireSolNNH(sol, &dist);
+		rgsc.construireCircuit(sol);
 		cout<<"calcul 3-opt PPD"<<endl;
 		t = clock();
 		sol = troisoptPPDconverge(sol, &dist);
@@ -101,7 +104,8 @@ int main() {
 
     	//test du vnd avec 2 et 3 opt
         sol = new int[dist.getN()];
-    	construireSolNNH(sol, &dist);
+///		construireSolNNH(sol, &dist);
+		rgsc.construireCircuit(sol);
     	cout<<"calcul vnd"<<endl;
     	t = clock();
 		sol = vnd(sol, &dist);
@@ -114,7 +118,8 @@ int main() {
 
     	//test du vnd avec 2 et 3 opt plus profonde descente
         sol = new int[dist.getN()];
-    	construireSolNNH(sol, &dist);
+///		construireSolNNH(sol, &dist);
+		rgsc.construireCircuit(sol);
     	cout<<"calcul vndPPD"<<endl;
     	t = clock();
 		sol = vndPPD(sol, &dist);
@@ -130,7 +135,8 @@ int main() {
         cout<<"calcul vns"<<endl;
         for(int i = 0; i<NBITER; ++i) {
             sol = new int[dist.getN()];
-            construireSolNNH(sol, &dist);
+///			construireSolNNH(sol, &dist);
+			rgsc.construireCircuit(sol);
             t = clock();
             sol = vns(sol, &dist);
             t = clock() - t;
@@ -161,7 +167,8 @@ int main() {
         cout<<"calcul vnsPPD"<<endl;
         for(int i = 0; i<NBITER; ++i) {
             sol = new int[dist.getN()];
-            construireSolNNH(sol, &dist);
+///			construireSolNNH(sol, &dist);
+			rgsc.construireCircuit(sol);
             t = clock();
             sol = vnsPPD(sol, &dist);
             t = clock() - t;
@@ -181,7 +188,7 @@ int main() {
             sumt += t;
             sumz += zsol;
 
-            delete(sol);   
+            delete(sol);
         }
         cout<<"moyenne de la valeur trouve par vns : "<<(double)((double)sumz/(double)NBITER)<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<"\n"<<endl;        
 

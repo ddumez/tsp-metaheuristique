@@ -17,8 +17,6 @@ RGSC::RGSC(Distancier *D) {
 	this->iteration = 0;
 	
 	calculerTailles();
-	initialiserCouples();
-	//~ genererPreferences();
 }
 
 //----------------------------------------------------------------------
@@ -26,7 +24,7 @@ RGSC::RGSC(Distancier *D) {
 //----------------------------------------------------------------------
 
 RGSC::~RGSC() {
-	/// DETRUIRE int**couples
+	//deleteCouples();
 }
 
 //----------------------------------------------------------------------
@@ -144,6 +142,13 @@ void RGSC::initialiserCouples() {
 		c.longueur = 0;
 		this->couples[0][i] = c;
 	}
+}
+
+void RGSC::deleteCouples() {
+	for (int i = 0; i < this->nbMariage; ++i) {
+		delete [] couples[i];
+	}
+	delete [] couples;
 }
 
 void RGSC::genererPreferences() {
@@ -406,6 +411,9 @@ void RGSC::initNextIter() {
 }
 
 void RGSC::construireCircuit(int *sol) {
+	this->iteration = 0;
+	initialiserCouples();
+	
 	for (int i = 3; i < nbMariage; ++i) {
 		//~ cout << i << endl;
 		initNextIter();
@@ -418,6 +426,7 @@ void RGSC::construireCircuit(int *sol) {
 	//~ afficherCouples();
 	
 	deroulerSolution(sol);
+	deleteCouples();
 }
 
 void RGSC::deroulerSolution(int *sol) const {
