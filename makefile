@@ -1,6 +1,6 @@
 CC = g++
 SOURCES = ./Distancier/Distancier.cpp ./code_fourni.cpp ./RGSC/RGSC.cpp ./3-opt/3opt.cpp ./vnd.cpp ./vns.cpp
-CFLAGS = -Wall -g
+CFLAGS = -Wall -O3
 .PHONY = clean
 
 all: main

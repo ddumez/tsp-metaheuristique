@@ -90,7 +90,7 @@ void RGSC::calculerTailles() {
 	this->tailles.push_back(N);
 	while (N > 1) {
 		this->tailles.push_back(N);
-		cout << "N="<<N<<endl;
+		//~ cout << "N="<<N<<endl;
 		if (N%2==0) {
 			N = N / 2;
 		} else {
@@ -99,7 +99,7 @@ void RGSC::calculerTailles() {
 		this->nbMariage = this->nbMariage + 1;
 	}
 	this->tailles.push_back(N);
-	cout << "nbMariage="<< this->nbMariage << endl;
+	//~ cout << "nbMariage="<< this->nbMariage << endl;
 }
 
 void RGSC::initialiserCouples() {
@@ -407,7 +407,7 @@ void RGSC::initNextIter() {
 
 void RGSC::construireCircuit(int *sol) {
 	for (int i = 3; i < nbMariage; ++i) {
-		cout << i << endl;
+		//~ cout << i << endl;
 		initNextIter();
 		genererPreferences();
 		marier();
@@ -415,7 +415,7 @@ void RGSC::construireCircuit(int *sol) {
 	initNextIter();
 	fermerCircuit();
 	
-	afficherCouples();
+	//~ afficherCouples();
 	
 	deroulerSolution(sol);
 }
@@ -468,18 +468,18 @@ void RGSC::deroulerSolution(int *sol) const {
 		}
 	}
 	
-	///AFFICHAGE
-	for (int i = 0; i < getN(); ++i) {
-		vois = voisinages[i];
-		cout<<i<<":\tv1="<<vois.v1<<"\tv2="<<vois.v2<<endl;
-	}cout<<endl;
+	//~ ///AFFICHAGE
+	//~ for (int i = 0; i < getN(); ++i) {
+		//~ vois = voisinages[i];
+		//~ cout<<i<<":\tv1="<<vois.v1<<"\tv2="<<vois.v2<<endl;
+	//~ }cout<<endl;
 	
 	vois = voisinages[0];
 	sol[0] = 0;
 	ville1 = 0;
 	ville2 = voisinages[ville1].v1;
 	for (int i = 1; i < getN(); ++i) {
-		cout<<"v1="<<vois.v1<<"v2="<<vois.v2<<endl;
+		//~ cout<<"v1="<<vois.v1<<"v2="<<vois.v2<<endl;
 		sol[i] = ville2;
 		vois = voisinages[ville2];
 		if (vois.v1 == ville1) {

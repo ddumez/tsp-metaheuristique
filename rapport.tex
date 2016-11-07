@@ -31,7 +31,7 @@ Il est alors évident que les 4 villes (iD, iF, jD, jF) doivent êtres différen
 Nous avons implémenté cet opérateur sous deux formes : en descente et en plus profonde descente.\\
 En plus profonde descente on teste toute les paires d'arc et on applique seulement celle qui conduit à la meilleure solution, ici celle dont le parcours est le plus cour.\\
 En descente on teste aussi toutes le paires d'arc mais cette fois ci on applique la modification dès qu'elle amélioré la solution. On ne s’arrête pas à la première solution trouve pour éviter de s'appesantir sur le début du cycle et pour éviter de le re-tester un trop grand nombre de fois à partir du moment où il se serait stabilisé.\\
-Dans les deux cas on va tester $O(nbVille^2)$ changement mais appliquer l'opérateur 2-opt s’effectue en $O(nbVille)$ car on doit inverser le sens de parcours des villes situé entre iF et jD. Donc l'algorithme de descente est en $O(nbVille^3$ tandis que celui de plus profonde descente est en $O(nbVille^2)$. Mais cette complexité n'est que celle de amelioreSol2opt et amelioreSol2optPPD, donc ne prend pas en compte la vitesse de convergence de la solution vers un minimum local.\\
+Dans les deux cas on va tester $O(nbVille^2)$ changement mais appliquer l'opérateur 2-opt s’effectue en $O(nbVille)$ car on doit inverser le sens de parcours des villes situé entre iF et jD. Donc l'algorithme de descente est en $O(nbVille^3)$ tandis que celui de plus profonde descente est en $O(nbVille^2)$. Mais cette complexité n'est que celle de amelioreSol2opt et amelioreSol2optPPD, donc ne prend pas en compte la vitesse de convergence de la solution vers un minimum local.\\
 Ces complexité sont permise par le fait que l'on peut connaître à l'avance et en temps constant la taille du cycle hamiltonien après la modification.
  
 \subsection{3-opt}
@@ -43,44 +43,82 @@ Mais cette fois ci je n'ai pas réussis à trouver une méthode me permettant de
 La complexité du 3-opt est donc de $O(nbVille^4)$ car il y a $O(nbVille^3)$ ensemble de 3 arc possible et le test et la modification se font de en $O(nbVille)$, la modification restant en $O(nbVille)$ car des inversions du sens de parcours sont nécessaire sur la plupart d'entre elles.\\
 Et avec le 3-opt la plus profonde descente à la même complexité puisque on est obligé d'appliquer toutes les modifications pour les tester.\\
 
+\section{Algorithmes de recherche}
+
+Les deux opérateurs ayant une version normale et une en plus profonde descente tous les algorithmes suivants ont aussi deux versions. Ce sont toujours les mêmes, à la différence que l'une utilisera les opérateurs classiques et l'autre ceux en plus profonde descente.
+
+\subsection{Descente avec 2-opt}
+
+Cet algorithme part d'une solution que lui fournit une heuristique de construction puis l’améliore uniquement à l'aide de l'opérateur 2-opt. On utilise toujours le même opérateur sur la solution sur laquelle on travaille. On le fait jusqu’à tomber dans un minimum local, c'est à dire jusqu’à que que 2-opt ne puisse plus améliorer la solution.
+
+\subsection{Descente avec 3-opt}
+
+Cet algorithme est identique au précédent mais avec l'opérateur 3-opt.
+
+\subsection{vnd}
+
+Cette fonction implémente un algorithme V.N.D utilisant les opérateurs 2 et 3 opt dans cet ordre. Elle part d'une solution fournie par une heuristique de construction. Elle utilise le critère d’arrêt standard du vnd qui est d'avoir trouvé un minimum local, c'est à dire que ni 2-opt ni 3-opt ne peuvent améliorer la solution.
+
+\subsection{vns}
+
+Cette fonction implémente un algorithme V.N.S utilisant les opérateur 2 et 3 opt dans cet ordre. Elle part d'une solution fournit par une heuristique de construction. Elle va s’arrêter quand elle aura utilisé, successivement, une fois la recherche de voisin puis l'amélioration, avec 2-opt puis avec 3-opt sans amélioration. Il faudrait donc mener de plus ample expérimentation concernant ce critère d’arrêt. Notamment en leurs permettant chacun d'échouer plusieurs fois avant de passer à l'opérateur suivant ou en répétant ces 2 recherches plusieurs fois avant d'abandonner.
+
 \section{Expérimentation}
 \subsection{En partant de N.N.H.}
 PPD designe la variante de l'algorithme utilisant la plus profonde descente.\\
+Tous ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtemps} sont des moyennes effectuées sur 10 exécutions (sauf pour l'instance à 280 variables). Ces dernières sont données avec plus de détails dans le tableau \ref{variationvnsNNH}.\\
 
-\begin{table}[h]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
   \hline
-  48 & 281 & 225 & 230 & 223 & 225 & 225 & 223 & 224 & 223 \\
-  52 & 19 & 6,8 & 5,9 & 4 & 4 & 6,3 & 4 & 5,6 & 4 \\
-  130 & 24 & 10 & 12 & 6 & 5,7 & 10 & 5,7 & 8,4 & 5,7 \\
-  150 & 25 & 3,8 & 2,4 & 1,4 & 1,4 & 3,8 & 1,4 & 2,3 & 1,4 \\
+  48 & 281 & 225 & 230 & 223 & 225 & 225 & 223 & 220 & 223 \\
+  52 & 19 & 6,8 & 5,9 & 4 & 4 & 6,3 & 4 & 5.8 & 3.9 \\
+  130 & 24 & 10 & 12 & 6 & 5,7 & 10 & 5,7 & 6.1 & 5,7 \\
+  150 & 25 & 3,8 & 5.4 & 1,4 & 1,4 & 3,8 & 1,4 & 4.7 & 1.4 \\
   280 & 23,3 & 10,7 & 7,5 & 7,5 & 7,5 & 10 & 7,5 & 7,5 & 7,5 \\
   \hline
 \end{tabular}
 \caption{distance supplémentaire en pourcentage par rapport à la solution optimale}
-\label{NNHpourcentage}
+\label{NNHpourcentageperf}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
   \hline
-  48 & 1.2e-05 & 0.00026 & 0.375 & 0.0007 & 1.6701 & 0.166 & 0.173 & 0.664 & 0.33 \\
-  52 & 2.2e-05 & 0.00026 & 0.474 & 0.00097 & 2.7708 & 0.464 & 0.235 & 0.462 & 2.77 \\
-  130 & 9.5e-05 & 0.00354 & 18.5 & 0.01105 & 206.4 & 18.7 & 18.5 & 37.1 & 66.7 \\
-  150 & 8.9e-05 & 0.0026 & 33.5 & 0.01409 & 403.6 & 17.4 & 16.9 & 69.6 & 68.9 \\
-  280 & 0.00069 & 0.02320 & 616 & 0.0879 & 7785.99 & 671.396 & 213.633 & 440.933 & 843.438 \\ 
+  48 & 1.2e-05 & 0.00026 & 0.322 & 0.0007 & 1.576 & 0.161 & 0.161 & 0.41 & 0.603 \\
+  52 & 1.4e-05 & 0.00023 & 0.454 & 0.00091 & 2.618 & 0.442 & 0.223 & 0.65 & 0.594 \\
+  130 & 6.7e-05 & 0.0024 & 17.9 & 0.0117 & 202.2 & 18.7 & 18.3 & 32.5 & 112 \\
+  150 & 8.9e-05 & 0.0026 & 37.9 & 0.014 & 433.9 & 27.6 & 27.8 & 86 & 57.6 \\
+  280 & 0.00058 & 0.0172 & 584 & 0.084 & 7785 & 671 & 213 & 440 & 843 \\ 
   \hline
 \end{tabular}
 \caption{temps d’exécutions en secondes}
-\label{NNHpourcentage}
+\label{NNHtemps}
 \end{table}
-
+~\\
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{5}{c|}}
+  \hline
+  nbVille & variation temps & variation résultat & variation temps & variation résultat \\
+  ~ & vns & vns & vns PPD & vns PP \\
+  \hline
+  48 & 304 & 2.18 & 305 & 2.84e-14 \\ 
+  52 & 201 & 4.5 & 357 & 3.7 \\
+  130 & 302 & 4.9 & 202 & 3.1 \\
+  150 & 590 & 6.3 & 596 & 7.4 \\
+  \hline
+\end{tabular}
+\caption{variation proportionnelle des algorithmes vns}
+\label{variationvnsNNH}
+\end{table}
+~\\
 \subsection{En partant de R.G.S.C}
-
+bla
 \end{document}
