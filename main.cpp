@@ -9,7 +9,7 @@
 #include "./Distancier/Distancier.hpp"
 #include "code_fourni.hpp"
 #include "./3-opt/3opt.hpp"
-//#include "RGSC/RGSC.hpp"
+#include "RGSC/RGSC.hpp"
 #include "vnd.hpp"
 #include "vns.hpp"
 
@@ -18,13 +18,13 @@ using namespace std;
 int main() {
 	//variables
 		clock_t t;
-		//Distancier dist ("./Datas/distancier20.dat");
-		Distancier dist ("./Datas/ouest.dat");
+		Distancier dist ("./Datas/distancier20.dat");
+		//Distancier dist ("./Datas/ouest.dat");
         int * sol = new int[dist.getN()];
 		bool improved = false;
 		
 	//début
-
+/*
 		dist.afficher();
 
 		//test du NNH
@@ -54,7 +54,7 @@ int main() {
     	cout<<"solution ameliorée par 3-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
     	afficheSol(sol, &dist);
         cout<<"\n"<<endl;
-/*
+
     	//test du 2-opt plus profonde descente
 		construireSolNNH(sol, &dist);
 		cout<<"calcul 2-opt PPD"<<endl;
@@ -117,10 +117,10 @@ int main() {
 */
 
 
-/*
+
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit();
-*/
+
 	//fin
 	delete(sol);
 

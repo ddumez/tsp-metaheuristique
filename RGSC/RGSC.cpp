@@ -69,7 +69,7 @@ void RGSC::afficherCouples() {
 		N = this->tailles[i];
 		for (int j = 0; j < N; ++j) {
 			c = this->couples[i][j];
-			cout<<j<<": [c1="<<c.c1<<"|c2="<<c.c2<<"|comp="<<c.compagnon<<"|v1="<<c.v1<<"|v2="<<c.v2<<"|ext1="<<c.ext1<<"|ext2="<<c.ext2<<"|vDom="<<c.vDom<<"|indPref="<<c.indPref<<"|longueur="<<c.longueur<<"]"<<endl;
+			cout<<j<<": [c1="<<c.c1<<"|c2="<<c.c2<<"|comp="<<c.compagnon<<"|v1="<<(char)(65+c.v1)<<"|v2="<<(char)(65+c.v2)<<"|ext1="<<(char)(65+c.ext1)<<"|ext2="<<(char)(65+c.ext2)<<"|vDom="<<(char)(65+c.vDom)<<"|indPref="<<c.indPref<<"|longueur="<<c.longueur<<"]"<<endl;
 		}
 	}
 	cout << endl;
@@ -372,7 +372,7 @@ void RGSC::construireCircuit() {
 	initNextIter();
 	genererPreferences();
 	marier();
-	
+	cout << "COCO" << endl;
 	initNextIter();
 	genererPreferences();
 	marier();
