@@ -12,22 +12,22 @@
 /**
 * \brief améliore la solution actuelle à l'aide du 3-opt
 *
-* \param[in,out] sol le tableau qui contien l'ordre de parcour des villes
+* \param[in] sol le tableau qui contien l'ordre de parcour des villes
 * \param[in] dist le distancier
-* \param[in,out] zSol la taille de la solution
 * \param[out] improved indique si la solution a été amélioré
+* \return la solution a laquelle on a aboutit
 */
-void ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved);
+int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved);
 
 /**
 * \brief améliore la solution actuelle à l'aide du 3-opt en plus profonde descente
 *
-* \param[in,out] sol le tableau qui contien l'ordre de parcour des villes
+* \param[in] sol le tableau qui contien l'ordre de parcour des villes (surement supprime durant la procedure)
 * \param[in] dist le distancier
-* \param[in,out] zSol la taille de la solution
 * \param[out] improved indique si la solution a été amélioré
+* \return le meilleur voisin de sol trouve
 */
-void ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improved);
+int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improved);
 
 
 /**

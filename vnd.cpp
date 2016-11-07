@@ -8,70 +8,52 @@
 
 using namespace std;
 
-void vnd(int * sol, const Distancier * const dist) {
-	bool improved = true;
+int * vnd(int * sol, const Distancier * const dist) {
+	bool improved;
 	do {
-		deuxoptconverge(sol, dist);
-		cout<<"avant 3opt : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
-		ameliorerSol3OPT( sol, dist, &improved);
-		cout<<"après 3opt : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
+		sol = deuxoptconverge(sol, dist);
+		sol = ameliorerSol3OPT( sol, dist, &improved);
 	} while (improved);
+	return sol;
 }
 
-bool deuxoptconverge(int * sol, const Distancier * const dist) {
-cout<<"deuxoptconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
-	bool improved = true;
-	int k = 0;
+int * deuxoptconverge(int * sol, const Distancier * const dist) {
+	bool improved;
 	do{
-		ameliorerSol2OPT(sol, dist, &improved);
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
-    	++k;
-    } while (improved);
-    return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+		sol = ameliorerSol2OPT(sol, dist, &improved);
+	} while (improved);
+    return sol;
 }
 
-bool troisoptconverge(int * sol, const Distancier * const dist) {
-cout<<"troisoptconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
-	bool improved = true;
-	int k = 0;
+int * troisoptconverge(int * sol, const Distancier * const dist) {
+	bool improved;
 	do{
-		ameliorerSol3OPT(sol, dist, &improved);
-		++k;
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
+		sol = ameliorerSol3OPT(sol, dist, &improved);
     } while (improved);
-	return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+	return sol;
 }
 
-void vndPPD(int * sol, const Distancier * const dist) {
-	bool improved = true;
+int * vndPPD(int * sol, const Distancier * const dist) {
+	bool improved;
 	do {
-		deuxoptPPDconverge(sol, dist);
-		cout<<"avant 3optPPD : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
-		ameliorerSol3OptPPD( sol, dist, &improved);
-		cout<<"après 3optPPD : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
+		sol = deuxoptPPDconverge(sol, dist);
+		sol = ameliorerSol3OptPPD(sol, dist, &improved);
 	} while (improved);
+	return sol;
 }
 
-bool deuxoptPPDconverge(int * sol, const Distancier * const dist) {
-cout<<"deuxoptPPDconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
-	bool improved = true;
-	int k = 0;
+int * deuxoptPPDconverge(int * sol, const Distancier * const dist) {
+	bool improved;
 	do{
-		ameliorerSol2OptPPD(sol, dist, &improved);
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
-    	++k;
+		sol = ameliorerSol2OptPPD(sol, dist, &improved);
     } while (improved);
-    return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+    return sol; 
 }
 
-bool troisoptPPDconverge(int * sol, const Distancier * const dist) {
-cout<<"troisoptPPDconverge : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
-	bool improved = true;
-	int k = 0;
+int * troisoptPPDconverge(int * sol, const Distancier * const dist) {
+	bool improved;
 	do{
-		ameliorerSol3OptPPD(sol, dist, &improved);
-		++k;
-cout<<calculerLongueurCircuitSol(sol, dist)<<endl;
+		sol = ameliorerSol3OptPPD(sol, dist, &improved);
     } while (improved);
-	return 1 == k; //on n'a rien ameliore car on s'esta rreter des la premire iteration
+	return sol;
 }

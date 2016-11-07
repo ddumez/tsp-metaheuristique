@@ -27,23 +27,27 @@ int * vns(int * sol, const Distancier * const dist) {
 			switch(k) {
 				case 1:
 						voisin = voisindeuxopt(sol, dist);
-						if ( (deuxoptconverge(voisin, dist)) && ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol) ) {
+						voisin = deuxoptconverge(voisin, dist);
+						if ( ( zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
 							zsol = zvoisin;
 							delete(sol);
 							sol = voisin;
 							improved = true;
 						} else {
+							delete(voisin);
 							improved = false;
 						}
 					break;
 				case 2:
 						voisin = voisintroisopt(sol, dist);
-						if ( (troisoptconverge(voisin, dist)) && ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol) ) {
+						voisin = troisoptconverge(voisin, dist);
+						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
 							zsol = zvoisin;
 							delete(sol);
 							sol = voisin;
 							improved = true;
 						} else {
+							delete(voisin);
 							improved = false;
 						}
 					break;
@@ -60,7 +64,6 @@ int * vns(int * sol, const Distancier * const dist) {
 			} else {
 				k = 1;	//on a amélioré
 			}
-
 		} while (! stop);
 	//fin
 
@@ -111,11 +114,11 @@ int * voisintroisopt(const int * const sol, const Distancier * const dist) {
 	int tmp1, tmp2, tmp3, tmp4;
 
 	int * res = new int[dist->getN()];
-
 	for(int k = 0; k<taille; ++k) {res[k] = sol[k];} //recopie de la solution
-
+	
 	int i = rand() % taille;
-	int j = rand() % (taille -5);
+	int j;
+	do {j = rand() % (taille -5);} while (taille-6-j < 1);
 	int n = rand() % (taille -6-j);
 
 	//calcul de iD, iF, jD, jF, nD, nF
@@ -212,23 +215,27 @@ int * vnsPPD(int * sol, const Distancier * const dist) {
 			switch(k) {
 				case 1:
 						voisin = voisindeuxopt(sol, dist);
-						if ( (deuxoptPPDconverge(voisin, dist)) && ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol) ) {
+						voisin = deuxoptPPDconverge(voisin, dist);
+						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
 							zsol = zvoisin;
 							delete(sol);
 							sol = voisin;
 							improved = true;
 						} else {
+							delete(voisin);
 							improved = false;
 						}			
 					break;
 				case 2:
-						voisin = voisintroisopt(sol, dist);					
-						if ( (troisoptPPDconverge(voisin, dist)) && ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol) ) {
+						voisin = voisintroisopt(sol, dist);
+						voisin = troisoptPPDconverge(voisin, dist);		
+						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
 							zsol = zvoisin;
 							delete(sol);
 							sol = voisin;
 							improved = true;
 						} else {
+							delete(voisin);
 							improved = false;
 						}
 					break;

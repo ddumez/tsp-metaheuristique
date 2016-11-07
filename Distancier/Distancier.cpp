@@ -78,6 +78,10 @@ void Distancier::afficheVillei (const int i) const {
 	cout<<this->villes[i];
 }
 
+string Distancier::getvillei (const int i) const {
+	return this->villes[i];
+}
+
 void Distancier::parser(const string f) {
 	// Ouverture du fichier
 		ifstream file(f.c_str());

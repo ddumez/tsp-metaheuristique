@@ -73,6 +73,14 @@ class Distancier {
 			* \param[in] i le numero de la ville a afficher
 			*/
 			void afficheVillei (const int i) const;
+
+			/**
+			* \brief renvoi le nom de la i eme ville
+			*
+			* \param[in] i le numero de la ville a afficher
+			* \return le nom de la ieme ville
+			*/
+			string getvillei(const int i) const;
 		private :
 			/**
 			 * \brief Lit un fichier pour initialiser les coordonnées du

@@ -51,7 +51,7 @@ double calculerLongueurCircuitSol(const int * const sol, const Distancier * cons
 	return zSol;
 }
 
-void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) {
+int * ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) {
 	int i,j,k,tmp;
 	int iD, iF, jD, jF;
 	double d1, d2;
@@ -96,12 +96,13 @@ void ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved) 
 			} // Fin traitement suite amelioration detectee
 		}
 	}
+	return sol;
 }
 
-void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improved) {	
+int * ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improved) {	
 	int i,j,k,tmp;
 	int iD, iF, jD, jF;
-	int d1, d2;
+	double d1, d2;
 	const int taille = dist->getN();
 
 	double zdiff = 0; 
@@ -134,13 +135,12 @@ void ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improve
 
 	//application de la meilleure modification trouvee
 	if (*improved) {
-double zSol = calculerLongueurCircuitSol(sol, dist);      
 		//re-calcul des indices
 		iD=ibest %taille;
 		iF=(ibest+1)%taille;
 		jD=(ibest+jbest+2) % taille;
 		jF=(ibest+jbest+3) % taille;
-		
+
 		//application du changement 
 		tmp = sol[iF];
 		sol[iF] = sol[jD];
@@ -160,9 +160,8 @@ double zSol = calculerLongueurCircuitSol(sol, dist);
 				sol[(taille+jD-k)%taille] = tmp;
 			}
 		}
-
-cout<<"compare : "<<zSol + zdiff<<" et "<<calculerLongueurCircuitSol(sol, dist)<<endl; 
 	}
+	return sol;
 }
 
 void afficheSol(const int * const sol, const Distancier * const dist) {
