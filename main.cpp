@@ -22,12 +22,8 @@ int main() {
 		clock_t t, sumt;
 		//Distancier dist ("./Datas/distancier20.dat");
 		//Distancier dist ("./Datas/ouest.dat");
-		//Distancier dist ("./Datas/distancier20.dat");
-		//Distancier dist ("./Datas/ouest.dat");
         //Distancier dist ("./Datas/att48.dat"); //z best sol : 10628
         Distancier dist ("./Datas/berlin52.dat"); //z best sol : 7542
-        //Distancier dist ("./Datas/att48.dat"); //z best sol : 10628
-        //Distancier dist ("./Datas/berlin52.dat"); //z best sol : 7542
         //Distancier dist ("./Datas/ch130.dat"); //z best sol : 6110
         //Distancier dist ("./Datas/ch150.dat"); //z best sol : 6528
         //Distancier dist ("./Datas/a280.dat"); //z best sol : 2579
@@ -37,10 +33,8 @@ int main() {
 		
 	//début
 
-		dist.afficher();
-
 		//dist.afficher();
-
+/*
 		//test du NNH
 		cout<<"calcul NNH"<<endl;
 		t = clock();
@@ -159,14 +153,15 @@ int main() {
             delete(sol);   
         }
         cout<<"moyenne de la valeur trouve par vns : "<<(double)((double)sumz/(double)NBITER)<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<"\n"<<endl;        
-
-
-
-/*
-		RGSC rgsc(&dist);
-		rgsc.construireCircuit();
-		//~ dist.afficher();
 */
+
+
+
+		RGSC rgsc(&dist);
+		rgsc.construireCircuit(sol);
+		afficheSol(sol, &dist);
+		//~ dist.afficher();
+
 	//fin
 
 return 0;

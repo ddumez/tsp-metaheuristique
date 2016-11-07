@@ -320,11 +320,11 @@ void RGSC::marier() {
 		indC1 = 0;
 		while (indC1 < nbSC) {
 			c1 = this->couples[iter][indC1];
-			indPref = c1.indPref;
+			indPref = 1;//c1.indPref;
 			uni = false;
 			
 			//~ afficherPreferences();
-			afficherCouples();
+			//~ afficherCouples();
 
 			while ((!uni) && (indPref < nbSC)) {	// Tant que c1 n'est pas relié et qu'on a pas tout essayé
 				
@@ -340,15 +340,16 @@ void RGSC::marier() {
 					indPref = indPref + 1;
 				}
 			}
-			if (indPref == nbSC) {
-				this->couples[iter][indC1].indPref = 1;
-			} else {
+			//~ if (indPref == nbSC) {
+				//~ this->couples[iter][indC1].indPref = 1;
+			//~ } else {
 				this->couples[iter][indC1].indPref = indPref;
-			}
+			//~ }
 			indC1 = indC1 + 1;
 		}
 	}
 }
+
 void RGSC::initNextIter() {
 	int iter = this->iteration;
 	int nbSc = this->tailles[iter];
@@ -404,18 +405,91 @@ void RGSC::initNextIter() {
 	this->iteration = iter + 1;
 }
 
-void RGSC::construireCircuit() {
+void RGSC::construireCircuit(int *sol) {
 	for (int i = 3; i < nbMariage; ++i) {
 		cout << i << endl;
 		initNextIter();
 		genererPreferences();
-		//~ afficherPreferences();
 		marier();
 	}
 	initNextIter();
 	fermerCircuit();
 	
 	afficherCouples();
+	
+	deroulerSolution(sol);
+}
+
+void RGSC::deroulerSolution(int *sol) const {
+	voisins	*voisinages = new voisins [getN()];
+	int ville1, ville2;
+	voisins vois;
+	couple c;
+	
+	for (int i = 0; i < getN(); ++i) {
+		vois.v1 = -1;
+		vois.v2 = -1;
+		voisinages[i] = vois;
+	}
+	
+	c = this->couples[this->nbMariage-1][0];
+	ville1 = c.ext1;
+	ville2 = c.ext2;
+	
+	// On lie d'abord les deux derniers sommets non liés
+	vois.v1 = ville2;
+	vois.v2 = -1;
+	voisinages[ville1] = vois;
+	
+	vois.v1 = ville1;
+	vois.v2 = -1;
+	voisinages[ville2] = vois;
+	
+	// Puis on parcourt toutes les liaisons
+	for (int i = 2; i < this->nbMariage; ++i) {
+		for (int j = 0; j < this->tailles[i]; ++j) {
+			c = this->couples[i][j];
+			
+			if (c.c2 != -1) {
+				ville1 = c.v1;
+				ville2 = c.v2;
+				if (voisinages[ville1].v1 == -1) {
+					voisinages[ville1].v1 = ville2;
+				} else if (voisinages[ville1].v2 == -1) {
+					voisinages[ville1].v2 = ville2;
+				}
+				
+				if (voisinages[ville2].v1 == -1) {
+					voisinages[ville2].v1 = ville1;
+				} else if (voisinages[ville2].v2 == -1) {
+					voisinages[ville2].v2 = ville1;
+				}
+			}
+		}
+	}
+	
+	///AFFICHAGE
+	for (int i = 0; i < getN(); ++i) {
+		vois = voisinages[i];
+		cout<<i<<":\tv1="<<vois.v1<<"\tv2="<<vois.v2<<endl;
+	}cout<<endl;
+	
+	vois = voisinages[0];
+	sol[0] = 0;
+	ville1 = 0;
+	ville2 = voisinages[ville1].v1;
+	for (int i = 1; i < getN(); ++i) {
+		cout<<"v1="<<vois.v1<<"v2="<<vois.v2<<endl;
+		sol[i] = ville2;
+		vois = voisinages[ville2];
+		if (vois.v1 == ville1) {
+			ville1 = ville2;
+			ville2 = vois.v2;
+		} else {
+			ville1 = ville2;
+			ville2 = vois.v1;
+		}
+	}
 }
 
 int RGSC::getN() const {
