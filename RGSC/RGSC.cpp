@@ -311,25 +311,22 @@ void RGSC::fermerCircuit() {
 void RGSC::marier() {
 	int iter = this->iteration;
 	int nbSC = this->tailles[iter];
-	int indPref, indC2, v1, v2;
+	int indPref, indC1, indC2, v1, v2;
 	double dist;
 	couple c1, c2;
 	bool uni;
 	
 	while (this->couplesRestant > 1) {
-		for (int indC1 = 0; indC1 < nbSC; ++indC1) {
+		indC1 = 0;
+		while (indC1 < nbSC) {
 			c1 = this->couples[iter][indC1];
 			indPref = c1.indPref;
 			uni = false;
 			
+			//~ afficherPreferences();
 			afficherCouples();
 
 			while ((!uni) && (indPref < nbSC)) {	// Tant que c1 n'est pas relié et qu'on a pas tout essayé
-				//~ cout << endl;
-				//~ cout << "indC1="<<indC1<<endl;
-				//~ cout << "indPref="<<indPref<<endl;
-				//~ cout << "comp="<<c1.compagnon<<endl;
-				//~ cout << "couples : " << this->couplesRestant << endl;
 				
 				indC2 = this->preferences[indC1][indPref].destination;
 				c2 = this->couples[iter][indC2];
@@ -337,15 +334,18 @@ void RGSC::marier() {
 				if (c2.compagnon == indC1) {
 					uni = true;
 				} else if ((c2.compagnon == -1) || (dist < getDistance(c2.vDom, this->couples[iter][c2.compagnon].vDom))) {
-					//~ cout << "UNION" << endl;
 					unir(indC1, indC2, v1, v2, dist);
 					uni = true;
 				} else {
 					indPref = indPref + 1;
 				}
 			}
-			this->couples[iter][indC1].indPref = indPref + 1;
-			/// ALGORITHME NON CONVERGENT ??????
+			if (indPref == nbSC) {
+				this->couples[iter][indC1].indPref = 1;
+			} else {
+				this->couples[iter][indC1].indPref = indPref;
+			}
+			indC1 = indC1 + 1;
 		}
 	}
 }
@@ -405,11 +405,11 @@ void RGSC::initNextIter() {
 }
 
 void RGSC::construireCircuit() {
-	
 	for (int i = 3; i < nbMariage; ++i) {
 		cout << i << endl;
 		initNextIter();
 		genererPreferences();
+		//~ afficherPreferences();
 		marier();
 	}
 	initNextIter();
