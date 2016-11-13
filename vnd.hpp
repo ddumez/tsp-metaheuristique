@@ -1,6 +1,6 @@
 /**
- * \file Distancier.hpp
- * \brief Donnees de base utiles à la résolution du TSP (Distancier)
+ * \file vnd.hpp
+ * \brief implemente le vnd et les methodes de descenete a un seul operateurs
  * \author Dorian D. & Jocelin C.
  */
 

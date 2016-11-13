@@ -1,5 +1,5 @@
 /**
- * \file code fourni.hpp
+ * \file code_fourni.hpp
  * \brief algorithmes fournit : nnh et 2-opt
  * \author Dorian D. & Jocelin C. par code de Xavier G.
  */
