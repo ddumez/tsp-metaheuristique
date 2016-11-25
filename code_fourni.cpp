@@ -171,7 +171,4 @@ void afficheSol(const int * const sol, const Distancier * const dist) {
 	}
 	dist->afficheVillei(sol[0]);
 	cout<<"\n taille : "<<calculerLongueurCircuitSol(sol, dist)<<endl;
-
 }
-
-

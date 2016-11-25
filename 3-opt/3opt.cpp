@@ -47,7 +47,7 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 					for(k = 1; k<8; ++k) {
 						if(d[k] < d[min]) {min = k;}
 					}
-
+if (0 != min) {cout<<min<<endl; afficheSol(sol, dist);}
 					//application du mouvement
 					switch(min) {
 						case 0:
@@ -67,86 +67,190 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								inverseSens(sol, jF, nD, taille);
 								*improved = true;
 							break;
-						case 3: //2-opt //modifie a reverifier : attention aux inversions
+						case 3: //2-opt
 								tmp1 = sol[iD];
 								sol[iD] = sol[nF];
 								sol[nF] = tmp1;
 								//inversion manuelle car differente des autres
+									//calcul du nombre de case entre iD et nF divise par 2
 								if (nF < iD) {
-									for (int k=1; k<=(iD-(nF+1))/2; k++) {
-										sol[iD-k] = sol[iD-k] + sol[nF+k];
-										sol[nF+k] = sol[iD-k] - sol[nF+k];
-										sol[iD-k] = sol[iD-k] - sol[nF+k];
-									}
+									tmp2 = (iD-nF) / 2;
 								} else { //iD > nF
-									for (int k=1; k<=(nF-(iD+1))/2; k++) {
-										sol[nF-k] = sol[nF-k] + sol[iD+k];
-										sol[iD+k] = sol[nF-k] - sol[iD+k];
-										sol[nF-k] = sol[nF-k] - sol[iD+k];
-									}
+									tmp2 = (dist->getN() - nF + iD) / 2;
+								}
+									//inversion
+								for(k = 1; k<tmp2; ++k) {
+									tmp1 = sol[(iD-k+dist->getN()) % dist->getN()];
+									sol[(iD-k+dist->getN()) % dist->getN()] = sol[(nF+k) % dist->getN()];
+									sol[(nF+k) % dist->getN()] = tmp1;
 								}
 								*improved = true;
 							break;
-						case 4: //OK
-								tmp1 = sol[iD];
-								tmp2 = sol[iF];
-								tmp3 = sol[jD];
-								tmp4 = sol[nF];
-								sol[jD] = tmp1;
-								sol[iD] = tmp2;
-								sol[nF] = tmp3;
-								sol[iF] = tmp4;		
-								inverseSens(sol, iF, jD, taille);
+						case 4: 
+								sol7 = new int[dist->getN()]; //allocation pour la recopie
+								k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+								sol7[k] = sol[iD]; //le point de depart
+								++k;
+								
+								//on place le segment jF-nD
+								sol7[k % dist->getN()] = sol[jF];
+								++k;
+								for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;
+								}
+								sol7[k % dist->getN()] = sol[nD];
+								++k;
+
+								
+								//on place le segment jD-iF
+								sol7[k % dist->getN()] = sol[jD];
+								++k;
+								for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1 + dist->getN()) % dist->getN() != iF; --tmp1 ) {
+									sol7[k % dist->getN()] = sol[(tmp1 + dist->getN()) % dist->getN()];
+									++k;							
+								}
+								sol7[k % dist->getN()] = sol[iF];
+								++k;
+
+								//on place le segment nF-iD, on revien au point de depard
+								sol7[k % dist->getN()] = sol[nF];
+								++k;
+								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;
+								}
+
+								//mise a jour de la solution
+								delete(sol);
+								sol = sol7;
+								
 								*improved = true;
 							break;
-						case 5: //OK
-								tmp1 = sol[nD];
-								tmp2 = sol[iF];
-								tmp3 = sol[jD];
-								tmp4 = sol[jF];
-								sol[iF] = tmp1;
-								sol[jF] = tmp2;
-								sol[nD] = tmp3;
-								sol[jD] = tmp4;
-								inverseSens(sol, jF, nD, taille);
+						case 5:
+								sol7 = new int[dist->getN()]; //allocation pour la recopie
+								k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+								sol7[k] = sol[iD]; //le point de depart
+								++k;
+								
+								//on place le segment nD-jF
+								sol7[k % dist->getN()] = sol[nD];
+								++k;
+								for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
+									sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+									++k;
+								}
+								sol7[k % dist->getN()] = sol[jF];
+								++k;
+
+								
+								//on place le segment iF-jD
+								sol7[k % dist->getN()] = sol[iF];
+								++k;
+								for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;							
+								}
+								sol7[k % dist->getN()] = sol[jD];
+								++k;
+
+								//on place le segment nF-iD, on revien au point de depard
+								sol7[k % dist->getN()] = sol[nF];
+								++k;
+								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;
+								}
+
+								//mise a jour de la solution
+								delete(sol);
+								sol = sol7;
+								
 								*improved = true;
 							break;
-						case 6: //OK
-								tmp1 = sol[iF];
-								tmp2 = sol[jD];
-								tmp3 = sol[jF];
-								tmp4 = sol[nD];
-								sol[jD] = tmp1;
-								sol[iF] = tmp2;
-								sol[nD] = tmp3;
-								sol[jF] = tmp4;
-								inverseSens(sol, iF, jD, taille);
-								inverseSens(sol, jF, nD, taille);
+						case 6:
+								sol7 = new int[dist->getN()]; //allocation pour la recopie
+								k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+								sol7[k] = sol[iD]; //le point de depart
+								++k;
+								
+								//on place le segment jD-iF
+								sol7[k % dist->getN()] = sol[jD];
+								++k;
+								for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != iF; --tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;							
+								}
+								sol7[k % dist->getN()] = sol[iF];
+								++k;
+
+								//on place le segment nD-jF
+								sol7[k % dist->getN()] = sol[nD];
+								++k;
+								for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;
+								}
+								sol7[k % dist->getN()] = sol[jF];
+								++k;
+
+								//on place le segment nF-iD, on revien au point de depard
+								sol7[k % dist->getN()] = sol[nF];
+								++k;
+								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;
+								}
+
+								//mise a jour de la solution
+								delete(sol);
+								sol = sol7;
+								
 								*improved = true;
 							break;
 						case 7: 
-								sol7 = new int[dist->getN()];
-								sol7[iD] = sol[iD];
-								sol7[(iD+1) % dist->getN()] = sol[jF];
+								sol7 = new int[dist->getN()]; //allocation pour la recopie
+								k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+								sol7[k] = sol[iD]; //le point de depart
+								++k;
+								
 								//on place le segment jF-nD
-								for(k = 1; k < abs(nD-jF); ++k ) {
-									sol7[(k+1) % dist->getN()] = sol[(jF+k) % dist->getN()];
+								sol7[k % dist->getN()] = sol[jF];
+								++k;
+								for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;
 								}
-								sol7[(k) % dist->getN()] = sol[nD];
-								sol7[(k+1) % dist->getN()] = sol[iF];
+								sol7[k % dist->getN()] = sol[nD];
+								++k;
+
+								
 								//on place le segment iF-jD
-								tmp1 = k+1;
-								for(k = tmp1; k < tmp1 + abs(iF-jD); ++k ) {
-									sol7[(k+1) % dist->getN()] = sol[(iF+k) % dist->getN()];
+								sol7[k % dist->getN()] = sol[iF];
+								++k;
+								for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;							
 								}
-								sol7[(k) % dist->getN()] = sol[jD];
-								sol7[(k+1) % dist->getN()] = sol[nF];
-								//on place le segment nF-iD
-								for(k = k+1; k < dist->getN(); ++k ) {
-									sol7[(k+1) % dist->getN()] = sol[(nF+k) % dist->getN()];
+								sol7[k % dist->getN()] = sol[jD];
+								++k;
+	
+								//on place le segment nF-iD, on revien au point de depard
+								sol7[k % dist->getN()] = sol[nF];
+								++k;
+								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									++k;
 								}
+
+								//mise a jour de la solution
 								delete(sol);
 								sol = sol7;
+								
 								*improved = true;
 							break;
 					}
@@ -227,21 +331,6 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 			nD = (ibest+jbest+nbest+4) % taille;
 			nF = (ibest+jbest+nbest+5) % taille;
 
-d[0] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
-d[1] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
-d[2] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
-d[3] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[iF],sol[nF]);
-d[4] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[jD]) + dist->getDistance(sol[iF],sol[nF]);
-d[5] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jF],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
-d[6] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
-d[7] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
-if (7 == mbest) {
-	cout<<iD<<" "<<iF<<" "<<jD<<" "<<jF<<" "<<nD<<" "<<nF<<endl;
-	cout<<dist->getvillei(sol[iD])<<" "<<dist->getvillei(sol[iF])<<" "<<dist->getvillei(sol[jD])<<" "<<dist->getvillei(sol[jF])<<" "<<dist->getvillei(sol[nD])<<" "<<dist->getvillei(sol[nF])<<endl;
-	cout<<d[7]<<" "<<d[0]<<" "<<d[0]-d[7]<<endl;
-	afficheSol(sol, dist);
-}
-
 			//application du mouvement
 			switch(mbest) {
 				case 0:
@@ -265,108 +354,195 @@ if (7 == mbest) {
 						tmp1 = sol[iD];
 						sol[iD] = sol[nF];
 						sol[nF] = tmp1;
-						//inversion manuelle car differente des autres
-						if (nF < iD) {
-							for (int k=1; k<=(iD-(nF+1))/2; k++) {
-								sol[iD-k] = sol[iD-k] + sol[nF+k];
-								sol[nF+k] = sol[iD-k] - sol[nF+k];
-								sol[iD-k] = sol[iD-k] - sol[nF+k];
-							}
-						} else { //iD > nF
-							for (int k=1; k<=(nF-(iD+1))/2; k++) {
-								sol[nF-k] = sol[nF-k] + sol[iD+k];
-								sol[iD+k] = sol[nF-k] - sol[iD+k];
-								sol[nF-k] = sol[nF-k] - sol[iD+k];
-							}
-						}
+						inverseSens(sol, nF, iD, taille);
 						*improved = true;
 					break;
 				case 4: 
-						tmp1 = sol[iD];
-						tmp2 = sol[iF];
-						tmp3 = sol[jD];
-						tmp4 = sol[nF];
-						sol[jD] = tmp1;
-						sol[iD] = tmp2;
-						sol[nF] = tmp3;
-						sol[iF] = tmp4;		
-						inverseSens(sol, iF, jD, taille);
+						sol7 = new int[dist->getN()]; //allocation pour la recopie
+						k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+						sol7[k] = sol[iD]; //le point de depart
+						++k;
+						
+						//on place le segment jF-nD
+						sol7[k % dist->getN()] = sol[jF];
+						++k;
+						for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;
+						}
+						sol7[k % dist->getN()] = sol[nD];
+						++k;
+
+						
+						//on place le segment jD-iF
+						sol7[k % dist->getN()] = sol[jD];
+						++k;
+						for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1 + dist->getN()) % dist->getN() != iF; --tmp1 ) {
+							sol7[k % dist->getN()] = sol[(tmp1 + dist->getN()) % dist->getN()];
+							++k;							
+						}
+						sol7[k % dist->getN()] = sol[iF];
+						++k;
+
+						//on place le segment nF-iD, on revien au point de depard
+						sol7[k % dist->getN()] = sol[nF];
+						++k;
+						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;
+						}
+
+						//mise a jour de la solution
+						delete(sol);
+						sol = sol7;
+						
 						*improved = true;
 					break;
 				case 5:
-						tmp1 = sol[nD];
-						tmp2 = sol[iF];
-						tmp3 = sol[jD];
-						tmp4 = sol[jF];
-						sol[iF] = tmp1;
-						sol[jF] = tmp2;
-						sol[nD] = tmp3;
-						sol[jD] = tmp4;
-						inverseSens(sol, jF, nD, taille);
+						sol7 = new int[dist->getN()]; //allocation pour la recopie
+						k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+						sol7[k] = sol[iD]; //le point de depart
+						++k;
+						
+						//on place le segment nD-jF
+						sol7[k % dist->getN()] = sol[nD];
+						++k;
+						for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
+							sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+							++k;
+						}
+						sol7[k % dist->getN()] = sol[jF];
+						++k;
+
+						
+						//on place le segment iF-jD
+						sol7[k % dist->getN()] = sol[iF];
+						++k;
+						for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;							
+						}
+						sol7[k % dist->getN()] = sol[jD];
+						++k;
+
+						//on place le segment nF-iD, on revien au point de depard
+						sol7[k % dist->getN()] = sol[nF];
+						++k;
+						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;
+						}
+
+						//mise a jour de la solution
+						delete(sol);
+						sol = sol7;
+						
 						*improved = true;
 					break;
 				case 6:
-						tmp1 = sol[iF];
-						tmp2 = sol[jD];
-						tmp3 = sol[jF];
-						tmp4 = sol[nD];
-						sol[jD] = tmp1;
-						sol[iF] = tmp2;
-						sol[nD] = tmp3;
-						sol[jF] = tmp4;
-						inverseSens(sol, iF, jD, taille);
-						inverseSens(sol, jF, nD, taille);
+						sol7 = new int[dist->getN()]; //allocation pour la recopie
+						k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+						sol7[k] = sol[iD]; //le point de depart
+						++k;
+						
+						//on place le segment jD-iF
+						sol7[k % dist->getN()] = sol[jD];
+						++k;
+						for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != iF; --tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;							
+						}
+						sol7[k % dist->getN()] = sol[iF];
+						++k;
+
+						//on place le segment nD-jF
+						sol7[k % dist->getN()] = sol[nD];
+						++k;
+						for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;
+						}
+						sol7[k % dist->getN()] = sol[jF];
+						++k;
+
+						//on place le segment nF-iD, on revien au point de depard
+						sol7[k % dist->getN()] = sol[nF];
+						++k;
+						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;
+						}
+
+						//mise a jour de la solution
+						delete(sol);
+						sol = sol7;
+						
 						*improved = true;
 					break;
 				case 7:
-						sol7 = new int[dist->getN()];
-						sol7[iD] = sol[iD];
-						sol7[(iD+1) % dist->getN()] = sol[jF];
+						sol7 = new int[dist->getN()]; //allocation pour la recopie
+						k = iD; //k est l'indice du tableau sol7 auquel on est rendu
+
+						sol7[k] = sol[iD]; //le point de depart
+						++k;
+						
 						//on place le segment jF-nD
-						for(k = 1; k < abs(nD-jF); ++k ) {
-							sol7[(k+1) % dist->getN()] = sol[(jF+k) % dist->getN()];
+						sol7[k % dist->getN()] = sol[jF];
+						++k;
+						for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;
 						}
-						sol7[(k) % dist->getN()] = sol[nD];
-						sol7[(k+1) % dist->getN()] = sol[iF];
+						sol7[k % dist->getN()] = sol[nD];
+						++k;
+
+						
 						//on place le segment iF-jD
-						tmp1 = k+1;
-						for(k = tmp1; k < tmp1 + abs(iF-jD); ++k ) {
-							sol7[(k+1) % dist->getN()] = sol[(iF+k) % dist->getN()];
+						sol7[k % dist->getN()] = sol[iF];
+						++k;
+						for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;							
 						}
-						sol7[(k) % dist->getN()] = sol[jD];
-						sol7[(k+1) % dist->getN()] = sol[nF];
-						//on place le segment nF-iD
-						for(k = k+1; k < dist->getN(); ++k ) {
-							sol7[(k+1) % dist->getN()] = sol[(nF+k) % dist->getN()];
+						sol7[k % dist->getN()] = sol[jD];
+						++k;
+
+						//on place le segment nF-iD, on revien au point de depard
+						sol7[k % dist->getN()] = sol[nF];
+						++k;
+						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
+							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							++k;
 						}
+
+						//mise a jour de la solution
 						delete(sol);
 						sol = sol7;
+						
 						*improved = true;
 					break;
 			}
-if (7 == mbest) {
-	afficheSol(sol, dist);
-	cout<<"\n"<<endl;
-}
 		}
 
 	//fin
 	return sol;
 }
 
-void inverseSens(int * sol, const int i, const int j, const int n) {
-	int tmp;
-	if (i-1 < j) {
-		for (int k=1; k<=(j-(i+1))/2; k++) {
-			tmp = sol[i+k];
-			sol[i+k] = sol[j-k];
-			sol[j-k] = tmp;
-		}
-	} else {
-		for (int k=1; k<=((i-1)-(j+2))/2; k++) {
-			tmp = sol[j+1+k];
-			sol[j+1+k] = sol[i-1-k];
-			sol[i-1-k] = tmp;
-		}
+void inverseSens(int * sol, const int j, const int i, const int n) {
+	int tmp1;
+	double tmp2;
+	if (j < i) {
+		tmp2 = (double)(i-j) / 2;0;
+	} else { //i > j
+		tmp2 = (double)(n - j + i) / 2;0;
+	}
+		//inversion
+	for(int k = 1; k<tmp2; ++k) {
+		tmp1 = sol[(i-k+n) % n];
+		sol[(i-k+n) % n] = sol[(j+k) % n];
+		sol[(j+k) % n] = tmp1;
 	}
 }
