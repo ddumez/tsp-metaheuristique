@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "3opt.hpp"
 #include "../Distancier/Distancier.hpp"
@@ -11,11 +12,10 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 	//variable
 		int iD, iF, jD, jF, nD, nF; //indice dans la solution des arretes consideres
 		const int taille = dist->getN();
-		int i,j,n,k;
+		int i,j,n,k, min;
 		int tmp1, tmp2, tmp3, tmp4;
-		int * restmp;
-		double zrestmp;
-		double zsol = calculerLongueurCircuitSol(sol, dist);
+		double d[8];
+		int * sol7; //pour la recopie partielle du cas 7
 		
 	//debut
 
@@ -32,135 +32,124 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 					nD = (i+j+n+4) % taille;
 					nF = (i+j+n+5) % taille;
 
-					//cas 1
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[jD];
-						restmp[jD] = restmp[iF];
-						restmp[iF] = tmp1;
-						inverseSens(restmp, iF, jD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zsol) {
-							delete(sol);
-							sol = restmp;
-							zsol = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
+					//calcul des distances previsionelles
+					d[0] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
+					d[1] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
+					d[2] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
+					d[3] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[iF],sol[nF]);
+					d[4] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[jD]) + dist->getDistance(sol[iF],sol[nF]);
+					d[5] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jF],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
+					d[6] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
+					d[7] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
 
-					//cas 2
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[nD];
-						restmp[nD] = restmp[jF];
-						restmp[jF] = tmp1;
-						inverseSens(restmp, jF, nD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zsol) {
-							delete(sol);
-							sol = restmp;
-							zsol = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-					//cas 3
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iD];
-						restmp[iD] = restmp[nF];
-						restmp[nF] = tmp1;
-						inverseSens(restmp, nF, iD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zsol) {
-							delete(sol);
-							sol = restmp;
-							zsol = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
+					//recherche du min
+					min = 0;
+					for(k = 1; k<8; ++k) {
+						if(d[k] < d[min]) {min = k;}
+					}
 
-					//cas 4
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[nD];
-						tmp2 = restmp[iF];
-						tmp3 = restmp[jD];
-						tmp4 = restmp[jF];
-						restmp[iF] = tmp1;
-						restmp[jF] = tmp2;
-						restmp[nD] = tmp3;
-						restmp[jD] = tmp4;
-						inverseSens(restmp, jF, nD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zsol) {
-							delete(sol);
-							sol = restmp;
-							zsol = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-
-					//cas 5
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iF];
-						tmp2 = restmp[jD];
-						tmp3 = restmp[jF];
-						tmp4 = restmp[nD];
-						restmp[nD] = tmp1;
-						restmp[jF] = tmp2;
-						restmp[iF] = tmp3;
-						restmp[jD] = tmp4;
-						inverseSens(restmp, iF, jD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zsol) {
-							delete(sol);
-							sol = restmp;
-							zsol = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-
-					//cas 6
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iD];
-						tmp2 = restmp[iF];
-						tmp3 = restmp[jD];
-						tmp4 = restmp[nF];
-						restmp[jD] = tmp1;
-						restmp[iD] = tmp2;
-						restmp[nF] = tmp3;
-						restmp[iF] = tmp4;		
-						inverseSens(restmp, iF, jD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zsol) {
-							delete(sol);
-							sol = restmp;
-							zsol = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-
-					//cas 7
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iF];
-						tmp2 = restmp[jD];
-						tmp3 = restmp[jF];
-						tmp4 = restmp[nD];
-						restmp[jF] = tmp1;
-						restmp[nD] = tmp2;
-						restmp[iF] = tmp3;
-						restmp[jD] = tmp4;
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zsol) {
-							delete(sol);
-							sol = restmp;
-							zsol = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
+					//application du mouvement
+					switch(min) {
+						case 0:
+								//on ne change rien
+							break;
+						case 1: //2-opt //OK
+								tmp1 = sol[jD];
+								sol[jD] = sol[iF];
+								sol[iF] = tmp1;
+								inverseSens(sol, iF, jD, taille);
+								*improved = true;
+							break;
+						case 2: //2-opt //Ok
+								tmp1 = sol[nD];
+								sol[nD] = sol[jF];
+								sol[jF] = tmp1;
+								inverseSens(sol, jF, nD, taille);
+								*improved = true;
+							break;
+						case 3: //2-opt //modifie a reverifier : attention aux inversions
+								tmp1 = sol[iD];
+								sol[iD] = sol[nF];
+								sol[nF] = tmp1;
+								//inversion manuelle car differente des autres
+								if (nF < iD) {
+									for (int k=1; k<=(iD-(nF+1))/2; k++) {
+										sol[iD-k] = sol[iD-k] + sol[nF+k];
+										sol[nF+k] = sol[iD-k] - sol[nF+k];
+										sol[iD-k] = sol[iD-k] - sol[nF+k];
+									}
+								} else { //iD > nF
+									for (int k=1; k<=(nF-(iD+1))/2; k++) {
+										sol[nF-k] = sol[nF-k] + sol[iD+k];
+										sol[iD+k] = sol[nF-k] - sol[iD+k];
+										sol[nF-k] = sol[nF-k] - sol[iD+k];
+									}
+								}
+								*improved = true;
+							break;
+						case 4: //OK
+								tmp1 = sol[iD];
+								tmp2 = sol[iF];
+								tmp3 = sol[jD];
+								tmp4 = sol[nF];
+								sol[jD] = tmp1;
+								sol[iD] = tmp2;
+								sol[nF] = tmp3;
+								sol[iF] = tmp4;		
+								inverseSens(sol, iF, jD, taille);
+								*improved = true;
+							break;
+						case 5: //OK
+								tmp1 = sol[nD];
+								tmp2 = sol[iF];
+								tmp3 = sol[jD];
+								tmp4 = sol[jF];
+								sol[iF] = tmp1;
+								sol[jF] = tmp2;
+								sol[nD] = tmp3;
+								sol[jD] = tmp4;
+								inverseSens(sol, jF, nD, taille);
+								*improved = true;
+							break;
+						case 6: //OK
+								tmp1 = sol[iF];
+								tmp2 = sol[jD];
+								tmp3 = sol[jF];
+								tmp4 = sol[nD];
+								sol[jD] = tmp1;
+								sol[iF] = tmp2;
+								sol[nD] = tmp3;
+								sol[jF] = tmp4;
+								inverseSens(sol, iF, jD, taille);
+								inverseSens(sol, jF, nD, taille);
+								*improved = true;
+							break;
+						case 7: 
+								sol7 = new int[dist->getN()];
+								sol7[iD] = sol[iD];
+								sol7[(iD+1) % dist->getN()] = sol[jF];
+								//on place le segment jF-nD
+								for(k = 1; k < abs(nD-jF); ++k ) {
+									sol7[(k+1) % dist->getN()] = sol[(jF+k) % dist->getN()];
+								}
+								sol7[(k) % dist->getN()] = sol[nD];
+								sol7[(k+1) % dist->getN()] = sol[iF];
+								//on place le segment iF-jD
+								tmp1 = k+1;
+								for(k = tmp1; k < tmp1 + abs(iF-jD); ++k ) {
+									sol7[(k+1) % dist->getN()] = sol[(iF+k) % dist->getN()];
+								}
+								sol7[(k) % dist->getN()] = sol[jD];
+								sol7[(k+1) % dist->getN()] = sol[nF];
+								//on place le segment nF-iD
+								for(k = k+1; k < dist->getN(); ++k ) {
+									sol7[(k+1) % dist->getN()] = sol[(nF+k) % dist->getN()];
+								}
+								delete(sol);
+								sol = sol7;
+								*improved = true;
+							break;
+					}
 				}
 			}
 		}
@@ -171,13 +160,14 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improved) {
 	//variable
 		int iD, iF, jD, jF, nD, nF; //indice dans la solution des arretes consideres
-		const int taille = dist->getN();
-		int i,j,n,k;
-		int tmp1, tmp2, tmp3, tmp4;
-		int * restmp;
-		double zrestmp;
-		int * best = new int[1]; //juste pour avoir un truc a delete et ne pas avoir de cas particulier
-		double zbest = calculerLongueurCircuitSol(sol, dist);
+ 		const int taille = dist->getN();
+		double d[8];
+		int i,j,n,k, min;
+ 		int tmp1, tmp2, tmp3, tmp4;
+		int ibest, jbest, nbest, mbest;
+		double zdiff = 0;
+		int * sol7; //pour la recopie partielle du cas 7
+
 		
 	//debut
 
@@ -187,7 +177,7 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 		for (i = 0; i < taille; ++i) {
 			for (j = 0; j < taille-5; ++j) {
 				for(n = 0; n < taille-6-j; ++n) {
-					//calcul de iD, iF, jD, jF, nD, nF et autre
+					//calcul de iD, iF, jD, jF, nD, nF
 					iD = i % taille;
 					iF = (i+1) % taille;
 					jD = (i+j+2) % taille;
@@ -195,146 +185,173 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 					nD = (i+j+n+4) % taille;
 					nF = (i+j+n+5) % taille;
 
-					//cas 1
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[jD];
-						restmp[jD] = restmp[iF];
-						restmp[iF] = tmp1;
-						inverseSens(restmp, iF, jD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zbest) {
-							delete(best);
-							best = restmp;
-							zbest = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
+					//distances previsiosnnelles
+					//calcul des distances previsionelles
+					d[0] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
+					d[1] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
+					d[2] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
+					d[3] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[iF],sol[nF]);
+					d[4] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[jD]) + dist->getDistance(sol[iF],sol[nF]);
+					d[5] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jF],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
+					d[6] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
+					d[7] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
 
-					//cas 2
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[nD];
-						restmp[nD] = restmp[jF];
-						restmp[jF] = tmp1;
-						inverseSens(restmp, jF, nD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zbest) {
-							delete(best);
-							best = restmp;
-							zbest = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-					//cas 3
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iD];
-						restmp[iD] = restmp[nF];
-						restmp[nF] = tmp1;
-						inverseSens(restmp, nF, iD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zbest) {
-							delete(best);
-							best = restmp;
-							zbest = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
+					//recherche du min
+					min = 0;
+					for(k = 1; k<8; ++k) {
+						if(d[k] < d[min]) {min = k;}
+					}
 
-					//cas 4
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[nD];
-						tmp2 = restmp[iF];
-						tmp3 = restmp[jD];
-						tmp4 = restmp[jF];
-						restmp[iF] = tmp1;
-						restmp[jF] = tmp2;
-						restmp[nD] = tmp3;
-						restmp[jD] = tmp4;
-						inverseSens(restmp, jF, nD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zbest) {
-							delete(best);
-							best = restmp;
-							zbest = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-
-					//cas 5
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iF];
-						tmp2 = restmp[jD];
-						tmp3 = restmp[jF];
-						tmp4 = restmp[nD];
-						restmp[nD] = tmp1;
-						restmp[jF] = tmp2;
-						restmp[iF] = tmp3;
-						restmp[jD] = tmp4;
-						inverseSens(restmp, iF, jD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zbest) {
-							delete(best);
-							best = restmp;
-							zbest = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-
-					//cas 6
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iD];
-						tmp2 = restmp[iF];
-						tmp3 = restmp[jD];
-						tmp4 = restmp[nF];
-						restmp[jD] = tmp1;
-						restmp[iD] = tmp2;
-						restmp[nF] = tmp3;
-						restmp[iF] = tmp4;		
-						inverseSens(restmp, iF, jD, taille);
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zbest) {
-							delete(best);
-							best = restmp;
-							zbest = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
-
-					//cas 7
-						restmp = new int[taille];
-						for(k = 0; k<taille; ++k) {restmp[k] = sol[k];}
-						tmp1 = restmp[iF];
-						tmp2 = restmp[jD];
-						tmp3 = restmp[jF];
-						tmp4 = restmp[nD];
-						restmp[jF] = tmp1;
-						restmp[nD] = tmp2;
-						restmp[iF] = tmp3;
-						restmp[jD] = tmp4;
-						if (( zrestmp = calculerLongueurCircuitSol(restmp, dist) ) < zbest) {
-							delete(best);
-							best = restmp;
-							zbest = zrestmp;
-							*improved = true;
-						} else {
-							delete(restmp);
-						}
+					//test si meilleure modification
+					if (- d[0] + d[min] < zdiff) {
+						*improved = true;
+						//enregistrement de la meilleure solution actuele
+						zdiff = - d[0] + d[min];
+						ibest = i;
+						jbest = j;
+						nbest = n;
+						mbest = min;
+					}
+					
 				}
 			}
 		}
+
+		//application de la meilleure modification
+		if(*improved) {
+			//re-calcul des indices
+			iD = ibest % taille;
+			iF = (ibest+1) % taille;
+			jD = (ibest+jbest+2) % taille;
+			jF = (ibest+jbest+3) % taille;
+			nD = (ibest+jbest+nbest+4) % taille;
+			nF = (ibest+jbest+nbest+5) % taille;
+
+d[0] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
+d[1] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[jF]) + dist->getDistance(sol[nD],sol[nF]);
+d[2] = dist->getDistance(sol[iD],sol[iF]) + dist->getDistance(sol[jD],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
+d[3] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jD],sol[jF]) + dist->getDistance(sol[iF],sol[nF]);
+d[4] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[jD]) + dist->getDistance(sol[iF],sol[nF]);
+d[5] = dist->getDistance(sol[iD],sol[nD]) + dist->getDistance(sol[jF],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
+d[6] = dist->getDistance(sol[iD],sol[jD]) + dist->getDistance(sol[iF],sol[nD]) + dist->getDistance(sol[jF],sol[nF]);
+d[7] = dist->getDistance(sol[iD],sol[jF]) + dist->getDistance(sol[nD],sol[iF]) + dist->getDistance(sol[jD],sol[nF]);
+if (7 == mbest) {
+	cout<<iD<<" "<<iF<<" "<<jD<<" "<<jF<<" "<<nD<<" "<<nF<<endl;
+	cout<<dist->getvillei(sol[iD])<<" "<<dist->getvillei(sol[iF])<<" "<<dist->getvillei(sol[jD])<<" "<<dist->getvillei(sol[jF])<<" "<<dist->getvillei(sol[nD])<<" "<<dist->getvillei(sol[nF])<<endl;
+	cout<<d[7]<<" "<<d[0]<<" "<<d[0]-d[7]<<endl;
+	afficheSol(sol, dist);
+}
+
+			//application du mouvement
+			switch(mbest) {
+				case 0:
+						//on ne change rien
+					break;
+				case 1: //2-opt
+						tmp1 = sol[jD];
+						sol[jD] = sol[iF];
+						sol[iF] = tmp1;
+						inverseSens(sol, iF, jD, taille);
+						*improved = true;
+					break;
+				case 2: //2-opt
+						tmp1 = sol[nD];
+						sol[nD] = sol[jF];
+						sol[jF] = tmp1;
+						inverseSens(sol, jF, nD, taille);
+						*improved = true;
+					break;
+				case 3: //2-opt
+						tmp1 = sol[iD];
+						sol[iD] = sol[nF];
+						sol[nF] = tmp1;
+						//inversion manuelle car differente des autres
+						if (nF < iD) {
+							for (int k=1; k<=(iD-(nF+1))/2; k++) {
+								sol[iD-k] = sol[iD-k] + sol[nF+k];
+								sol[nF+k] = sol[iD-k] - sol[nF+k];
+								sol[iD-k] = sol[iD-k] - sol[nF+k];
+							}
+						} else { //iD > nF
+							for (int k=1; k<=(nF-(iD+1))/2; k++) {
+								sol[nF-k] = sol[nF-k] + sol[iD+k];
+								sol[iD+k] = sol[nF-k] - sol[iD+k];
+								sol[nF-k] = sol[nF-k] - sol[iD+k];
+							}
+						}
+						*improved = true;
+					break;
+				case 4: 
+						tmp1 = sol[iD];
+						tmp2 = sol[iF];
+						tmp3 = sol[jD];
+						tmp4 = sol[nF];
+						sol[jD] = tmp1;
+						sol[iD] = tmp2;
+						sol[nF] = tmp3;
+						sol[iF] = tmp4;		
+						inverseSens(sol, iF, jD, taille);
+						*improved = true;
+					break;
+				case 5:
+						tmp1 = sol[nD];
+						tmp2 = sol[iF];
+						tmp3 = sol[jD];
+						tmp4 = sol[jF];
+						sol[iF] = tmp1;
+						sol[jF] = tmp2;
+						sol[nD] = tmp3;
+						sol[jD] = tmp4;
+						inverseSens(sol, jF, nD, taille);
+						*improved = true;
+					break;
+				case 6:
+						tmp1 = sol[iF];
+						tmp2 = sol[jD];
+						tmp3 = sol[jF];
+						tmp4 = sol[nD];
+						sol[jD] = tmp1;
+						sol[iF] = tmp2;
+						sol[nD] = tmp3;
+						sol[jF] = tmp4;
+						inverseSens(sol, iF, jD, taille);
+						inverseSens(sol, jF, nD, taille);
+						*improved = true;
+					break;
+				case 7:
+						sol7 = new int[dist->getN()];
+						sol7[iD] = sol[iD];
+						sol7[(iD+1) % dist->getN()] = sol[jF];
+						//on place le segment jF-nD
+						for(k = 1; k < abs(nD-jF); ++k ) {
+							sol7[(k+1) % dist->getN()] = sol[(jF+k) % dist->getN()];
+						}
+						sol7[(k) % dist->getN()] = sol[nD];
+						sol7[(k+1) % dist->getN()] = sol[iF];
+						//on place le segment iF-jD
+						tmp1 = k+1;
+						for(k = tmp1; k < tmp1 + abs(iF-jD); ++k ) {
+							sol7[(k+1) % dist->getN()] = sol[(iF+k) % dist->getN()];
+						}
+						sol7[(k) % dist->getN()] = sol[jD];
+						sol7[(k+1) % dist->getN()] = sol[nF];
+						//on place le segment nF-iD
+						for(k = k+1; k < dist->getN(); ++k ) {
+							sol7[(k+1) % dist->getN()] = sol[(nF+k) % dist->getN()];
+						}
+						delete(sol);
+						sol = sol7;
+						*improved = true;
+					break;
+			}
+if (7 == mbest) {
+	afficheSol(sol, dist);
+	cout<<"\n"<<endl;
+}
+		}
+
 	//fin
-	if (*improved) {
-		delete(sol);
-		return best;
-	} else {
-		delete(best);
-		return sol;
-	}
+	return sol;
 }
 
 void inverseSens(int * sol, const int i, const int j, const int n) {
