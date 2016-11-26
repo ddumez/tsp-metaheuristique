@@ -47,7 +47,7 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 					for(k = 1; k<8; ++k) {
 						if(d[k] < d[min]) {min = k;}
 					}
-if (0 != min) {cout<<min<<endl; afficheSol(sol, dist);}
+
 					//application du mouvement
 					switch(min) {
 						case 0:
@@ -181,7 +181,7 @@ if (0 != min) {cout<<min<<endl; afficheSol(sol, dist);}
 								sol7[k % dist->getN()] = sol[jD];
 								++k;
 								for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != iF; --tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
 									++k;							
 								}
 								sol7[k % dist->getN()] = sol[iF];
@@ -191,7 +191,7 @@ if (0 != min) {cout<<min<<endl; afficheSol(sol, dist);}
 								sol7[k % dist->getN()] = sol[nD];
 								++k;
 								for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+									sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
 									++k;
 								}
 								sol7[k % dist->getN()] = sol[jF];
@@ -452,7 +452,7 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						sol7[k % dist->getN()] = sol[jD];
 						++k;
 						for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != iF; --tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
 							++k;							
 						}
 						sol7[k % dist->getN()] = sol[iF];
@@ -462,7 +462,7 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						sol7[k % dist->getN()] = sol[nD];
 						++k;
 						for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+							sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
 							++k;
 						}
 						sol7[k % dist->getN()] = sol[jF];
