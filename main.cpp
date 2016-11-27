@@ -12,6 +12,7 @@
 #include "RGSC/RGSC.hpp"
 #include "vnd.hpp"
 #include "vns.hpp"
+#include "Path-Relinking/PathRel.hpp"
 
 using namespace std;
 
@@ -24,9 +25,9 @@ int main() {
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
         //Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-        //Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
-        Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
+        //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
 		bool improved = false;
         double sumz, maxz, minz, zsol;;
@@ -42,12 +43,12 @@ int main() {
 		cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
 */
 		//test du NNH
-		cout<<"calcul NNH"<<endl;
+/*		cout<<"calcul NNH"<<endl;
 		t = clock();
 		construireSolNNH(sol, &dist);
 		t = clock() - t;
-//		cout<<"solution de NNH (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-//		afficheSol(sol, &dist);
+		cout<<"solution de NNH (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
+		afficheSol(sol, &dist);		
 //      cout<<"\n"<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
 
@@ -189,6 +190,38 @@ int main() {
         sumz = (double)((double)sumz/(double)NBITER);
         cout<<"différence proportionelle moyenne de la valeur trouve par vnsPPD : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
+*/
+
+		int *solA = new int [dist.getN()];
+		int *solB = new int [dist.getN()];
+		int *resultat;// = new int [dist.getN()];
+		cout<<"calcul NNH"<<endl;
+		construireSolNNH(solA, &dist);
+		
+		for (int i = 0; i < dist.getN(); ++i) {
+			solB[i] = solA[i];
+			//cout << solB[i] << endl;
+		}
+		
+		ameliorerSol2OPT(solB, &dist, &improved);
+		
+		//~ for (int i = 0; i < dist.getN(); ++i) {
+			//~ cout << solB[i] << endl;
+		//~ }
+		
+		//~ for (int i = 0; i < dist.getN(); ++i) {
+			//~ cout << solB[i] << endl;
+		//~ }
+		
+		
+		
+		resultat = pathRelinking(solA, solB, &dist, &improved);
+		cout << endl << "DEPART : " << endl << endl;
+		afficheSol(solA, &dist);
+		cout << endl << "ARRIVEE : " << endl << endl;
+		afficheSol(solB, &dist);
+		cout << endl << "RESULTAT : " << endl << endl;
+		afficheSol(resultat, &dist);
 
 	//fin
 return 0;
