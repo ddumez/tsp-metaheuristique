@@ -88,9 +88,8 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 		termine = true;
 		for (i = 0; i < N; ++i) {	// Tester toutes les permutations possibles
 			for (j = i+1; j < N; ++j) {
-				// Si 
-				if ((solCourante[i] != solB[i]) && (solCourante[j] != solB[j])) {
-					if ((solCourante[i] == solB[j]) || (solCourante[j] == solB[i])) {
+						//~ if (solCourante[i]==solB[j] || solCourante[j]==solB[i]) {
+						if ((solCourante[i]==solB[j]) || (solCourante[j]==solB[i]) || ((solCourante[i]!=solB[i]) && (solCourante[j]!=solB[j]))) {
 						// Alors on swap
 						
 						Si = solCourante[i];
@@ -110,21 +109,20 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 							}
 						}
 						
-						cout << "------------------------------------------" << endl;
-						cout << "SOL A : ";
-						afficheSol(solA, dist);
-						cout << endl;
-						
-						cout << "SOL C : ";
-						afficheSol(solCourante, dist);
-						cout << " zCour  : " << zCourant << endl;
-						cout << " zBest  : " << zBest << endl;
-						cout << endl;
-						
-						cout << "SOL B : ";
-						afficheSol(solB, dist);
-						cout << "------------------------------------------" << endl;
-					}
+						//~ cout << "------------------------------------------" << endl;
+						//~ cout << "SOL A : ";
+						//~ afficheSol(solA, dist);
+						//~ cout << endl;
+						//~ 
+						//~ cout << "SOL C : ";
+						//~ afficheSol(solCourante, dist);
+						//~ cout << " zCour  : " << zCourant << endl;
+						//~ cout << " zBest  : " << zBest << endl;
+						//~ cout << endl;
+						//~ 
+						//~ cout << "SOL B : ";
+						//~ afficheSol(solB, dist);
+						//~ cout << "------------------------------------------" << endl;
 				}
 			}
 		}
