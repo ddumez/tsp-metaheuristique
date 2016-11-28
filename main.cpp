@@ -22,7 +22,7 @@ int main() {
 	//variables
 		clock_t t, sumt, maxt, mint;
 		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
-		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
+		Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
 		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
@@ -203,18 +203,23 @@ int main() {
 			//cout << solB[i] << endl;
 		}
 		
-		ameliorerSol2OPT(solB, &dist, &improved);
+        cout<<"amelioration"<<endl;
+		solB = troisoptconverge(solB, &dist);
+		/*
+        cout<<"ville solB : ";
+		for (int i = 0; i < dist.getN(); ++i) {
+            cout << solB[i] <<" ; ";
+		}
+        cout<<"\n"<<endl;
 		
-		//~ for (int i = 0; i < dist.getN(); ++i) {
-			//~ cout << solB[i] << endl;
-		//~ }
+        cout<<"ville solA : ";
+		for (int i = 0; i < dist.getN(); ++i) {
+			cout << solA[i] <<" ; ";
+		}
+        cout<<"\n"<<endl;
+		*/
 		
-		//~ for (int i = 0; i < dist.getN(); ++i) {
-			//~ cout << solB[i] << endl;
-		//~ }
-		
-		
-		
+		cout<<"calcul pathRelinking"<<endl;
 		resultat = pathRelinking(solA, solB, &dist, &improved);
 		cout << endl << "DEPART : " << endl << endl;
 		afficheSol(solA, &dist);

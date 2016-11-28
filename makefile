@@ -1,6 +1,6 @@
 CC = g++
 SOURCES = ./Distancier/Distancier.cpp ./code_fourni.cpp ./RGSC/RGSC.cpp ./3-opt/3opt.cpp ./vnd.cpp ./vns.cpp ./Path-Relinking/PathRel.cpp
-CFLAGS = -Wall -O3
+CFLAGS = -Wall -g
 .PHONY = clean
 
 all: main
@@ -11,3 +11,4 @@ clean:
 	rm ./*.o
 	rm ./3-opt/*.o
 	rm ./Distancier/*.o
+	rm ./Path-Relinking/*.o
