@@ -6,13 +6,14 @@
 #include <cmath>
 #include <time.h>
 
-#include "./Distancier/Distancier.hpp"
-#include "code_fourni.hpp"
+#include "./2-opt/2opt.hpp"
 #include "./3-opt/3opt.hpp"
-#include "RGSC/RGSC.hpp"
-#include "vnd.hpp"
-#include "vns.hpp"
+#include "./Distancier/Distancier.hpp"
 #include "Path-Relinking/PathRel.hpp"
+#include "RGSC/RGSC.hpp"
+#include "vnd/vnd.hpp"
+#include "vns/vns.hpp"
+#include "code_fourni.hpp"
 
 using namespace std;
 
@@ -21,11 +22,12 @@ using namespace std;
 int main() {
 	//variables
 		clock_t t, sumt, maxt, mint;
-		Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
+		
+		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
         //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
@@ -33,7 +35,7 @@ int main() {
         double sumz, maxz, minz, zsol;;
 		
         //dist.afficher();
-/*
+
 		//test du RGSC
 		cout<<"calcul RGSC"<<endl;
 		t = clock();
@@ -41,9 +43,9 @@ int main() {
 		rgsc.construireCircuit(sol);
 		t = clock() - t;
 		cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
-*/
+
 		//test du NNH
-/*		cout<<"calcul NNH"<<endl;
+		cout<<"calcul NNH"<<endl;
 		t = clock();
 		construireSolNNH(sol, &dist);
 		t = clock() - t;
@@ -190,7 +192,7 @@ int main() {
         sumz = (double)((double)sumz/(double)NBITER);
         cout<<"différence proportionelle moyenne de la valeur trouve par vnsPPD : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
-*/
+
 
 		int *solA = new int [dist.getN()];
 		int *solB = new int [dist.getN()];

@@ -13,7 +13,7 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 		int iD, iF, jD, jF, nD, nF; //indice dans la solution des arretes consideres
 		const int taille = dist->getN();
 		int i,j,n,k, min;
-		int tmp1, tmp2, tmp3, tmp4;
+		int tmp, lim;
 		double d[8];
 		int * sol7; //pour la recopie partielle du cas 7
 		
@@ -54,35 +54,35 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on ne change rien
 							break;
 						case 1: //2-opt //OK
-								tmp1 = sol[jD];
+								tmp = sol[jD];
 								sol[jD] = sol[iF];
-								sol[iF] = tmp1;
+								sol[iF] = tmp;
 								inverseSens(sol, iF, jD, taille);
 								*improved = true;
 							break;
 						case 2: //2-opt //Ok
-								tmp1 = sol[nD];
+								tmp = sol[nD];
 								sol[nD] = sol[jF];
-								sol[jF] = tmp1;
+								sol[jF] = tmp;
 								inverseSens(sol, jF, nD, taille);
 								*improved = true;
 							break;
 						case 3: //2-opt
-								tmp1 = sol[iD];
+								tmp = sol[iD];
 								sol[iD] = sol[nF];
-								sol[nF] = tmp1;
+								sol[nF] = tmp;
 								//inversion manuelle car differente des autres
 									//calcul du nombre de case entre iD et nF divise par 2
 								if (nF < iD) {
-									tmp2 = (iD-nF) / 2;
+									lim = (iD-nF) / 2;
 								} else { //iD > nF
-									tmp2 = (dist->getN() - nF + iD) / 2;
+									lim = (dist->getN() - nF + iD) / 2;
 								}
 									//inversion
-								for(k = 1; k<tmp2; ++k) {
-									tmp1 = sol[(iD-k+dist->getN()) % dist->getN()];
+								for(k = 1; k<lim; ++k) {
+									tmp = sol[(iD-k+dist->getN()) % dist->getN()];
 									sol[(iD-k+dist->getN()) % dist->getN()] = sol[(nF+k) % dist->getN()];
-									sol[(nF+k) % dist->getN()] = tmp1;
+									sol[(nF+k) % dist->getN()] = tmp;
 								}
 								*improved = true;
 							break;
@@ -96,8 +96,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment jF-nD
 								sol7[k % dist->getN()] = sol[jF];
 								++k;
-								for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (jF+1) % dist->getN(); tmp % dist->getN() != nD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;
 								}
 								sol7[k % dist->getN()] = sol[nD];
@@ -107,8 +107,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment jD-iF
 								sol7[k % dist->getN()] = sol[jD];
 								++k;
-								for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1 + dist->getN()) % dist->getN() != iF; --tmp1 ) {
-									sol7[k % dist->getN()] = sol[(tmp1 + dist->getN()) % dist->getN()];
+								for(tmp = (jD-1+dist->getN()) % dist->getN(); (tmp + dist->getN()) % dist->getN() != iF; --tmp ) {
+									sol7[k % dist->getN()] = sol[(tmp + dist->getN()) % dist->getN()];
 									++k;							
 								}
 								sol7[k % dist->getN()] = sol[iF];
@@ -117,8 +117,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment nF-iD, on revien au point de depard
 								sol7[k % dist->getN()] = sol[nF];
 								++k;
-								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;
 								}
 
@@ -138,8 +138,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment nD-jF
 								sol7[k % dist->getN()] = sol[nD];
 								++k;
-								for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
-									sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+								for(tmp = (nD-1+dist->getN()) % dist->getN(); (tmp+dist->getN()) % dist->getN() != jF; --tmp ) {
+									sol7[k % dist->getN()] = sol[(tmp+dist->getN()) % dist->getN()];
 									++k;
 								}
 								sol7[k % dist->getN()] = sol[jF];
@@ -149,8 +149,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment iF-jD
 								sol7[k % dist->getN()] = sol[iF];
 								++k;
-								for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (iF+1) % dist->getN(); tmp % dist->getN() != jD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;							
 								}
 								sol7[k % dist->getN()] = sol[jD];
@@ -159,8 +159,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment nF-iD, on revien au point de depard
 								sol7[k % dist->getN()] = sol[nF];
 								++k;
-								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;
 								}
 
@@ -180,8 +180,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment jD-iF
 								sol7[k % dist->getN()] = sol[jD];
 								++k;
-								for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != iF; --tmp1 ) {
-									sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+								for(tmp = (jD-1+dist->getN()) % dist->getN(); (tmp+dist->getN()) % dist->getN() != iF; --tmp ) {
+									sol7[k % dist->getN()] = sol[(tmp+dist->getN()) % dist->getN()];
 									++k;							
 								}
 								sol7[k % dist->getN()] = sol[iF];
@@ -190,8 +190,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment nD-jF
 								sol7[k % dist->getN()] = sol[nD];
 								++k;
-								for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
-									sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+								for(tmp = (nD-1+dist->getN()) % dist->getN(); (tmp+dist->getN()) % dist->getN() != jF; --tmp ) {
+									sol7[k % dist->getN()] = sol[(tmp+dist->getN()) % dist->getN()];
 									++k;
 								}
 								sol7[k % dist->getN()] = sol[jF];
@@ -200,8 +200,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment nF-iD, on revien au point de depard
 								sol7[k % dist->getN()] = sol[nF];
 								++k;
-								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;
 								}
 
@@ -221,8 +221,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment jF-nD
 								sol7[k % dist->getN()] = sol[jF];
 								++k;
-								for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (jF+1) % dist->getN(); tmp % dist->getN() != nD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;
 								}
 								sol7[k % dist->getN()] = sol[nD];
@@ -232,8 +232,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment iF-jD
 								sol7[k % dist->getN()] = sol[iF];
 								++k;
-								for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (iF+1) % dist->getN(); tmp % dist->getN() != jD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;							
 								}
 								sol7[k % dist->getN()] = sol[jD];
@@ -242,8 +242,8 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 								//on place le segment nF-iD, on revien au point de depard
 								sol7[k % dist->getN()] = sol[nF];
 								++k;
-								for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-									sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+								for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+									sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 									++k;
 								}
 
@@ -267,7 +267,7 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
  		const int taille = dist->getN();
 		double d[8];
 		int i,j,n,k, min;
- 		int tmp1, tmp2, tmp3, tmp4;
+ 		int tmp, lim;
 		int ibest, jbest, nbest, mbest;
 		double zdiff = 0;
 		int * sol7; //pour la recopie partielle du cas 7
@@ -337,24 +337,36 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on ne change rien
 					break;
 				case 1: //2-opt
-						tmp1 = sol[jD];
+						tmp = sol[jD];
 						sol[jD] = sol[iF];
-						sol[iF] = tmp1;
+						sol[iF] = tmp;
 						inverseSens(sol, iF, jD, taille);
 						*improved = true;
 					break;
 				case 2: //2-opt
-						tmp1 = sol[nD];
+						tmp = sol[nD];
 						sol[nD] = sol[jF];
-						sol[jF] = tmp1;
+						sol[jF] = tmp;
 						inverseSens(sol, jF, nD, taille);
 						*improved = true;
 					break;
 				case 3: //2-opt
-						tmp1 = sol[iD];
+						tmp = sol[iD];
 						sol[iD] = sol[nF];
-						sol[nF] = tmp1;
-						inverseSens(sol, nF, iD, taille);
+						sol[nF] = tmp;
+						//inversion manuelle car differente des autres
+							//calcul du nombre de case entre iD et nF divise par 2
+						if (nF < iD) {
+							lim = (iD-nF) / 2;
+						} else { //iD > nF
+							lim = (dist->getN() - nF + iD) / 2;
+						}
+							//inversion
+						for(k = 1; k<lim; ++k) {
+							tmp = sol[(iD-k+dist->getN()) % dist->getN()];
+							sol[(iD-k+dist->getN()) % dist->getN()] = sol[(nF+k) % dist->getN()];
+							sol[(nF+k) % dist->getN()] = tmp;
+						}
 						*improved = true;
 					break;
 				case 4: 
@@ -367,8 +379,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment jF-nD
 						sol7[k % dist->getN()] = sol[jF];
 						++k;
-						for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (jF+1) % dist->getN(); tmp % dist->getN() != nD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;
 						}
 						sol7[k % dist->getN()] = sol[nD];
@@ -378,8 +390,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment jD-iF
 						sol7[k % dist->getN()] = sol[jD];
 						++k;
-						for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1 + dist->getN()) % dist->getN() != iF; --tmp1 ) {
-							sol7[k % dist->getN()] = sol[(tmp1 + dist->getN()) % dist->getN()];
+						for(tmp = (jD-1+dist->getN()) % dist->getN(); (tmp + dist->getN()) % dist->getN() != iF; --tmp ) {
+							sol7[k % dist->getN()] = sol[(tmp + dist->getN()) % dist->getN()];
 							++k;							
 						}
 						sol7[k % dist->getN()] = sol[iF];
@@ -388,8 +400,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment nF-iD, on revien au point de depard
 						sol7[k % dist->getN()] = sol[nF];
 						++k;
-						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;
 						}
 
@@ -409,8 +421,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment nD-jF
 						sol7[k % dist->getN()] = sol[nD];
 						++k;
-						for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
-							sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+						for(tmp = (nD-1+dist->getN()) % dist->getN(); (tmp+dist->getN()) % dist->getN() != jF; --tmp ) {
+							sol7[k % dist->getN()] = sol[(tmp+dist->getN()) % dist->getN()];
 							++k;
 						}
 						sol7[k % dist->getN()] = sol[jF];
@@ -420,8 +432,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment iF-jD
 						sol7[k % dist->getN()] = sol[iF];
 						++k;
-						for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (iF+1) % dist->getN(); tmp % dist->getN() != jD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;							
 						}
 						sol7[k % dist->getN()] = sol[jD];
@@ -430,8 +442,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment nF-iD, on revien au point de depard
 						sol7[k % dist->getN()] = sol[nF];
 						++k;
-						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;
 						}
 
@@ -451,8 +463,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment jD-iF
 						sol7[k % dist->getN()] = sol[jD];
 						++k;
-						for(tmp1 = (jD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != iF; --tmp1 ) {
-							sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+						for(tmp = (jD-1+dist->getN()) % dist->getN(); (tmp+dist->getN()) % dist->getN() != iF; --tmp ) {
+							sol7[k % dist->getN()] = sol[(tmp+dist->getN()) % dist->getN()];
 							++k;							
 						}
 						sol7[k % dist->getN()] = sol[iF];
@@ -461,8 +473,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment nD-jF
 						sol7[k % dist->getN()] = sol[nD];
 						++k;
-						for(tmp1 = (nD-1+dist->getN()) % dist->getN(); (tmp1+dist->getN()) % dist->getN() != jF; --tmp1 ) {
-							sol7[k % dist->getN()] = sol[(tmp1+dist->getN()) % dist->getN()];
+						for(tmp = (nD-1+dist->getN()) % dist->getN(); (tmp+dist->getN()) % dist->getN() != jF; --tmp ) {
+							sol7[k % dist->getN()] = sol[(tmp+dist->getN()) % dist->getN()];
 							++k;
 						}
 						sol7[k % dist->getN()] = sol[jF];
@@ -471,8 +483,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment nF-iD, on revien au point de depard
 						sol7[k % dist->getN()] = sol[nF];
 						++k;
-						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;
 						}
 
@@ -492,8 +504,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment jF-nD
 						sol7[k % dist->getN()] = sol[jF];
 						++k;
-						for(tmp1 = (jF+1) % dist->getN(); tmp1 % dist->getN() != nD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (jF+1) % dist->getN(); tmp % dist->getN() != nD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;
 						}
 						sol7[k % dist->getN()] = sol[nD];
@@ -503,8 +515,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment iF-jD
 						sol7[k % dist->getN()] = sol[iF];
 						++k;
-						for(tmp1 = (iF+1) % dist->getN(); tmp1 % dist->getN() != jD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (iF+1) % dist->getN(); tmp % dist->getN() != jD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;							
 						}
 						sol7[k % dist->getN()] = sol[jD];
@@ -513,8 +525,8 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 						//on place le segment nF-iD, on revien au point de depard
 						sol7[k % dist->getN()] = sol[nF];
 						++k;
-						for(tmp1 = (nF+1) % dist->getN(); tmp1 % dist->getN() != iD; ++tmp1 ) {
-							sol7[k % dist->getN()] = sol[tmp1 % dist->getN()];
+						for(tmp = (nF+1) % dist->getN(); tmp % dist->getN() != iD; ++tmp ) {
+							sol7[k % dist->getN()] = sol[tmp % dist->getN()];
 							++k;
 						}
 
@@ -535,9 +547,9 @@ void inverseSens(int * sol, const int j, const int i, const int n) {
 	int tmp1;
 	double tmp2;
 	if (j < i) {
-		tmp2 = (double)(i-j) / 2;0;
+		tmp2 = (double)(i-j) / 2.0;
 	} else { //i > j
-		tmp2 = (double)(n - j + i) / 2;0;
+		tmp2 = (double)(n - j + i) / 2.0;
 	}
 		//inversion
 	for(int k = 1; k<tmp2; ++k) {
