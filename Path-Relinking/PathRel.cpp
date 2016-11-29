@@ -54,7 +54,6 @@ double deltaSwap(int *sol, const Distancier * const dist, int i, int j) {
 		}
 	}
 	
-	
 	return delta;
 }
 
@@ -68,17 +67,17 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 	int *solCourante = new int [N];
 	int *bestSol = new int [N];
 	
-	for (int i = 0; i < N; ++i) {	// On part de solA
+	for (i = 0; i < N; ++i) {	// On part de solA
 		solCourante[i] = solA[i];
 	}
 	
 	if (zCourant < zBest) {			// Si solA est meilleure que solB
 		zBest = zCourant;				// solA est la meilleure solution
-		for (int i = 0; i < N; ++i) {
+		for (i = 0; i < N; ++i) {
 			bestSol[i] = solA[i];
 		}
 	} else {							// sinon solB est la meilleure solution
-		for (int i = 0; i < N; ++i) {
+		for (i = 0; i < N; ++i) {
 			bestSol[i] = solB[i];
 		}
 	}
@@ -130,3 +129,96 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 	
 	return bestSol;
 }
+
+
+int * pathRelinkingReconstr(int *solA, int *solB, const Distancier * const dist, bool *improved, int n) {
+	int i, j, nb, sortant, entrant, indS, indE;
+	bool estSorti, estDouble;
+	int N = dist->getN();
+	double zCourant = calculerLongueurCircuitSol(solA, dist);
+	double zBest = calculerLongueurCircuitSol(solB, dist);
+	int *solCourante = new int [N];
+	int *bestSol = new int [N];
+	int *sortis = new int [n];
+	int *doubles = new int [n];
+	
+	for (i = 0; i < N; ++i) {	// On part de solA
+		solCourante[i] = solA[i];
+	}
+	
+	if (zCourant < zBest) {			// Si solA est meilleure que solB
+		zBest = zCourant;				// solA est la meilleure solution
+		for (i = 0; i < N; ++i) {
+			bestSol[i] = solA[i];
+		}
+	} else {							// sinon solB est la meilleure solution
+		for (i = 0; i < N; ++i) {
+			bestSol[i] = solB[i];
+		}
+	}
+	
+	nb = 0;
+	for (i = 0; i < N; ++i) {			// Pour chaque
+		sortant = solCourante[i];
+		entrant = solB[i];
+		if (sortant != entrant) {
+			solCourante[i] = entrant;
+			
+			// On cherche si le sortant etait en double
+			indE = 0;
+			while ((indE < nb) && (doubles[indE] != sortant)) {
+				++indE;
+			}
+			estDouble = (indE < nb);
+			
+			// On cherche si l'entrant etait sorti
+			indS = 0;
+			while ((indS < nb) && (sortis[indS] != entrant)) {
+				++indS;
+			}
+			estSorti = (indS < nb);
+			
+			if (!(estSorti || estDouble)) {
+				sortis[nb] = sortant;
+				doubles[nb] = entrant;
+				++nb;
+			} else if (!estSorti) {
+				sortis[indS] = sortant;
+			} else if (!estDouble) {
+				doubles[indE] = entrant;
+			} else {
+				for (j = indS+1; j < nb; ++j) {
+					sortis[j-1] = sortis[j];
+				}
+				for (j = indE+1; j < nb; ++j) {
+					doubles[j-1] = doubles[j];
+				}
+				--nb;
+			}
+			afficheSol(solCourante, dist);
+		}
+		
+		if (nb == n) {
+			for (j = 0; j < nb; ++j) {
+				//~ if (
+			}
+			nb = 0;
+		}
+	}
+	
+	
+	delete sortis;
+	delete doubles;
+	
+	return solCourante;
+}
+
+
+
+
+
+
+
+
+
+

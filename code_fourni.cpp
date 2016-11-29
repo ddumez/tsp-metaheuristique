@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include "code_fourni.hpp"
 #include "./Distancier/Distancier.hpp"
@@ -35,6 +37,29 @@ void construireSolNNH(int * sol, const Distancier * const dist) {
 		tmp = sol[i+1];
 		sol[i+1] = sol[jmin];
 		sol[jmin] = tmp;
+	}
+}
+
+void construireSolAleatoire(int * sol, const Distancier * const dist) {
+	int i,j;
+	int n = dist->getN();
+	int tmp;
+
+	//initialise la solution avec un circuit qui correspond a la permutation identite
+	//plus facile pour connaire les villes restantes
+	for (i=0; i<n; ++i) {
+    	sol[i] = i;
+	}
+
+	// calcule la distance min de la ville i a toutes les autres villes
+	for (i=0; i<n-1; ++i) {
+		i = rand() % n;
+		j = rand() % n;
+		
+		// echange entre la ville i+1 et jmin dans la solution
+		tmp = sol[i];
+		sol[i] = sol[j];
+		sol[j] = tmp;
 	}
 }
 

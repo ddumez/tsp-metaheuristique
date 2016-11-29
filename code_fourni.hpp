@@ -12,11 +12,20 @@
 /**
 * \brief utilise l'heuristique NNH pour construire une solution initiale
 *
-* \param[in,out] sol tableau qui contien l'ordre de parcour des villes
+* \param[in,out] sol tableau qui contien l'ordre de parcours des villes
 * \param[in] dist le distancier
 * \param[out] zSol taille de la solution trouvé
 */
 void construireSolNNH(int * sol, const Distancier * const dist);
+
+/**
+* \brief construit une solution aléatoire
+*
+* \param[in,out] sol tableau qui contien l'ordre de parcours des villes
+* \param[in] dist le distancier
+* \param[out] zSol taille de la solution trouvé
+*/
+void construireSolAleatoire(int * sol, const Distancier * const dist);
 
 /**
 * \brief calcule la taille du circuit
