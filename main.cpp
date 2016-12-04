@@ -236,7 +236,7 @@ int main() {
 		cout << "Optimisation solA 3-opt" << endl;
 		solA = troisoptconverge(solA, &dist);
 		
-		cout << "Optimisation solA 2-opt" << endl;
+		cout << "Optimisation solB 2-opt" << endl;
 		solB = deuxoptconverge(solB, &dist);
 		cout << "Optimisation solB 3-opt" << endl;
 		solB = troisoptconverge(solB, &dist);

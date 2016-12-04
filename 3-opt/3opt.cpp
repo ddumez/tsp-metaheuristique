@@ -45,22 +45,21 @@ int * ameliorerSol3OPT(int * sol, const Distancier * const dist, bool *improved)
 					//recherche du min
 					min = 0;
 					for(k = 1; k<8; ++k) {
-						if(d[k] < d[min]) {min = k;}
+						if(d[k] + 0.000001 < d[min]) {min = k;} //ajout d'un epsilon pour eviter les imprecisons numeriques
 					}
-
 					//application du mouvement
 					switch(min) {
 						case 0:
 								//on ne change rien
 							break;
-						case 1: //2-opt //OK
+						case 1: //2-opt
 								tmp = sol[jD];
 								sol[jD] = sol[iF];
 								sol[iF] = tmp;
 								inverseSens(sol, iF, jD, taille);
 								*improved = true;
 							break;
-						case 2: //2-opt //Ok
+						case 2: //2-opt
 								tmp = sol[nD];
 								sol[nD] = sol[jF];
 								sol[jF] = tmp;
@@ -303,11 +302,11 @@ int * ameliorerSol3OptPPD(int * sol, const Distancier * const dist, bool *improv
 					//recherche du min
 					min = 0;
 					for(k = 1; k<8; ++k) {
-						if(d[k] < d[min]) {min = k;}
+						if(d[k] + 0.000001 < d[min]) {min = k;} //epsilon pour eviter les imprecisions numeriques
 					}
 
 					//test si meilleure modification
-					if (- d[0] + d[min] < zdiff) {
+					if (- d[0] + d[min] + 0.000001 < zdiff) { //epsilon pour eviter les imprecisions numeriques
 						*improved = true;
 						//enregistrement de la meilleure solution actuele
 						zdiff = - d[0] + d[min];

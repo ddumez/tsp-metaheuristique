@@ -22,7 +22,7 @@ int * ameliorerSol2OPT(int * sol, const Distancier * const dist, bool *improved)
 		  d1 = dist->getDistance( sol[iD] , sol[iF] ) + dist->getDistance( sol[jD] , sol[jF] );
 		  d2 = dist->getDistance( sol[iD] , sol[jD] ) + dist->getDistance( sol[iF] , sol[jF] );
 
-			if (d1>d2) {
+			if (d1>d2 + 0.000001) { //epsilon pour eviter les imprecisions numeriques
 				// amelioration detectee
 				*improved = true; // notifie que une amelioration est detectee
 
@@ -74,7 +74,7 @@ int * ameliorerSol2OptPPD(int * sol, const Distancier * const dist, bool *improv
 			d1 = dist->getDistance( sol[iD] , sol[iF] ) + dist->getDistance( sol[jD] , sol[jF] );
 			d2 = dist->getDistance( sol[iD] , sol[jD] ) + dist->getDistance( sol[iF] , sol[jF] );
 
-			if (- d1 + d2 < zdiff) {
+			if (- d1 + d2 + 0.000001 < zdiff) { //epsilon pour eviter les imprecisions numeriques
 				// amelioration detectee
 				*improved = true; // notifie que une amelioration est detectee
 				 
