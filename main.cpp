@@ -23,13 +23,13 @@ int main() {
 	//variables
 		clock_t t, sumt, maxt, mint;
 		
-		Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
+		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
 		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
-        //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
+        Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
 		bool improved = false;
         double sumz, maxz, minz, zsol;;
@@ -194,6 +194,14 @@ int main() {
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
 */
 
+
+
+
+
+/// Tests de Jojo :
+
+
+
 		int *solA = new int [dist.getN()];
 		int *solB = new int [dist.getN()];
 		int *resultat1, *resultat2;// = new int [dist.getN()];
@@ -215,10 +223,27 @@ int main() {
 		cout << "creation solB aléatoire" << endl;
 		construireSolAleatoire(solB, &dist);
 		afficheSol(solB, &dist);
+		//~ cout << "creation solA NNH" << endl;
+		//~ construireSolNNH(solA, &dist);
+		//~ afficheSol(solA, &dist);
+		//~ cout << "creation solB NNH" << endl;
+		//~ construireSolNNH(solB, &dist);
+		//~ afficheSol(solB, &dist);
+		
+		
+		cout << "Optimisation solA 2-opt" << endl;
+		solA = deuxoptconverge(solA, &dist);
+		cout << "Optimisation solA 3-opt" << endl;
+		solA = troisoptconverge(solA, &dist);
+		
+		cout << "Optimisation solA 2-opt" << endl;
+		solB = deuxoptconverge(solB, &dist);
+		cout << "Optimisation solB 3-opt" << endl;
+		solB = troisoptconverge(solB, &dist);
 		
 		cout<<"calcul pathRelinking"<<endl;
-		resultat1 = pathRelinkingReconstr(solA, solB, &dist, &improved, 3);
-		resultat2 = pathRelinkingReconstr(solB, solA, &dist, &improved, 3);
+		resultat1 = pathRelinkingReconstr(solA, solB, &dist, &improved, dist.getN()/5);
+		resultat2 = pathRelinkingReconstr(solB, solA, &dist, &improved, dist.getN()/5);
 		cout << endl << "SOLUTION A : " << endl;
 		afficheSol(solA, &dist);
 		cout << endl << "SOLUTION B : " << endl;
