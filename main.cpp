@@ -23,11 +23,11 @@ int main() {
 	//variables
 		clock_t t, sumt, maxt, mint;
 		
-		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
+		Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
         //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
@@ -37,7 +37,7 @@ int main() {
         //dist.afficher();
 
 		//test du RGSC
-		cout<<"calcul RGSC"<<endl;
+		/*cout<<"calcul RGSC"<<endl;
 		t = clock();
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit(sol);
@@ -192,7 +192,7 @@ int main() {
         sumz = (double)((double)sumz/(double)NBITER);
         cout<<"différence proportionelle moyenne de la valeur trouve par vnsPPD : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
-
+*/
 
 		int *solA = new int [dist.getN()];
 		int *solB = new int [dist.getN()];
@@ -211,11 +211,14 @@ int main() {
 		srand(0);
 		cout << "creation solA aléatoire" << endl;
 		construireSolAleatoire(solA, &dist);
+		afficheSol(solA, &dist);
+		cout << "creation solB aléatoire" << endl;
 		construireSolAleatoire(solB, &dist);
+		afficheSol(solB, &dist);
 		
 		cout<<"calcul pathRelinking"<<endl;
-		resultat1 = pathRelinkingReconstr(solA, solB, &dist, &improved, 20);
-		resultat2 = pathRelinkingReconstr(solB, solA, &dist, &improved, 20);
+		resultat1 = pathRelinkingReconstr(solA, solB, &dist, &improved, 3);
+		resultat2 = pathRelinkingReconstr(solB, solA, &dist, &improved, 3);
 		cout << endl << "SOLUTION A : " << endl;
 		afficheSol(solA, &dist);
 		cout << endl << "SOLUTION B : " << endl;
