@@ -25,20 +25,22 @@ int main() {
 		clock_t t, sumt, maxt, mint;
 		
 		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
-		Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
+		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
         //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
 		bool improved = false;
-        double sumz, maxz, minz, zsol;;
-		
+        double sumz, maxz, minz, zsol;
+
+        srand(0);
+        		
         //dist.afficher();
 
 		//test du RGSC
-		/*cout<<"calcul RGSC"<<endl;
+		cout<<"calcul RGSC"<<endl;
 		t = clock();
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit(sol);
@@ -51,17 +53,18 @@ int main() {
 		construireSolNNH(sol, &dist);
 		t = clock() - t;
 		cout<<"solution de NNH (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-		afficheSol(sol, &dist);		
-//      cout<<"\n"<<endl;
+		//afficheSol(sol, &dist);
+        cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
-
+/*
 		//test du 2-opt
 		cout<<"calcul 2-opt"<<endl;
 		t = clock();
 		sol = deuxoptconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 2-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-       	afficheSol(sol, &dist);
+       	//afficheSol(sol, &dist);
+        cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
         delete(sol);
 
@@ -74,7 +77,8 @@ int main() {
 		sol = troisoptconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 3-opt (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-    	afficheSol(sol, &dist);
+    	//afficheSol(sol, &dist);
+        cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
         delete(sol);
 
@@ -87,7 +91,8 @@ int main() {
 		sol = deuxoptPPDconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 2-opt PPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-    	afficheSol(sol, &dist);
+    	//afficheSol(sol, &dist);
+        cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
         delete(sol);
 
@@ -100,7 +105,8 @@ int main() {
 		sol = troisoptPPDconverge(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par 3-opt PPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-    	afficheSol(sol, &dist);
+    	//afficheSol(sol, &dist);
+        cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
         delete(sol);
 
@@ -113,7 +119,8 @@ int main() {
 		sol = vnd(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par vnd (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-    	afficheSol(sol, &dist);
+    	//afficheSol(sol, &dist);
+        cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
         delete(sol);
 
@@ -126,7 +133,8 @@ int main() {
 		sol = vndPPD(sol, &dist);
     	t = clock() - t;
     	cout<<"solution ameliorée par vndPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
-    	afficheSol(sol, &dist);
+    	//afficheSol(sol, &dist);
+        cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
         delete(sol);
 
@@ -159,11 +167,13 @@ int main() {
             delete(sol);
         }
         sumz = (double)((double)sumz/(double)NBITER);
+        cout<<"taille minimale : "<<minz<<" et maximale : "<<maxz<<endl;
+        cout<<"temps minimal : "<<mint<<" et maximal : "<<maxt<<endl;
         cout<<"différence proportionelle moyenne de la valeur trouve par vns : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
 
         //test du vns avec 2 et 3 opt plus profonde descente
-        sumt = 0; sumz = 0;
+        sumt = 0; sumz = 0; maxz = 0; maxt = 0;
         cout<<"calcul vnsPPD"<<endl;
         for(int i = 0; i<NBITER; ++i) {
             sol = new int[dist.getN()];
@@ -191,9 +201,42 @@ int main() {
             delete(sol);
         }
         sumz = (double)((double)sumz/(double)NBITER);
+        cout<<"taille minimale : "<<minz<<" et maximale : "<<maxz<<endl;
+        cout<<"temps minimal : "<<mint<<" et maximal : "<<maxt<<endl;
         cout<<"différence proportionelle moyenne de la valeur trouve par vnsPPD : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
 */
+        //test du grasp
+        sumt = 0; sumz = 0; maxz = 0; maxt = 0;
+        cout<<"calcul grasp"<<endl;
+        for(int i = 0; i<NBITER; ++i) {
+            t = clock();
+            sol = grasp(& dist, 0.7);
+            t = clock() - t;
+//            cout<<"solution ameliorée par vnsPPD (en "<<(double)((double)t/(double)(CLOCKS_PER_SEC))<<" sc) : "<<endl;
+//            afficheSol(sol, &dist);
+//            cout<<"\n"<<endl;
+            
+            zsol = calculerLongueurCircuitSol(sol, &dist);
+            if (0 == sumt) { //premiere iteration
+                minz = zsol;
+                mint = t;
+            }
+            if (mint > t) {mint = t;}
+            if (maxt < t) {maxt = t;}
+            if (minz > zsol) {minz = zsol;}
+            if (maxz < zsol) {maxz = zsol;}
+            sumt += t;
+            sumz += zsol;
+
+            delete(sol);
+        }
+        sumz = (double)((double)sumz/(double)NBITER);
+        cout<<"taille minimale : "<<minz<<" et maximale : "<<maxz<<endl;
+        cout<<"temps minimal : "<<mint<<" et maximal : "<<maxt<<endl;
+        cout<<"différence proportionelle moyenne de la valeur trouve par grasp : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
+        cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
+
 
 
 
@@ -254,11 +297,6 @@ int main() {
 		cout << endl << "RESULTAT B->A : " << endl;
 		afficheSol(resultat2, &dist);
 */
-
-        //tests du grasp
-        srand(0);
-        construireSolNNHrand(sol, & dist, 0.7);
-        afficheSol(sol, &dist);
 
 
 	//fin

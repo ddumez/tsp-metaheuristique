@@ -63,3 +63,29 @@ void construireSolNNHrand(int * sol, const Distancier * const dist, const double
 		delete(RCL);
 	}	
 }
+
+int * grasp(const Distancier * const dist, const double alpha) {
+	int nogood = 0;
+	int * sol; int tmp;
+	int * best = new int[dist->getN()]; construireSolNNH(best, dist); //initialisation du best
+	double zbest = calculerLongueurCircuitSol(best, dist); //initialisation de zbest
+	bool improved;
+	do {
+		sol = new int[dist->getN()];
+		construireSolNNHrand(sol, dist, alpha);
+		sol = vnd(sol, dist);
+		
+		if ( (tmp = calculerLongueurCircuitSol(sol, dist)) < zbest) {
+			delete(best);
+			zbest = tmp;
+			best = sol;
+			nogood = 0;
+		} else {
+			delete(sol);
+			++nogood;
+		}
+
+	} while (nogood < dist->getN()/5);
+
+	return best;
+}
