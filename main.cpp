@@ -26,9 +26,9 @@ int main() {
 		
 		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
-        //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
+        Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
         //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
@@ -56,7 +56,7 @@ int main() {
 		//afficheSol(sol, &dist);
         cout<<"taille de la solution : "<<calculerLongueurCircuitSol(sol, &dist)<<endl;
         cout<<"temps : "<< (double)((double)t/(double)(CLOCKS_PER_SEC)) <<" difference proportionnelle de valeur : "<<(double)( calculerLongueurCircuitSol(sol, &dist) * 100)/(double)(zbest) - 100<<"\n"<<endl;
-/*
+
 		//test du 2-opt
 		cout<<"calcul 2-opt"<<endl;
 		t = clock();
@@ -205,7 +205,7 @@ int main() {
         cout<<"temps minimal : "<<mint<<" et maximal : "<<maxt<<endl;
         cout<<"différence proportionelle moyenne de la valeur trouve par vnsPPD : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
-*/
+
         //test du grasp
         sumt = 0; sumz = 0; maxz = 0; maxt = 0;
         cout<<"calcul grasp"<<endl;
