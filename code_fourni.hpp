@@ -1,6 +1,6 @@
 /**
  * \file code_fourni.hpp
- * \brief algorithmes fournit : nnh et 2-opt
+ * \brief algorithmes fournit : nnh et utilitaires
  * \author Dorian D. & Jocelin C. par code de Xavier G.
  */
 
@@ -14,7 +14,6 @@
 *
 * \param[in,out] sol tableau qui contien l'ordre de parcours des villes
 * \param[in] dist le distancier
-* \param[out] zSol taille de la solution trouvé
 */
 void construireSolNNH(int * sol, const Distancier * const dist);
 
@@ -23,7 +22,6 @@ void construireSolNNH(int * sol, const Distancier * const dist);
 *
 * \param[in,out] sol tableau qui contien l'ordre de parcours des villes
 * \param[in] dist le distancier
-* \param[out] zSol taille de la solution trouvé
 */
 void construireSolAleatoire(int * sol, const Distancier * const dist);
 

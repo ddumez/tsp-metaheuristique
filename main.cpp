@@ -9,6 +9,7 @@
 #include "./2-opt/2opt.hpp"
 #include "./3-opt/3opt.hpp"
 #include "./Distancier/Distancier.hpp"
+#include "./GRASP/grasp.hpp"
 #include "Path-Relinking/PathRel.hpp"
 #include "RGSC/RGSC.hpp"
 #include "vnd/vnd.hpp"
@@ -24,12 +25,12 @@ int main() {
 		clock_t t, sumt, maxt, mint;
 		
 		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
-		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
+		Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
 		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
-        Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
+        //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
 		bool improved = false;
         double sumz, maxz, minz, zsol;;
@@ -201,7 +202,7 @@ int main() {
 /// Tests de Jojo :
 
 
-
+/*
 		int *solA = new int [dist.getN()];
 		int *solB = new int [dist.getN()];
 		int *resultat1, *resultat2;// = new int [dist.getN()];
@@ -252,6 +253,13 @@ int main() {
 		afficheSol(resultat1, &dist);
 		cout << endl << "RESULTAT B->A : " << endl;
 		afficheSol(resultat2, &dist);
+*/
+
+        //tests du grasp
+        srand(0);
+        construireSolNNHrand(sol, & dist, 0.7);
+        afficheSol(sol, &dist);
+
 
 	//fin
 return 0;
