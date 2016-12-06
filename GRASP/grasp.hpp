@@ -25,13 +25,21 @@
 void construireSolNNHrand(int * sol, const Distancier * const dist, const double a);
 
 /**
-* \brief utilise l'algorithme de grasp pour ameliorer la solution
+* \brief utilise l'algorithme de grasp
 *
-* \param[in] dist les information sur l'instance
+* \param[in] dist les informations sur l'instance
 * \param[in] alpha la parametre de control de l'aleatoire de grasp
 * \return la meilleure solution trouve
 */
 int * grasp(const Distancier * const dist, const double alpha);
+
+/**
+* \brief utilise l'algorithme reactive grasp
+*
+* \param[in] dist les informations sur l'instance
+* \return la meilleure solution trouve
+*/
+int * reacgrasp(const Distancier * const dist);
 
 
 #endif

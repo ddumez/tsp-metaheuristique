@@ -72,7 +72,6 @@ int * vns(int * sol, const Distancier * const dist) {
 }
 
 int * voisindeuxopt(const int * const sol, const Distancier * const dist) {
-	srand (time(NULL));
 	const int taille = dist->getN();
 	int i = rand() % taille;
 	int j = rand() % (taille -3);
@@ -109,7 +108,6 @@ int * voisindeuxopt(const int * const sol, const Distancier * const dist) {
 }
 
 int * voisintroisopt(const int * const sol, const Distancier * const dist) {
-	srand (time(NULL));
 	const int taille = dist->getN();
 	int tmp, lim, k;
 

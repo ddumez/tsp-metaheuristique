@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <stdlib.h>
 #include <vector>
 
 #include <iostream>
@@ -69,7 +70,7 @@ int * grasp(const Distancier * const dist, const double alpha) {
 	int * sol; int tmp;
 	int * best = new int[dist->getN()]; construireSolNNH(best, dist); //initialisation du best
 	double zbest = calculerLongueurCircuitSol(best, dist); //initialisation de zbest
-	bool improved;
+
 	do {
 		sol = new int[dist->getN()];
 		construireSolNNHrand(sol, dist, alpha);
@@ -86,6 +87,80 @@ int * grasp(const Distancier * const dist, const double alpha) {
 		}
 
 	} while (nogood < dist->getN()/5);
+
+	return best;
+}
+
+int * reacgrasp(const Distancier * const dist) {
+	int nogood = 0;
+	int * sol; int tmp;
+
+	int * best = new int[dist->getN()]; construireSolNNH(best, dist); //initialisation du best
+	//amelioration de la solution
+	/*sol = deuxoptconverge(sol, dist);
+	sol = troisoptconverge(sol, dist);
+	sol = deuxoptPPDconverge(sol, dist);
+	sol = troisoptPPDconverge(sol, dist);
+	*/best = vnd(best, dist);/*
+	sol = vndPPD(sol, dist);
+	sol = vns(sol, dist);
+	sol = vnsPPD(sol, dist);*/
+
+	int k;
+	int compt = 0; //compte le nombre de tour de grasp
+	double p[20]; for (k = 0; k<20; ++k){p[k] = k*0.05 + 0.05;} //probabilite de chaque alpha_k = 1 - k*0.05 -0.01
+	double q[20]; double sumq;
+	double zbest = calculerLongueurCircuitSol(best, dist); //initialisation de zbest
+	double zworst = zbest;
+	double avg[20]; for (k = 0; k<20; ++k){avg[k] = zbest;} //initialisation des moyennes
+	double choix; //valeur aleatoire du choix de la valeur de alpha
+
+	do {
+		sol = new int[dist->getN()];
+		
+		//choix de la valeur de alpha
+		choix = (double)((double)rand() / (double)RAND_MAX);
+		k = 0; while(p[k] <= choix) {++k;}
+
+		//construction pseudo aleatoire de la solution
+		construireSolNNHrand(sol, dist, 1 - k*0.05 - 0.01); //on laisse toujour une par d'aleatoire car la solution constuite a deja ete explore
+
+		//amelioration de la solution
+		/*sol = deuxoptconverge(sol, dist);
+		sol = troisoptconverge(sol, dist);
+		sol = deuxoptPPDconverge(sol, dist);
+		sol = troisoptPPDconverge(sol, dist);
+		*/sol = vnd(sol, dist);/*
+		sol = vndPPD(sol, dist);
+		sol = vns(sol, dist);
+		sol = vnsPPD(sol, dist);*/
+		
+		++compt;
+
+		//mise a jour de best et zbest
+		if ( (tmp = calculerLongueurCircuitSol(sol, dist)) < zbest) {
+			delete(best);
+			zbest = tmp;
+			best = sol;
+			nogood = 0;
+		} else {
+			delete(sol);
+			++nogood;
+		}
+
+		//mise a jour de zworst
+		if (tmp > zworst) {zworst = tmp;}
+
+		//mise a jour de avg
+		avg[k] = (double)((double)(avg[k] * (compt-1)) / (double)compt) + (double)((double)tmp / (double)compt);
+
+		//calcul des nouvelles probabilites
+		for (k = 0; k<20; ++k) {q[k] = (double)((double)(avg[k] - zworst) / (double)(zbest - zworst));}
+		sumq = 0; for(k = 0; k<20; ++k) {sumq += q[k];}
+		p[0] = q[0] / sumq;
+		for(k = 1; k<20; ++k) {p[k] = p[k-1] + (q[k] / sumq);}
+
+	} while (nogood < dist->getN()/5); //critère d'arret
 
 	return best;
 }
