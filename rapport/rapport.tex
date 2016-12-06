@@ -69,7 +69,7 @@ Cette fonction implémente un algorithme V.N.S utilisant les opérateur 2 et 3 o
 \section{Expérimentation}
 \subsection{En partant de N.N.H.}
 PPD designe la variante de l'algorithme utilisant la plus profonde descente.\\
-Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtemps} sont des moyennes effectuées sur 10 exécutions (sauf pour l'instance à 280 variables). Ces dernières sont données avec plus de détails dans le tableau \ref{variationvnsNNH}.\\
+Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtemps} sont des moyennes effectuées sur 10 exécutions. Ces dernières sont données avec plus de détails dans le tableau \ref{variationvnsNNH}.\\
 
 \begin{table}[!h]
 \centering
@@ -77,11 +77,11 @@ Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
   \hline
   nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
   \hline
-  48 & 281 & 225 & 230 & 223 & 225 & 225 & 223 & 220 & 223 \\
-  52 & 19 & 6,8 & 5,9 & 4 & 4 & 6,3 & 4 & 5.8 & 3.9 \\
-  130 & 24 & 10 & 12 & 6 & 5,7 & 10 & 5,7 & 6.1 & 5,7 \\
-  150 & 25 & 3,8 & 5.4 & 1,4 & 1,4 & 3,8 & 1,4 & 4.7 & 1.4 \\
-  280 & 23,3 & 10,7 & 7,5 & 7,5 & 7,5 & 10 & 7,5 & 7,5 & 7,5 \\
+  48 & 281 & 225 & 218 & 223 & 223 & 218 & 223 & 219 & 223 \\
+  52 & 19.0 & 6.80 & 5.96 & 3.96 & 3.40 & 2.56 & 3.41 & 3.56 & 3.41 \\
+  130 & 23.9 & 10.3 & 4.01 & 5.98 & 1.77 & 4.57 & 4.62 & 3.19 & 4.62 \\
+  150 & 25.5 & 3.88 & 3.39 & 1.45 & 1.31 & 1.85 & 0.80 & 3.95 & 0.80 \\
+  280 & 23.3 & 10.7 & 6.86 & 7.63 & 3.04 & 6.39 & 6.64 & 5.02 & 6.54 \\
   \hline
 \end{tabular}
 \caption{distance supplémentaire en pourcentage par rapport à la solution optimale}
@@ -94,11 +94,11 @@ Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
   \hline
   nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
   \hline
-  48 & 1.2e-05 & 0.00026 & 0.322 & 0.0007 & 1.576 & 0.161 & 0.161 & 0.41 & 0.603 \\
-  52 & 1.4e-05 & 0.00023 & 0.454 & 0.00091 & 2.618 & 0.442 & 0.223 & 0.65 & 0.594 \\
-  130 & 6.7e-05 & 0.0024 & 17.9 & 0.0117 & 202.2 & 18.7 & 18.3 & 32.5 & 112 \\
-  150 & 8.9e-05 & 0.0026 & 37.9 & 0.014 & 433.9 & 27.6 & 27.8 & 86 & 57.6 \\
-  280 & 0.00058 & 0.0172 & 584 & 0.084 & 7785 & 671 & 213 & 440 & 843 \\ 
+  48 & 1e-05 & 0.0002 & 0.0151 & 0.0004 & 0.0380 & 0.0116 & 0.0042 & 0.0105 & 0.0054 \\
+  52 & 1e-05 & 0.0002 & 0.0165 & 0.0010 & 0.0573 & 0.0102 & 0.0110 & 0.0128 & 0.0166 \\
+  130 & 5e-05 & 0.0020 & 0.2013 & 0.0043 & 1.4373 & 0.1155 & 0.2935 & 0.3496 & 0.5998 \\
+  150 & 0.0001 & 0.0032 & 0.2481 & 0.0055 & 1.4498 & 0.1817 & 0.1885 & 0.4458 & 0.4815 \\
+  280 & 0.0004 & 0.0122 & 2.0138 & 0.0351 & 19.013 & 1.2042 & 3.0444 & 3.0440 & 5.4501 \\ 
   \hline
 \end{tabular}
 \caption{temps d’exécutions en secondes}
@@ -112,10 +112,11 @@ Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
   nbVille & variation temps & variation résultat & variation temps & variation résultat \\
   ~ & vns & vns & vns PPD & vns PP \\
   \hline
-  48 & 304 & 2.18 & 305 & 2.84e-14 \\ 
-  52 & 201 & 4.5 & 357 & 3.7 \\
-  130 & 302 & 4.9 & 202 & 3.1 \\
-  150 & 590 & 6.3 & 596 & 7.4 \\
+  48 & 37.1 & 0 & 10.4 & 0 \\ 
+  52 & 33.8 & 0 & 6.27 & 0 \\
+  130 & 127 & 1.74 & 36.2 & 1e-13 \\
+  150 & 157 & 3.27 & 40.0 & 2e-14 \\
+  280 & 173 & 4.67 & 51.6 & 0.183 \\
   \hline
 \end{tabular}
 \caption{variation proportionnelle des algorithmes vns}
@@ -132,32 +133,32 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
   \hline
   nbVille & R.G.S.C. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
   \hline
-  48 & 357 & 220 & 239 & 225 & 222 & 220 & 225 & 219 & 226 \\
-  52 & 24 & 1,55 & 5,61 & 2,67 & 2,57 & 1,55 & 2,57 & 4,98 & 2,06 \\
-  130 & 38,53 & 5,14 & 6,51 & 2,84 & NaN & 4,67 & 2,81 & NaN & NaN \\
-  150 & 38,82 & 6,68 & 7,62 & 3,95 & NaN & 6,68 & 3,95 & NaN & NaN \\
+  48 & 357 & 220 & 221 & 225 & 222 & 220 & 218 & 221 & 218 \\
+  52 & 24.1 & 1.55 & 3.91 & 2.56 & 2.56 & 1.55 & 2.56 & 4.87 & 2.56 \\
+  130 & 38.5 & 5.14 & 2.98 & 2.83 & 0.845 & 1.60 & 1.43 & 3.63 & 1.43 \\
+  150 & 38.8 & 6.68 & 4.43 & 3,95 & 1.26 & 4.89 & 3.48 & 2.51 & 3.29 \\
   \hline
 \end{tabular}
 \caption{distance supplémentaire en pourcentage par rapport à la solution optimale}
-\label{NNHpourcentageperf}
+\label{RGSCpourcentageperf}
 \end{table}
 
 \begin{table}[!h]
 \centering
 \begin{tabular}{|*{10}{c|}}
   \hline
-  nbVille & R.G.S.C. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
+  nbVille & R.G.S.C. & 2opt & 3opt & 2opt PPD & 3opt PPD & vnd & vnd PPD & vns & vns PPD \\
   \hline
-  48 & 0,0049 & 0,00025 & 0,277 & 0,00096 & 2,64 & 0,144 & 0,145 & 0,13 & 0,33 \\
-  52 & 0,0069 & 0,00028 & 0,411 & 0,00067 & 1,98 & 0,20 & 0,20 & 0,55 & 0,59 \\
-  130 & 0,086 & 0,0025 & 15,63 & 0,019 & NaN & 15,84 & 7,96 & NaN & NaN \\
-  150 & 0,13 & 0,0034 & 27,94 & 0,018 & NaN & 13,97 & 13,18 & NaN & NaN \\
+  48 & 0.0132 & 0.0003 & 0.0132 & 0.0010 & 0.0650 & 0.0041 & 0.0119 & 0.0110 & 0.0305 \\
+  52 & 0.0155 & 0.0003 & 0.0135 & 0.0006 & 0.0382 & 0.0048 & 0.0052 & 0.0208 & 0.0068 \\
+  130 & 0.1389 & 0.0015 & 0.1169 & 0.0071 & 1.620 & 0.1194 & 0.2361 & 0.3007 & 0.5681 \\
+  150 & 0.2207 & 0.0019 & 0.1716 & 0.0087 & 2.593 & 0.1735 & 0.1914 & 0.3036 & 0.5024 \\
   \hline
 \end{tabular}
 \caption{temps d’exécution en secondes}
-\label{NNHtemps}
+\label{RGSCtemps}
 \end{table}
-~\\
+
 \begin{table}[!h]
 \centering
 \begin{tabular}{|*{5}{c|}}
@@ -165,14 +166,17 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
   nbVille & variation temps & variation résultat & variation temps & variation résultat \\
   ~ & vns & vns & vns PPD & vns PP \\
   \hline
-  48 & 314 & 224 & 301 & 225\\ 
-  52 & 106 & 2,39 & 115 & 6,06\\
+  48 & 26.1 & 0 & 25.2 & 0.526 \\ 
+  52 & 39.6 & 0 & 10.6 & 0 \\
+  130 & 203 & 3.89 & 68.2 & 7e-14 \\
+  150 & 76.8 & 5.09 & 126 & 0.658 \\
   \hline
 \end{tabular}
 \caption{variation proportionnelle des algorithmes vns}
-\label{variationvnsNNH}
+\label{variationvnsRGSC}
 \end{table}
-~\\
+
+\newpage
 \section{Conclusion}
 Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, bien le R.G.S.C. effectue plus de comparaisons celui-ci fournit des chemins plus long d'au moins 10\%. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\
 Cet algorithme est donc moins bon qu'il n'en avait l'air. Cela dit, nous allons réfléchir à d'éventuelles améliorations basées sur le même principe.\\

@@ -1,6 +1,6 @@
 CXX = g++
 SOURCES = ./2-opt/2opt.cpp ./3-opt/3opt.cpp ./Distancier/Distancier.cpp ./GRASP/grasp.cpp ./Path-Relinking/PathRel.cpp ./RGSC/RGSC.cpp ./vnd/vnd.cpp ./vns/vns.cpp code_fourni.cpp
-CPPFLAGS = -Wall -g
+CPPFLAGS = -Wall -O3
 .PHONY = clean
 
 all: main
@@ -12,7 +12,7 @@ clean:
 	rm ./2-opt/*.o
 	rm ./3-opt/*.o
 	rm ./Distancier/*.o
-	rm ./GRASP/*.0
+	rm ./GRASP/*.o
 	rm ./Path-Relinking/*.o
 	rm ./RGSC/*.o
 	rm ./vnd/*.o
