@@ -46,7 +46,7 @@ Mais cette fois ci je n'ai pas réussis à trouver une méthode me permettant de
 La complexité du 3-opt est donc de $O(nbVille^4)$ car il y a $O(nbVille^3)$ ensemble de 3 arc possible et le test et la modification se font de en $O(nbVille)$, la modification restant en $O(nbVille)$ car des inversions du sens de parcours sont nécessaire sur la plupart d'entre elles.\\
 Et avec le 3-opt la plus profonde descente à la même complexité puisque on est obligé d'appliquer toutes les modifications pour les tester.\\
 
-\section{Algorithmes de recherche}
+\section{Algorithmes de recherche locale}
 
 Les deux opérateurs ayant une version normale et une en plus profonde descente tous les algorithmes suivants ont aussi deux versions. Ce sont toujours les mêmes, à la différence que l'une utilisera les opérateurs classiques et l'autre ceux en plus profonde descente.
 
@@ -176,7 +176,99 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
 \label{variationvnsRGSC}
 \end{table}
 
-\newpage
+\subsection{Modification du critère d’arrêt de VNS}
+
+Dans cette section je détaille les expérimentations faites sur VNS et VNS-PPD. En effet dans les tableaux précédent on s'arrête dès que 2-opt puis 3-opt n'ont pas amélioré successivement. Mais leurs laisser plusieurs essais à impact. Donc on effectue la boucle 2-opt - 3-opt k fois, on relève la moyenne de la différence proportionnelle de valeur et la moyenne de temps d’exécution. Toutes ces exécutions sont effectués en partant de solution construite avec NNH.
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{7}{c|}}
+  \hline
+  nbVille & VNS -1 & VNS PPD -1 & VNS -2 & VNS PPD -2 & VNS -3 & VNS PPD -3 \\
+  \hline
+  48 & 219 & 223 & 219 & 223 & 217 & 223 \\ 
+  52 & 4.48 & 3.41 & 2.98 & 3.66 & 2.48 & 3.40 \\
+  130 & 3.26 & 4.62 & 2.03 & 4.62 & 1.85 & 4.53 \\
+  150 & 3.28 & 0.80 & 2.43 & 0.80 & 1.86 & 0.99 \\ 
+  280 & 4.64 & 6.44 & 3.53 & 6.53 & 3.10 & 6.59 \\
+  \hline
+\end{tabular}
+\caption{modification du critère d’arrêt de VNS : valeurs}
+\label{stopingRuleVNSval}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{7}{c|}}
+  \hline
+  nbVille & VNS -1 & VNS PPD -1 & VNS -2 & VNS PPD -2 & VNS -3 & VNS PPD -3 \\
+  \hline
+  48 & 0.0177 & 0.0114 & 0.0281 & 0.0123 & 0.0412 & 0.0162 \\ 
+  52 & 0.0167 & 0.0194 & 0.0322 & 0.0271 & 0.0484 & 0.0368 \\
+  130 & 0.4620 & 0.6899 & 0.7016 & 0.8776 & 1.200 & 1.029 \\
+  150 & 0.4204 & 0.5822 & 0.9710 & 0.7370 & 1.445 & 1.007 \\  
+  280 & 4.587 & 5.923 & 10.63 & 8.204 & 12.34 & 9.188 \\
+  \hline
+\end{tabular}
+\caption{modification du critère d’arrêt de VNS : temps}
+\label{stopingRuleVNStemps}
+\end{table}
+
+Premièrement cette modification dessert complètement la version plus profonde descente. La qualité de ses solution n'est même pas forcement augmenté (logiquement elle devrai toujours l’être mais l’aléatoire fait qu'elle ne l'est même pas forcement) tellement l’amélioration est faible. Par contre l'impact sur le temps d’exécution est très clairement visible.\\
+
+Sur la version classique le bilan est plus mitigé. En effet cette modification viens grandement améliorer la qualité des solutions, surtout le passage de 1 à 2 tours. Mais l'opérateur part alors en rapidité : on a en moyenne un facteur 2 entre le temps d’exécution entre 1 et 2 tours.\\ 
+
+\section{GRASP}
+
+\subsection{Implémentation}
+
+\subsection{Construction des solutions}
+
+\subsection{Expérimentations}
+
+On expérimente l'algorithme GRASP avec plusieurs algorithme de recherche locale. Le critère d’arrêt choisis est un nogood réglé empiriquement, et de manière constante, sur le nombre de ville divisé par 5.\\
+Les expérimentations sont, comme toujours, faites sur 10 expérimentations. Mais quand ce temps était trop grand une seule expérimentation a été faite. Ces cas sont noté d'une étoile. Les exécutions vraiment trop longue ont été arrêtés et noté par un tiret.\\
+VNS à été testé avec 1 et 2 tours, tandis que sa version plus profonde descente n'a été utilisé qu'avec 1 tours.\\
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{10}{c|}}
+  \hline
+  nbVille & 2opt & 3opt & 2optPPD & 3optPPD & VND & VNDPPD & VNS-1 & VNS-2 & VNSPPD \\
+  \hline
+  48 & 217 & 217 & 218 & 216 & 216 & 216 & 215 & 215 & 216 \\ 
+  52 & 2.56 & 1.44 & 2.01 & 0.77 & 1.83 & 1.64 & 0.67 & 0.10 & 0.94 \\
+  130 & 4.10 & 1.63 & 2.99 & 0.66* & 1.67 & 1.38 & 1.13 & 0.74 & 1.57 \\
+  150 & 1.85 & 1.71 & 1.52 &  0.75* & 1.84 & 1.03 & 0.91 & $0.86^1$ & 1.02 \\  
+  280 & 6.32 & 3.10* & 6.01 & - & 3.06* & - & 1.99* & 1.67* & 3.51* \\
+  \hline
+\end{tabular}
+\caption{différence de valeur de GRASP en fonction de la recherche locale}
+\label{recherchelocaleGRASPvaleurs}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{10}{c|}}
+  \hline
+  nbVille & 2opt & 3opt & 2optPPD & 3optPPD & VND & VNDPPD & VNS-1 & VNS-2 & VNSPPD \\
+  \hline
+  48 & 0.0146 & 0.0917 & 0.0169 & 0.9165 & 0.0886 & 0.1262 & 0.1924 & 0.3626 & 0.3424 \\ 
+  52 & 0.0161 & 0.1231 & 0.0201 & 1.511 & 0.0779 & 0.1326 & 0.3465 & 0.5166 & 0.3408 \\
+  130 & 0.1590 & 5.880 & 0.8385 & 249* & 6.660 & 14.9 & 17.46 & 38.5 & 30.8 \\
+  150 & 0.2312 & 8.868 & 1.364 & 309* & 6.82 & 30.9 & 33.68 & $39.23^1$ & 66.1 \\  
+  280 & 1.653 & 124* & 17.02 & - & 95* & - & 397* & 509* & 1103* \\
+  \hline
+\end{tabular}
+\caption{temps de GRASP en fonction de la recherche locale}
+\label{recherchelocaleGRASPtemps}
+\end{table}
+$~^1$ la huitième exécution sur les 10 à été arrêté au bout de plusieurs minutes.\\
+
+On remarque alors que des recherches locales comme le 3-opt PPD ou le VNS-2 permettent d'obtenir des solutions d'une grande qualité. Malheureusement ces versions passent mal à l’échelle à cause de leurs temps d’exécution. Donc si l'on souhaite traiter efficacement de grosse instance le 2-opt est obligatoire.\\
+
+Mais dans tous les cas on remarque que l'utilisation en multistart de ces différentes heuristiques permet d'obtenir des solutions de bien meilleure qualité que lorsque elles ne sont appelé qu'une seule fois.\\
+
 \section{Conclusion}
 Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, bien le R.G.S.C. effectue plus de comparaisons celui-ci fournit des chemins plus long d'au moins 10\%. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\
 Cet algorithme est donc moins bon qu'il n'en avait l'air. Cela dit, nous allons réfléchir à d'éventuelles améliorations basées sur le même principe.\\

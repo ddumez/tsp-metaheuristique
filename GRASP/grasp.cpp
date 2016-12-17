@@ -130,10 +130,10 @@ int * reacgrasp(const Distancier * const dist) {
 		sol = troisoptconverge(sol, dist);
 		sol = deuxoptPPDconverge(sol, dist);
 		sol = troisoptPPDconverge(sol, dist);
-		*/sol = vnd(sol, dist);/*
+		sol = vnd(sol, dist);
 		sol = vndPPD(sol, dist);
 		sol = vns(sol, dist);
-		sol = vnsPPD(sol, dist);*/
+		*/sol = vnsPPD(sol, dist);
 		
 		++compt;
 

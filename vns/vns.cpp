@@ -16,7 +16,7 @@ using namespace std;
 int * vns(int * sol, const Distancier * const dist) {
 	//variables
 		bool improved = false;
-		int k = 1;
+		int k = 0;
 		bool stop = false;
 		int * voisin;
 		double zsol, zvoisin;
@@ -25,8 +25,8 @@ int * vns(int * sol, const Distancier * const dist) {
 	//debut
 		do {
 			//choix du voisinage utilise
-			switch(k) {
-				case 1:
+			switch(k%2) {
+				case 0:
 						voisin = voisindeuxopt(sol, dist);
 						voisin = deuxoptconverge(voisin, dist);
 						if ( ( zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
@@ -39,7 +39,7 @@ int * vns(int * sol, const Distancier * const dist) {
 							improved = false;
 						}
 					break;
-				case 2:
+				case 1:
 						voisin = voisintroisopt(sol, dist);
 						voisin = troisoptconverge(voisin, dist);
 						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
@@ -58,7 +58,65 @@ int * vns(int * sol, const Distancier * const dist) {
 			}
 
 			//action suivante
-			if ((!improved) && (k>2)) {
+			if ((!improved) && (k>3)) {
+				stop = true; //on a pas amélioré on a aucun autre voisinage
+			} else if (!improved) {
+				++k; //on a pas amélioré mais il nous reste des voisinage
+			} else {
+				k = 0;	//on a amélioré
+			}
+		} while (! stop);
+	//fin
+
+	return sol;
+}
+
+int * vnsPPD(int * sol, const Distancier * const dist) {
+	//variables
+		bool improved = false;
+		int k = 0;
+		bool stop = false;
+		int * voisin;
+		double zsol, zvoisin;
+
+		zsol = calculerLongueurCircuitSol(sol, dist);
+	//debut
+		do {
+			//choix du voisinage utilise
+			switch(k%2) {
+				case 0:
+						voisin = voisindeuxopt(sol, dist);
+						voisin = deuxoptPPDconverge(voisin, dist);
+						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
+							zsol = zvoisin;
+							delete(sol);
+							sol = voisin;
+							improved = true;
+						} else {
+							delete(voisin);
+							improved = false;
+						}			
+					break;
+				case 1:
+						voisin = voisintroisopt(sol, dist);
+						voisin = troisoptPPDconverge(voisin, dist);		
+						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
+							zsol = zvoisin;
+							delete(sol);
+							sol = voisin;
+							improved = true;
+						} else {
+							delete(voisin);
+							improved = false;
+						}
+					break;
+				default :
+						improved = false;
+					break;
+			}
+
+			//action suivante
+			if ((!improved) && (k>1)) {
 				stop = true; //on a pas amélioré on a aucun autre voisinage
 			} else if (!improved) {
 				++k; //on a pas amélioré mais il nous reste des voisinage
@@ -67,9 +125,9 @@ int * vns(int * sol, const Distancier * const dist) {
 			}
 		} while (! stop);
 	//fin
-
 	return sol;
 }
+
 
 int * voisindeuxopt(const int * const sol, const Distancier * const dist) {
 	const int taille = dist->getN();
@@ -308,62 +366,4 @@ int * voisintroisopt(const int * const sol, const Distancier * const dist) {
 	}
 
 	return res;
-}
-
-
-int * vnsPPD(int * sol, const Distancier * const dist) {
-	//variables
-		bool improved = false;
-		int k = 1;
-		bool stop = false;
-		int * voisin;
-		double zsol, zvoisin;
-
-		zsol = calculerLongueurCircuitSol(sol, dist);
-	//debut
-		do {
-			//choix du voisinage utilise
-			switch(k) {
-				case 1:
-						voisin = voisindeuxopt(sol, dist);
-						voisin = deuxoptPPDconverge(voisin, dist);
-						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
-							zsol = zvoisin;
-							delete(sol);
-							sol = voisin;
-							improved = true;
-						} else {
-							delete(voisin);
-							improved = false;
-						}			
-					break;
-				case 2:
-						voisin = voisintroisopt(sol, dist);
-						voisin = troisoptPPDconverge(voisin, dist);		
-						if ( (zvoisin = calculerLongueurCircuitSol(voisin, dist)) < zsol ) {
-							zsol = zvoisin;
-							delete(sol);
-							sol = voisin;
-							improved = true;
-						} else {
-							delete(voisin);
-							improved = false;
-						}
-					break;
-				default :
-						improved = false;
-					break;
-			}
-
-			//action suivante
-			if ((!improved) && (k>2)) {
-				stop = true; //on a pas amélioré on a aucun autre voisinage
-			} else if (!improved) {
-				++k; //on a pas amélioré mais il nous reste des voisinage
-			} else {
-				k = 1;	//on a amélioré
-			}
-		} while (! stop);
-	//fin
-	return sol;
 }
