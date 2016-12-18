@@ -91,7 +91,6 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 	int i, j, k, ind, indSuiv, indMin;
 	bool debutTrouve, fini;
 	
-	//~ afficheSol(solB, dist);
 	ind = 0;
 	while (nb > 0) {	// Tant qu'on a pas retiré tous les doubles ni ajouté tous les absents
 		// On se place sur la première case trouvée de la solution qui n'est pas doublée
@@ -102,24 +101,12 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			}
 		}
 		
-		//~ afficheSol(sol, dist);
-		//~ cout << "doublés=";
-		//~ for (int i = 0; i < nb; ++i) {
-			//~ cout<<(char)(doubles[i]+65)<<"|";
-		//~ }
-		//~ cout << endl << "disparus=";
-		//~ for (int i = 0; i < nb; ++i) {
-			//~ cout <<(char)(absents[i]+65)<<"|";
-		//~ }
-		//~ cout << endl << endl;
-		
 		// On cherche la première case doublée
 		debutTrouve = false;
 		while (!debutTrouve) {				// Tant qu'on a pas trouvé
 			while (sol[ind]==solB[ind]) {		// On parcourt le chemin jusqu'à trouver une case fixée
 				ind = (ind+1)%N;
 			}
-			//~ cout << "ind non fixé = " << ind << endl;
 			
 			// On cherche si sur la case non fixée est une ville en double
 			i = 0;
@@ -128,19 +115,12 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			}
 			if (i<nb) {		// Si c'est le cas, alors on a trouvé le début
 				debutTrouve = true;
-				//~ cout << "est en double" << endl;
 			} else {		// Sinon, alors on regarde le prochaine indice
 				ind = (ind+1)%N;
-				//~ cout << "n'est pas en double" << endl;
-				//~ cout << "indice suivant : " << ind << endl;
 			}
 		}
 
-		if (ind == 0) {
-			debut = N-1;
-		} else {
-			debut = ind-1;
-		}
+		debut = (ind-1)%N;
 		
 		indSuiv = ind;
 		ind = debut;
@@ -179,7 +159,7 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			ind = indSuiv;
 			indSuiv = (indSuiv+1)%N;
 			
-			if ((k<nb) && (sol[indSuiv] != solB[indSuiv])) {
+			if (sol[indSuiv] != solB[indSuiv]) {
 				k = 0;
 				while ((k<nb) && (doubles[k]!=sol[indSuiv])) {
 					++k;
@@ -196,84 +176,6 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 	
 	return delta;
 }
-
-//~ // On répare sol
-//~ // On renvoie la différence de longueur de la solution réparée
-//~ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *doubles, int *absents, int nb) {
-	//~ int N = dist->getN();
-	//~ double delta = 0;
-	//~ int debut, fin, tailleSection;
-	//~ int i, ind;
-	//~ int *section = new int [nb+2];
-	//~ double zCourant = 0;
-	//~ int *bestSection = new int [nb+2];
-	//~ double zBest;
-	//~ bool debutTrouve;
-	//~ bool finTrouvee;
-	//~ 
-	//~ ind = 0;
-	//~ while (nb > 0) {	// Tant qu'on a pas retiré tous les doubles ni ajouté tous les absents
-		//~ // On se place sur la première case trouvée de la solution qui n'est pas doublée
-		//~ while (sol[ind]!=solB[ind]) { // Par simplification, je prends la première case fixée (égale à celle de la solution d'arrivée)
-			//~ ++ind;
-			//~ if (ind == N) {
-				//~ ind = 0;
-			//~ }
-		//~ }
-		//~ 
-		//~ // On cherche la première case doublée
-		//~ debutTrouve = false;
-		//~ while (!debutTrouve) {
-			//~ while (sol[ind]==solB[ind]) {
-				//~ ++ind;
-			//~ }
-			//~ i = 0;
-			//~ while ((i<nb) && (sol[ind] != doubles[i])) {
-				//~ ++i;
-			//~ }
-			//~ if (i<nb) {
-				//~ debutTrouve = true;
-			//~ } else {
-				//~ ++ind;
-			//~ }
-		//~ }
-		//~ if (ind == 0) {
-			//~ debut = N-1;
-		//~ } else {
-			//~ debut = ind-1;
-		//~ }
-		//~ 
-		//~ // On met la première ville fixée au début de la section (pour les futurs calculs)
-		//~ section[0] = sol[debut];
-		//~ 
-		//~ // On cherche la dernière case doublée
-		//~ finTrouvee = false;
-		//~ while (!finTrouvee) {
-			//~ i = 0;
-			//~ while ((i<nb) && (sol[ind] != doubles[i])) {
-				//~ ++i;
-			//~ }
-			//~ finTrouvee = (i==nb);
-		//~ }
-		//~ fin = ind;
-		//~ 
-		//~ // On met la dernière ville fixée à la fin de la section
-		//~ section[nb+1] = sol[fin];
-		//~ tailleSection = fin-debut;
-		//~ if (tailleSeciont < 0) {
-			//~ tailleSection = -tailleSection;
-		//~ }
-		//~ 
-		//~ // On a maintenant une section dans laquelle il n'y a que des villes doublées
-		//~ // On optimise de manière gloutonne la solution (amélioration en exact plus tard ?)
-		//~ for (i = 1; i < tailleSection-1; ++i) {
-			//~ section[i] = doubles
-		//~ }
-	//~ }
-	//~ 
-	//~ free(section);
-	//~ return delta;
-//~ }
 
 int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *improved) {
 	bool termine;
@@ -360,17 +262,11 @@ int * pathRelinkingReconstr(int *solA, int *solB, const Distancier * const dist,
 		}
 	}
 	
-	//~ afficheSol(solCourante, dist);
-	//~ cout << "zCalculé=" << zCourant << endl;
-	
-	
 	nb = 0;
 	for (i = 0; i < N; ++i) {			// Pour chaque
 		sortant = solCourante[i];
 		entrant = solB[i];
 		if (sortant != entrant) {
-			//~ cout << "entrant="<<(char)(solB[i]+65)<<endl;
-			//~ cout << "sortant="<<(char)(solCourante[i]+65)<<endl;
 			
 			zCourant = zCourant + deltaInsertion(solCourante, dist, i, entrant);
 			
@@ -407,38 +303,11 @@ int * pathRelinkingReconstr(int *solA, int *solB, const Distancier * const dist,
 			} else if (estDouble) {			// Sinon si seul le sortant était en double
 				doubles[indE] = entrant;		// Sa case est occupée par celui qui vient d'entrer
 			}
-			
-			//~ afficheSol(solCourante, dist);
-			//~ cout << "zCalculé=" << zCourant << endl;
-			//~ 
-			//~ cout << "doublés=";
-			//~ for (int i = 0; i < nb; ++i) {
-				//~ cout<<(char)(doubles[i]+65)<<"|";
-			//~ }
-			//~ cout << endl << "disparus=";
-			//~ for (int i = 0; i < nb; ++i) {
-				//~ cout <<(char)(absents[i]+65)<<"|";
-			//~ }
-			//~ cout << endl << endl;
 		}
 		
 		if (nb == n) {
-			cout << "REPARATION ||||||||||||||| "  << endl;
 			zCourant = zCourant + reparerSolution(solCourante, solB, dist, doubles, absents, nb);
 			nb = 0;
-			
-			//~ afficheSol(solCourante, dist);
-			//~ cout << "zCalculé=" << zCourant << endl;
-			//~ 
-			//~ cout << "doublés=";
-			//~ for (int i = 0; i < nb; ++i) {
-				//~ cout<<(char)(doubles[i]+65)<<"|";
-			//~ }
-			//~ cout << endl << "disparus=";
-			//~ for (int i = 0; i < nb; ++i) {
-				//~ cout <<(char)(absents[i]+65)<<"|";
-			//~ }
-			//~ cout << endl << endl;
 		}
 		if ((nb == 0) && (zCourant < zBest)) {
 			zBest = zCourant;
