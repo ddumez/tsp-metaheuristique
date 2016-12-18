@@ -269,6 +269,28 @@ On remarque alors que des recherches locales comme le 3-opt PPD ou le VNS-2 perm
 
 Mais dans tous les cas on remarque que l'utilisation en multistart de ces différentes heuristiques permet d'obtenir des solutions de bien meilleure qualité que lorsque elles ne sont appelé qu'une seule fois.\\
 
+\subsection{Arrêt probabiliste}
+
+C.C. Ribeiro, I. Rosseti et R.C. Souza ont montré dans leur papier "effective probabilistic stopping rules for randomized metaheuristics: GRASP implementations" que la qualité d'une solution généré et amélioré par GRASP suit une loi normale. Il est donc possible d'utiliser cela comme condition d’arrêt de GRASP. Au regard des solution déjà généré on peut estimer les paramètre de cette loi normale, et l'on décide de s’arrêter si la probabilité d'avoir une meilleure solution devient trop faible.\\
+
+Une loi normale est totalement décrite par sa moyenne $\mu$ et son écart-type $\sigma$. Pour estimer $\mu$ nous avons choisis l’estimateur des moments d'ordre 1 (simple et efficace) : $\widehat{\mu} = \frac{1}{n} \sum \limits_{k = 1} ^{n} X_k$. Pour estimer $\sigma$ nous avons utilisé la variance empirique corrigé (l'estimateur des moments d'ordre 2 avec un facteur correctif pour qu'il soit sans biais) : $\widehat{\sigma}^2 = \frac{1}{n-1} \sum \limits_{k = 1} ^{n} \left( X_k - \bar{X}_k \right) ^2$.\\
+Mais pour éviter de refaire des calcul et d'avoir à mémoriser toutes les valeurs obtenues nous avons utilisé une forme développé de cette dernière : $\widehat{\sigma}^2 = \frac{1}{n-1} \sum \limits_{k=0} ^n \left( X_k ^2 \right) - \frac{ \bar{X}_k }{n-1} \sum \limits_{k=1} ^{n} \left( X_k \right)$ qui se calcule aisément avec des accumulateurs. En effet si note $sumX_k = \sum \limits_{k=1} ^{n} X_k$ et $sumX2_{k} = \sum \limits_{k=1} ^{n} X_k ^2$ alors $\widehat{\sigma}^2 = \frac{sumX2_k}{n-1} - \frac{sumX_k ^2}{n(n-1)}$. Mais pour que ces formules soient valides il faut que $n > 1$ donc on force toujours le premier tour de boucle.\\
+
+Si l'on souhaite s’arrêter dès que la probabilité de trouver une meilleure solution est inférieur à $\alpha$ il faut calculer cette dernière. La probabilité d'avoir une solution d'une taille de moins de x une est égal à $F_{N(\mu,\sigma^2)} (x) = \int _{- \infty} ^{x} \frac{1}{\sqrt{2 \pi \sigma ^2}} e^{ \frac{\left( x - \mu \right)^2}{2 \sigma^2} } dx$. Or on ne peux exprimé cela sans intégrale. Mais on certaine valeur approché de $F_{N(0,1)}$ :
+\begin{itemize}
+\item
+$F_{N(0,1)} (-2.06) \leqslant 0.02$
+\item
+$F_{N(0,1)} (-1.65) \leqslant 0.05$
+\item
+$F_{N(0,1)} (-1.48) \leqslant 0.07$
+\item
+$F_{N(0,1)} (-1.29) \leqslant 0.1$
+\end{itemize}
+De plus on sait que si $X \sim N(0,1)$ et que $Y = \mu + \sigma X$ alors $Y \sim N(\mu, \sigma ^2)$ donc $F_{N(\mu,\sigma^2)} (y) = F_{N(\mu , \sigma ^2)} (\frac{y-\mu}{\sigma})$. Donc on peut dire que si $y \leqslant \mu + \sigma F^{-1} _{N(0,1)} ( \alpha)$ alors la probabilité d'avoir une meilleur solution est inférieure à $\alpha$.\\
+
+En pratique on ne connais bien évidement ni $\mu$ ni $\sigma$ donc on utilise $\widehat{\mu}$ et $\widehat{\sigma}$ décrit précédemment. Et pour les valeurs de $\alpha$, on les choisis à l'avance pour fixer la valeur de $F^{-1} _{N(0,1)} ( \alpha)$ à utiliser, en effet $\alpha$ n’appairait plus.
+
 \section{Conclusion}
 Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, bien le R.G.S.C. effectue plus de comparaisons celui-ci fournit des chemins plus long d'au moins 10\%. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\
 Cet algorithme est donc moins bon qu'il n'en avait l'air. Cela dit, nous allons réfléchir à d'éventuelles améliorations basées sur le même principe.\\
