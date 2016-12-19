@@ -10,7 +10,7 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{fullpage}
 
-\title{Rapport intermédiaire du projet de comparaison de méthodes de résolution approchées du T.S.P.}
+\title{Méthodes de résolution approchées du T.S.P.}
 \author{Dorian Dumez \and Jocelin Cailloux}
 
 \begin{document}
@@ -220,8 +220,6 @@ Sur la version classique le bilan est plus mitigé. En effet cette modification 
 
 \section{GRASP}
 
-\subsection{Implémentation}
-
 \subsection{Construction des solutions}
 
 \subsection{Expérimentations}
@@ -289,7 +287,95 @@ $F_{N(0,1)} (-1.29) \leqslant 0.1$
 \end{itemize}
 De plus on sait que si $X \sim N(0,1)$ et que $Y = \mu + \sigma X$ alors $Y \sim N(\mu, \sigma ^2)$ donc $F_{N(\mu,\sigma^2)} (y) = F_{N(\mu , \sigma ^2)} (\frac{y-\mu}{\sigma})$. Donc on peut dire que si $y \leqslant \mu + \sigma F^{-1} _{N(0,1)} ( \alpha)$ alors la probabilité d'avoir une meilleur solution est inférieure à $\alpha$.\\
 
-En pratique on ne connais bien évidement ni $\mu$ ni $\sigma$ donc on utilise $\widehat{\mu}$ et $\widehat{\sigma}$ décrit précédemment. Et pour les valeurs de $\alpha$, on les choisis à l'avance pour fixer la valeur de $F^{-1} _{N(0,1)} ( \alpha)$ à utiliser, en effet $\alpha$ n’appairait plus.
+En pratique on ne connais bien évidement ni $\mu$ ni $\sigma$ donc on utilise $\widehat{\mu}$ et $\widehat{\sigma}$ décrit précédemment. Et pour les valeurs de $\alpha$, on les choisis à l'avance pour fixer la valeur de $F^{-1} _{N(0,1)} ( \alpha)$ à utiliser, en effet $\alpha$ n’appairait plus.\\
+
+\subsection{Nouvelles expérimentations}
+
+Au vu de cette nouvelle il faut désormais refaire des tests. Mais on se restreindra cette fois au heuristique d'amélioration les plus prometeuses :
+\begin{itemize}
+\item
+2-opt pour sa rapidité
+\item
+vns-2 pour sa qualité de solution, sans être aussi lent que vns-ppd
+\item
+vnd comme solution intermédiaire qui pourrait se révélé intéressante
+\end{itemize}
+
+Notre algorithme GRASP commence toujours par construire une solution avec un NNH déterministe avant de l’amélioré avec VND. Le but étant d'avoir une bonne solution dès le début. Mais lorsque GRASP utilise l’opérateur 2-opt on se rend compte qu'une part importante de son temps d’exécution est due à cette première recherche. En effet vnd avait été choisis pour cette tache car il produit de bonnes solutions mais il n'est pas trop lent (surtout qu'il n'est utilisé qu'une seule fois). Mais étant donné la vitesse de GRASP avec 2-opt on va remplacer, dans les exécutions avec -opt, cette amélioration par une descente avec 2-opt.
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{6}{c|}}
+  \hline
+  nbVille & 2\% & 5\% & 7\% & 10\% & nogood \\
+  \hline
+  48 & 216 & 217 & 218 & 219 & 217 \\
+  52 & 1.34 & 3.03 & 3.47 & 4.61 & 2.98 \\
+  130 & 1.34 & 3.51 & 4.49 & 4.57 & 3.67 \\
+  150 & 3.38 & 3.68 & 3.71 & 3.73 & 3.75 \\
+  280 & 7.33 & 7.81 & 8.15 & 8.27 & 6.64 \\
+  \hline
+\end{tabular}
+\caption{différence de valeur de GRASP en fonction de $\alpha$ avec 2-opt}
+\label{recherchelocaleGRASPval2optproba}
+\end{table}
+
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{6}{c|}}
+  \hline
+  nbVille & 2\% & 5\% & 7\% & 10\% & nogood \\
+  \hline
+  48 & 0.1599 & 0.0105 & 0.0070 & 0.0051 & 0.0033 \\ 
+  52 & 0.0250 & 0.0137 & 0.0046 & 0.0042 & 0.0041 \\
+  130 & 0.0318 & 0.0594 & 0.0344 & 0.0278 & 0.0743 \\
+  150 & 0.1390 & 0.0501 & 0.0523 & 0.0293 & 0.0727 \\  
+  280 & 0.4688 & 0.2335 & 0.1735 & 0.1181 & 0.8435 \\
+  \hline
+\end{tabular}
+\caption{temps de GRASP en fonction de $\alpha$ avec 2-opt}
+\label{recherchelocaleGRASPtemps2optproba}
+\end{table}
+
+Pour vnd et vns-2 on garde l'initialisation avec vnd, car vns-2 et vnd s’exécutent dans des temps semblables.
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{6}{c|}}
+  \hline
+  nbVille & 2\% & 5\% & 7\% & 10\% & nogood \\
+  \hline
+  48 & - & 216 & 216 & 217 & 216 \\
+  52 & 0.47 & 0.95 & 1.28 & 1.87 & 1.83 \\
+  130 & 0.61* & 0.95 & 2.11 & 1.98 & 1.67 \\
+  150 & 1.21* & 1.81 & 1.83 & 1.85 & 1.84 \\
+  280 & 2.90* & 3.06* & 3.06* & 3.06* & 3.06* \\
+  \hline
+\end{tabular}
+\caption{différence de valeur de GRASP en fonction de $\alpha$ avec VND}
+\label{recherchelocaleGRASPtempsvndproba}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{6}{c|}}
+  \hline
+  nbVille & 2\% & 5\% & 7\% & 10\% & nogood \\
+  \hline
+  48 & - & 0.4871 & 0.2548 & 0.0920 & 0.0886 \\
+  52 & 0.3417 & 0.1380 & 0.1140 & 0.0929 & 0.0779 \\
+  130 & 132.5* & 0.1395 & 2.902 & 2.679 & 6.660 \\
+  150 & 116* & 10.54 & 4.295 & 2.443 & 6.82 \\
+  280 & 220.8 & 118* & 109.2* & 111* & 95* \\
+  \hline
+\end{tabular}
+\caption{temps de GRASP en fonction de $\alpha$ avec VND}
+\label{recherchelocaleGRASPvalvnsproba}
+\end{table}
+
+La combinaison de l’opérateur 2-opt avec l'arret probabiliste produit de bon résultats. On remarque en effet qu'avec $\alpha = 0.02$ on obtiens généralement de meilleures solution, donc on contrebalance le défaut de 2-opt, sans que cela ne prenne trop de temps, donc sans perdre son avantage.\\
+Avec VNS de nombreux tests ont été effectué, mais ils sont tellement mauvais que cette possibilité a été abandonné. Et avec VND ils ne sont pas probant non plus. Donc on peut désormais exclure cette combinaison : VND et VNS-2 offre de très belle qualité de solution mais fonctionne beaucoup mieux avec le critère nogood.\\
 
 \section{Conclusion}
 Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, bien le R.G.S.C. effectue plus de comparaisons celui-ci fournit des chemins plus long d'au moins 10\%. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\

@@ -99,14 +99,14 @@ int * reacgrasp(const Distancier * const dist) {
 
 	int * best = new int[dist->getN()]; construireSolNNH(best, dist); //initialisation du best
 	//amelioration de la solution
-	/*sol = deuxoptconverge(sol, dist);
-	sol = troisoptconverge(sol, dist);
-	sol = deuxoptPPDconverge(sol, dist);
-	sol = troisoptPPDconverge(sol, dist);
+	/*best = deuxoptconverge(best, dist);
+	best = troisoptconverge(best, dist);
+	best = deuxoptPPDconverge(best, dist);
+	best = troisoptPPDconverge(best, dist);
 	*/best = vnd(best, dist);/* //choix de celle ci car elle plutot rapide et de bonne qualite
-	sol = vndPPD(sol, dist);
-	sol = vns(sol, dist);
-	sol = vnsPPD(sol, dist);*/
+	best = vndPPD(best, dist);
+	best = vns(best, dist);
+	best = vnsPPD(best, dist);*/
 
 	int k; //compteur de boucle des diverse boucles internes
 	int compt = 0; //compte le nombre de tour de grasp
@@ -133,13 +133,13 @@ int * reacgrasp(const Distancier * const dist) {
 		construireSolNNHrand(sol, dist, 1 - k*0.05 - 0.01); //on laisse toujour une par d'aleatoire car la solution constuite a deja ete explore
 
 		//amelioration de la solution
-		sol = deuxoptconverge(sol, dist);
-		/*sol = troisoptconverge(sol, dist);
+		/*sol = deuxoptconverge(sol, dist);
+		sol = troisoptconverge(sol, dist);
 		sol = deuxoptPPDconverge(sol, dist);
 		sol = troisoptPPDconverge(sol, dist);
 		sol = vnd(sol, dist);
 		sol = vndPPD(sol, dist);
-		sol = vns(sol, dist);
+		*/sol = vns(sol, dist);/*
 		sol = vnsPPD(sol, dist);*/
 		
 		++compt; //compteur du nombre de tours
@@ -154,14 +154,12 @@ int * reacgrasp(const Distancier * const dist) {
 			delete(sol);
 			//++nogood;
 		}
-//cout<<"taille sol : "<<tmp<<endl;
+
 		//mise a jour des estimateur
 		sumXk += tmp;
 		sumXk2 += tmp*tmp;
 		mu = (double)(sumXk / (double)(compt));
-//cout<<"sumXk = "<<sumXk<<" et sumXk2 = "<<sumXk2<<endl;
 		sigma2 = (sumXk2 / (double)(compt-1)) - ( (sumXk * sumXk) / (double)(compt*(compt-1)));
-//cout<<"mu = "<<mu<<" ; sigma2 = "<<sigma2<<" ; sigma = "<<sqrt(sigma2)<<" ; compt = "<<compt<<" : "<<(tmp > mu - sqrt(sigma2)*1.65)<<"\n"<<endl;
 
 		//mise a jour de zworst
 		if (tmp > zworst) {zworst = tmp;}
@@ -174,7 +172,6 @@ int * reacgrasp(const Distancier * const dist) {
 		sumq = 0; for(k = 0; k<20; ++k) {sumq += q[k];}
 		p[0] = q[0] / sumq;
 		for(k = 1; k<20; ++k) {p[k] = p[k-1] + (q[k] / sumq);}
-
 
 	//} while (nogood < dist->getN()/5); //critère d'arret
 	} while( (compt == 1) || ( tmp > mu - sqrt(sigma2)*1.29 ) ); //la proba d'avoir une meilleure solution est trop faible 2% ->2.06 ; 5% ->1.65 ; 7% ->1.46 ; 10% ->1.29
