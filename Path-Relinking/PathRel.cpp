@@ -88,7 +88,7 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 	int N = dist->getN();
 	double delta = 0;
 	int debut;
-	int i, j, k, ind, indSuiv, indMin;
+	int i, j, k, indPrec, ind, indSuiv, indMin;
 	bool debutTrouve, fini;
 	
 	ind = 0;
@@ -110,7 +110,7 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			
 			// On cherche si sur la case non fixée est une ville en double
 			i = 0;
-			while ((i<nb) && (sol[ind] != doubles[i])) { 
+			while ((i<nb) && (sol[ind] != doubles[i])) {
 				++i;
 			}
 			if (i<nb) {		// Si c'est le cas, alors on a trouvé le début
@@ -120,17 +120,25 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			}
 		}
 
-		debut = (ind-1)%N;
+		indPrec = (ind-1)%N;
+		indSuiv = (ind+1)%N;
 		
-		indSuiv = ind;
-		ind = debut;
-		fini = false;
-		while (!fini) {
+		if (sol[indSuiv] != solB[indSuiv]) {
+			k = 0;
+			while ((k<nb) && (doubles[k]!=sol[indSuiv])) {
+				++k;
+			}
+			fini = k==nb;
+		} else {
+			fini = true;
+		}
 			
+		while (!fini) {
+			//afficheSol(sol, dist);
 			// On cherche de manière gloutonne la meilleure ville à ajouter après
 			indMin = 0;
 			for (i = 1; i < nb; ++i) {
-				if (dist->getDistance(sol[ind], absents[i]) < dist->getDistance(sol[ind], absents[indMin])) {
+				if (dist->getDistance(sol[indPrec], absents[i]) < dist->getDistance(sol[indPrec], absents[indMin])) {
 					indMin = i;
 				}
 			}
@@ -145,8 +153,8 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			}
 			
 			// On change la ville
-			delta = delta + deltaInsertion(sol, dist, indSuiv, absents[indMin]);
-			sol[indSuiv] = absents[indMin];
+			delta = delta + deltaInsertion(sol, dist, ind, absents[indMin]);
+			sol[ind] = absents[indMin];
 			
 			// On shifte les villes absentes
 			for (i = indMin+1; i < nb; ++i) {
@@ -156,6 +164,7 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			nb = nb -1;
 			
 			// on se place sur la case suivante
+			indPrec = ind;
 			ind = indSuiv;
 			indSuiv = (indSuiv+1)%N;
 			
@@ -168,10 +177,7 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 			} else {
 				fini = true;
 			}
-			
 		}
-		
-
 	}
 	
 	return delta;
