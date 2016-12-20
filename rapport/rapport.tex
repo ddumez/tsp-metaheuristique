@@ -18,22 +18,30 @@
 \section{Heuristiques de constructions}
 \subsection{N.N.H.}
 Cet algorithme est une heuristique de construction gloutonne qui, partant d'une ville donnée, construit le cycle hamiltonien de proche en proche. A partir d'une ville d'origine, l'algorithme sélectionne comme prochaine ville celle qui est la plus proche de la ville courante.\\
+
 On vois tout de suite l'impact du choix de la ville de départ sur la solution. Mais estimer la qualité de la solution en fonction de chaque ville est compliqué donc elle est choisie de manière arbitraire. En effet on prend toujours comme point de départ la première ville située dans le tableau de notre distancier.\\
+
 Notre distancier représentant le graphe sous forme d'une matrice d'adjacence on dispose toujours de la distance entre deux ville en temps constant. Cet algorithme va, pour chaque ville (on les parcours toutes une unique fois étant donne que l'on construit un cycle hamiltonien), parcourir toutes les villes non déjà parcourues pour trouver la plus proche. On en déduit que cet algorithme à une complexité temporelle en $O(nbVille^2)$. De plus sa complexité spatiale est en $O(nbVille)$, en effet on ne fait qu’allouer le parcours correspondant à la permutation identité avant de le modifier sur place.\\
 
 \subsection{R.G.S.C}
 Nous avons choisi d'implémenter une heuristique de construction de notre invention, en effet, nous voulions essayer quelque chose d'original. Nous avons donc imaginé un algorithme qui se base sur celui de Gale et Shapley qui résout le problème du mariage stable. Nous l'avons donc appelé ainsi, Recursive Gale-Shapley Circuit.\\
+
 Nous avons pensé qu'il est pertinent de construire des couples de villes de telle manière qu'aucune puisse s'unir avec une autre ville sans augmenter la longueur totale des distances entre les couples. L'idée est donc de former de tels couples de manière récursive, une fois que les villes sont unies deux à deux, nous réitérons l'algorithme afin d'unir les couples précédement formés deux à deux de la même manière.\\
-Chaque ville (puis chaque sous-couple par la suite), possède une liste de préférences des autres couples triés par ordre décroissant des distances. Nous avons supposé que la complexité de cet algorithme serait du même ordre que celui de Gale-Shapley multiplié par log(n), log(n) étant le nombre d'itérations effecutées. L'algorithme de Gale-Shapley s'effectue en $O(n^2)$, nous avons donc pour notre algorithme RGSC une complexité de $O(log(nbVille^2))$.\\
+
+Chaque ville (puis chaque sous-couple par la suite), possède une liste de préférences des autres couples triés par ordre décroissant des distances. Nous avons supposé que la complexité de cet algorithme serait du même ordre que celui de Gale-Shapley multiplié par log(n), log(n) étant le nombre d'itérations effecutées. L'algorithme de Gale-Shapley s'effectue en $O(n^2)$, nous avons donc pour notre algorithme RGSC une complexité de $O(log(nbVille) \times nbVille ^2)$.\\
 
 \section{Opérateurs de modification}
 \subsection{2-opt}
-Cet opérateur consiste à sélectionner deux arc (i.e. deux paire de ville adjacente dans le parcours) et a tester si leur croisement fournit une meilleure solution. Si on pose iD, iF les extrémités du premier arc et jD, jF celle du deuxième arc, on entend par croiser les arc aller de iD à jD puis de iF à jF au lieu de iD à iF puis de jD à jF comme c’était le cas dans la solution. Graphiquement on observe que c'est en réalité l'inverse qui améliore la solution, en effet si les deux arc s’intersectent dans le plan (d'une carte où les villes sont positionnées dans un repère par exemple) alors les inverser fait disparaître cette intersection et réduit la taille du chemin parcouru.\\
+
+Cet opérateur consiste à sélectionner deux arc (i.e. deux paire de ville adjacente dans le parcours) et à tester si leurs croisement fournit une meilleure solution. Si on pose iD, iF les extrémités du premier arc et jD, jF celle du deuxième arc, on entend par croiser les arcs aller de iD à jD puis de iF à jF au lieu de iD à iF puis de jD à jF comme c’était le cas dans la solution. Graphiquement on observe que c'est en réalité l'inverse qui améliore la solution, en effet si les deux arcs s’intersectent dans le plan (d'une carte où les villes sont positionnées dans un repère par exemple) alors les inverser fait disparaître cette intersection et réduit la taille du chemin parcouru.\\
+
 Il est alors évident que les 4 villes (iD, iF, jD, jF) doivent êtres différentes car sinon on ne fait que modifier l'ordre de parcours de ces villes (on ne fait qu'inverser une permutation) mais le T.S.P. sur lequel on travaille est symétrique donc cela ne change rien. Il est aussi évident que l'on considère des paires d'arc et non des couples car cela reviendrai à tester deux fois le même changement.\\
 
-Nous avons implémenté cet opérateur sous deux formes : en descente et en plus profonde descente.\\
+Nous avons implémenté cet opérateur sous deux formes : en descente et en plus profonde descente.
 En plus profonde descente on teste toute les paires d'arc et on applique seulement celle qui conduit à la meilleure solution, ici celle dont le parcours est le plus cour.\\
-En descente on teste aussi toutes le paires d'arc mais cette fois ci on applique la modification dès qu'elle amélioré la solution. On ne s’arrête pas à la première solution trouve pour éviter de s'appesantir sur le début du cycle et pour éviter de le re-tester un trop grand nombre de fois à partir du moment où il se serait stabilisé.\\
+
+En descente on teste aussi toutes le paires d'arc mais cette fois ci on applique la modification dès qu'elle améliore la solution. On ne s’arrête pas à la première solution trouvé pour éviter de s'appesantir sur le début du cycle et pour éviter de le re-tester un trop grand nombre de fois à partir du moment où il se serait stabilisé.\\
+
 Dans les deux cas on va tester $O(nbVille^2)$ changement mais appliquer l'opérateur 2-opt s’effectue en $O(nbVille)$ car on doit inverser le sens de parcours des villes situé entre iF et jD. Donc l'algorithme de descente est en $O(nbVille^3)$ tandis que celui de plus profonde descente est en $O(nbVille^2)$. Mais cette complexité n'est que celle de amelioreSol2opt et amelioreSol2optPPD, donc ne prend pas en compte la vitesse de convergence de la solution vers un minimum local.\\
 Ces complexité sont permise par le fait que l'on peut connaître à l'avance et en temps constant la taille du cycle hamiltonien après la modification.
  
@@ -42,9 +50,8 @@ Cet opérateur est une généralisation du 2-opt avec 3 arc. Tout les mouvements
 
 Cet opérateur a aussi été implémenté en descente et en plus profonde descente.\\
 Pour les même raison que pour le 2-opt, dans l'algorithme de descente on teste toutes les triplet possible à chaque fois au lieu de s’arrêter au premier mouvement améliorant trouvé.\\
-Mais cette fois ci je n'ai pas réussis à trouver une méthode me permettant de connaître à l'avance la longueur du cycle hamiltonien après la modification. Donc pour tester une modification la solution est applique puis la modification appliqué avant de calculer la longueur du cycle obtenu. Donc chaque test se fait en $O(nbVille)$.\\
-La complexité du 3-opt est donc de $O(nbVille^4)$ car il y a $O(nbVille^3)$ ensemble de 3 arc possible et le test et la modification se font de en $O(nbVille)$, la modification restant en $O(nbVille)$ car des inversions du sens de parcours sont nécessaire sur la plupart d'entre elles.\\
-Et avec le 3-opt la plus profonde descente à la même complexité puisque on est obligé d'appliquer toutes les modifications pour les tester.\\
+
+Dans les deux cas on va tester tous les triplets d'arcs possible, il y en a $O(nbVille ^3)$. De même que pour le 2-opt appliquer une modification s'effectue en $O(nbVille)$ car des inversions du sens de parcours sont parfois nécessaire. Donc selon le même principe que pour le 2-opt l'opérateur 3-opt est en $O(nbVille^4)$ pour la version classique et en $O(nbVille^3)$ pour la plus profonde descente. Mais cela ne tien toujours pas compte de la vitesse de convergence vers un minimum local.\\
 
 \section{Algorithmes de recherche locale}
 
@@ -58,24 +65,24 @@ Cet algorithme part d'une solution que lui fournit une heuristique de constructi
 
 Cet algorithme est identique au précédent mais avec l'opérateur 3-opt.
 
-\subsection{vnd}
+\subsection{VND}
 
-Cette fonction implémente un algorithme V.N.D utilisant les opérateurs 2 et 3 opt dans cet ordre. Elle part d'une solution fournie par une heuristique de construction. Elle utilise le critère d’arrêt standard du vnd qui est d'avoir trouvé un minimum local, c'est à dire que ni 2-opt ni 3-opt ne peuvent améliorer la solution.
+Cette fonction implémente un algorithme V.N.D utilisant les opérateurs 2 et 3 opt dans cet ordre. Elle part d'une solution fournie par une heuristique de construction. Elle utilise le critère d’arrêt standard du VND qui est d'avoir trouvé un minimum local, c'est à dire que ni 2-opt ni 3-opt ne peuvent améliorer la solution.
 
-\subsection{vns}
+\subsection{VNS}
 
-Cette fonction implémente un algorithme V.N.S utilisant les opérateur 2 et 3 opt dans cet ordre. Elle part d'une solution fournie par une heuristique de construction. Elle va s’arrêter quand elle aura utilisé, successivement, une fois la recherche de voisin puis l'amélioration, avec 2-opt puis avec 3-opt sans amélioration. Il faudrait donc mener de plus ample expérimentation concernant ce critère d’arrêt. Notamment en leur permettant chacun d'échouer plusieurs fois avant de passer à l'opérateur suivant ou en répétant ces 2 recherches plusieurs fois avant d'abandonner.
+Cette fonction implémente un algorithme V.N.S utilisant les opérateurs 2 et 3 opt dans cet ordre. Elle part d'une solution fournie par une heuristique de construction. Elle va s’arrêter quand elle aura utilisé, successivement, une fois la recherche de voisin puis l'amélioration, avec 2-opt puis avec 3-opt sans amélioration. Il faudrait donc mener de plus ample expérimentation concernant ce critère d’arrêt. Notamment en répétant ces 2 recherches plusieurs fois avant d'abandonner.
 
 \section{Expérimentation}
 \subsection{En partant de N.N.H.}
 PPD designe la variante de l'algorithme utilisant la plus profonde descente.\\
-Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtemps} sont des moyennes effectuées sur 10 exécutions. Ces dernières sont données avec plus de détails dans le tableau \ref{variationvnsNNH}.\\
+Tout ce qui concerne le VNS dans tableau \ref{NNHpourcentageperf} et \ref{NNHtemps} sont des moyennes effectuées sur 10 exécutions. Ces dernières sont données avec plus de détails dans le tableau \ref{variationVNSNNH}.\\
 
 \begin{table}[!h]
 \centering
 \begin{tabular}{|*{10}{c|}}
   \hline
-  nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
+  nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & VND & VND PPD & VNS & VNS PPD \\
   \hline
   48 & 281 & 225 & 218 & 223 & 223 & 218 & 223 & 219 & 222 \\
   52 & 19.0 & 6.80 & 5.96 & 3.96 & 3.40 & 2.56 & 3.41 & 4.23 & 3.41 \\
@@ -92,7 +99,7 @@ Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
 \centering
 \begin{tabular}{|*{10}{c|}}
   \hline
-  nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
+  nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & VND & VND PPD & VNS & VNS PPD \\
   \hline
   48 & 1e-05 & 0.0002 & 0.0151 & 0.0004 & 0.0380 & 0.0116 & 0.0042 & 0.0101 & 0.0821 \\
   52 & 1e-05 & 0.0002 & 0.0165 & 0.0010 & 0.0573 & 0.0102 & 0.0110 & 0.0143 & 0.0193 \\
@@ -104,13 +111,13 @@ Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
 \caption{temps d’exécutions en secondes}
 \label{NNHtemps}
 \end{table}
-~\\
+
 \begin{table}[!h]
 \centering
 \begin{tabular}{|*{5}{c|}}
   \hline
   nbVille & variation temps & variation résultat & variation temps & variation résultat \\
-  ~ & vns & vns & vns PPD & vns PP \\
+  ~ & VNS & VNS & VNS PPD & VNS PP \\
   \hline
   48 & 398 & 1.57 & 167 & 0.750 \\ 
   52 & 286 & 7.62 & 67.7 & 2e-14 \\
@@ -119,10 +126,28 @@ Tout ce qui concerne le vns dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
   280 & 334 & 5.91 & 25.2 & 0.183 \\
   \hline
 \end{tabular}
-\caption{variation proportionnelle des algorithmes vns}
-\label{variationvnsNNH}
+\caption{variation proportionnelle des algorithmes VNS}
+\label{variationVNSNNH}
 \end{table}
-~\\
+
+De ces première expérimentation on peut déduire que :
+\begin{itemize}
+\item
+2-opt est très clairement le pus rapide, malheureusement cela se ressent sur la qualité de ses solutions.
+\item
+la version plus profonde descente augmente bien la qualité des solutions (surtout pour 2 et 3-opt seul) mais cela se ressent fortement sur le temps d’exécution.
+\item
+3-opt seul ne semble présenter aucun intérêt car vnd le surpasse en tout point. Mais il sera tout de même gardé pour la suite car il pourrai réagir différemment face à la diversité de solution proposé par GRASP.
+\item
+3-opt PPD seul propose les solutions de meilleures qualité, malheureusement son utilisation est très compromise par le temps de calcul qu'il requiert. Au contraire 2-opt PPD propose de bonnes solutions, sans être aussi bonne, mais sont temps d’exécution est des plus compétitif.
+\item
+Quand a vnd et vns il propose des solutions de qualités, légèrement meilleures que celles de 2-opt PPD, mais son plus lent que ce dernier. Et entre eux ils sont difficilement comparable car la comparaison dépend des instances.
+\item
+VND est relativement stable du point de vue de la qualité des solutions mais ne l'est pas du tout selon le temps d’exécution.
+\item
+VNS est déjà nettement plus stable du coté des temps d’exécutions et renforce encore plus cette stabilité au regard de la qualité des solutions.
+\end{itemize}
+
 \subsection{En partant de R.G.S.C}
 Nous avons rencontré plus de difficultés que prévu lors de l'implémentation de cet algorithme. En dehors de l'aspect programmation et déboguage qui étaient particulièrement compliqué, nous avons remarqué que celui-ci ne converge pas pour l'itération de 280 villes que nous avons.\\
 Nous n'avons pas encore déterminé s'il s'agît d'une erreur de programmation ou bien de l'algorithme qui ne converge pas. En effet, l'algorithme de Gale-Shapley permet de créer un mariage stable entre deux ensembles différents, ici, nous marions les éléments d'un ensemble avec des élements de ce même ensemble. Cette différence fondamentale qui ne semble pas avoir d'impact intuitivement, pourrait en effet empêcher la convergence de l'algorithme.\\
@@ -131,7 +156,7 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
 \centering
 \begin{tabular}{|*{10}{c|}}
   \hline
-  nbVille & R.G.S.C. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & vnd & vnd PPD & vns & vns PPD \\
+  nbVille & R.G.S.C. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & VND & VND PPD & VNS & VNS PPD \\
   \hline
   48 & 357 & 220 & 221 & 225 & 222 & 220 & 218 & 221 & 216 \\
   52 & 24.1 & 1.55 & 3.91 & 2.56 & 2.56 & 1.55 & 2.56 & 2.37 & 1.80 \\
@@ -147,7 +172,7 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
 \centering
 \begin{tabular}{|*{10}{c|}}
   \hline
-  nbVille & R.G.S.C. & 2opt & 3opt & 2opt PPD & 3opt PPD & vnd & vnd PPD & vns & vns PPD \\
+  nbVille & R.G.S.C. & 2opt & 3opt & 2opt PPD & 3opt PPD & VND & VND PPD & VNS & VNS PPD \\
   \hline
   48 & 0.0132 & 0.0003 & 0.0132 & 0.0010 & 0.0650 & 0.0041 & 0.0119 & 0.0239 & 0.0844 \\
   52 & 0.0155 & 0.0003 & 0.0135 & 0.0006 & 0.0382 & 0.0048 & 0.0052 & 0.0091 & 0.0887 \\
@@ -164,7 +189,7 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
 \begin{tabular}{|*{5}{c|}}
   \hline
   nbVille & variation temps & variation résultat & variation temps & variation résultat \\
-  ~ & vns & vns & vns PPD & vns PP \\
+  ~ & VNS & VNS & VNS PPD & VNS PP \\
   \hline
   48 & 219 & 2.81 & 106 & 0.548 \\ 
   52 & 302 & 3.69 & 105 & 2.53 \\
@@ -172,13 +197,15 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
   150 & 177 & 5.43 & 63.3 & 7e-14 \\
   \hline
 \end{tabular}
-\caption{variation proportionnelle des algorithmes vns}
-\label{variationvnsRGSC}
+\caption{variation proportionnelle des algorithmes VNS}
+\label{variationVNSRGSC}
 \end{table}
+
+On remarque alors que les différents opérateurs conservent le même rapport entre eux en partant de solutions construites par RGSC. Mais même après amélioration cet algorithme de construction est totalement dominé par NNH.\\
 
 \subsection{Modification du critère d’arrêt de VNS}
 
-Dans cette section je détaille les expérimentations faites sur VNS et VNS-PPD. En effet dans les tableaux précédent on s'arrête dès que 2-opt puis 3-opt n'ont pas amélioré successivement. Mais leurs laisser plusieurs essais à impact. Donc on effectue la boucle 2-opt - 3-opt k fois, on relève la moyenne de la différence proportionnelle de valeur et la moyenne de temps d’exécution. Toutes ces exécutions sont effectués en partant de solution construite avec NNH.
+Dans cette section je détaille les expérimentations faites sur VNS et VNS-PPD. En effet dans les tableaux précédent on s'arrête dès que 2-opt puis 3-opt n'ont pas amélioré successivement. Mais leurs laisser plusieurs essais. Donc on effectue la boucle 2-opt - 3-opt k fois, on relève la moyenne de la différence proportionnelle de valeur et la moyenne de temps d’exécution. Toutes ces exécutions sont effectués en partant de solution construite avec NNH.
 
 \begin{table}[!h]
 \centering
@@ -214,13 +241,19 @@ Dans cette section je détaille les expérimentations faites sur VNS et VNS-PPD.
 \label{stopingRuleVNStemps}
 \end{table}
 
-Premièrement cette modification dessert complètement la version plus profonde descente. La qualité de ses solution n'est même pas forcement augmenté (logiquement elle devrai toujours l’être mais l’aléatoire fait qu'elle ne l'est même pas forcement) tellement l’amélioration est faible. Par contre l'impact sur le temps d’exécution est très clairement visible.\\
+Premièrement cette modification dessert complètement la version plus profonde descente. La qualité de ses solutions n'est même pas forcement augmenté (logiquement elle devrai toujours l’être mais l’aléatoire fait qu'elle ne l'est même pas forcement) tellement l’amélioration est faible. Par contre l'impact sur le temps d’exécution est très clairement visible.\\
 
 Sur la version classique le bilan est plus mitigé. En effet cette modification viens grandement améliorer la qualité des solutions, surtout le passage de 1 à 2 tours. Mais l'opérateur part alors en rapidité : on a en moyenne un facteur 2 entre le temps d’exécution entre 1 et 2 tours.\\ 
 
 \section{GRASP}
 
 \subsection{Construction des solutions}
+
+GRASP construit ses solutions avec un algorithme de NNH modifié pour include de l'aléatoire. NNH à été choisis car il propose de meilleurs résultats que RGSC, et nos recherches locales se comportent aussi mieux dessus. De plus RGSC ne convergent pas dans tous les cas il aurait dangereux de l'utiliser de manière aussi intensive.\\
+
+La version classique de NNH part d'une ville, parcours toutes les autres pour trouver la plus proche, y va et recommence.  Etant donné que pour chaque ville on doit parcourir toutes celles qui n'ont pas encore été visité cet algorithme est en $O(nbVille ^2)$.\\
+
+Dans cette version l'algorithme prend en paramètre "le taux d'aléatoire" $\alpha$. On va encore parcourir toutes les villes en allant ensuite vers une ville proche. Pour décider vers quelle ville on va se diriger on parcours toutes les villes qui n'ont pas encore été visité pour trouver la plus proche et la plus loin. A partir de cela, et de $\alpha$, on détermine la distance maximale acceptable. On se dirige alors vers une ville tiré aléatoirement dans l'ensemble de celles qui ne se situe pas trop loin, selon cette distance critique. Même si cet version est un peu plus lourde elle reste en $O(nbVille ^2)$.\\
 
 \subsection{Expérimentations}
 
@@ -272,9 +305,9 @@ Mais dans tous les cas on remarque que l'utilisation en multistart de ces diffé
 C.C. Ribeiro, I. Rosseti et R.C. Souza ont montré dans leur papier "effective probabilistic stopping rules for randomized metaheuristics: GRASP implementations" que la qualité d'une solution généré et amélioré par GRASP suit une loi normale. Il est donc possible d'utiliser cela comme condition d’arrêt de GRASP. Au regard des solution déjà généré on peut estimer les paramètre de cette loi normale, et l'on décide de s’arrêter si la probabilité d'avoir une meilleure solution devient trop faible.\\
 
 Une loi normale est totalement décrite par sa moyenne $\mu$ et son écart-type $\sigma$. Pour estimer $\mu$ nous avons choisis l’estimateur des moments d'ordre 1 (simple et efficace) : $\widehat{\mu} = \frac{1}{n} \sum \limits_{k = 1} ^{n} X_k$. Pour estimer $\sigma$ nous avons utilisé la variance empirique corrigé (l'estimateur des moments d'ordre 2 avec un facteur correctif pour qu'il soit sans biais) : $\widehat{\sigma}^2 = \frac{1}{n-1} \sum \limits_{k = 1} ^{n} \left( X_k - \bar{X}_k \right) ^2$.\\
-Mais pour éviter de refaire des calcul et d'avoir à mémoriser toutes les valeurs obtenues nous avons utilisé une forme développé de cette dernière : $\widehat{\sigma}^2 = \frac{1}{n-1} \sum \limits_{k=0} ^n \left( X_k ^2 \right) - \frac{ \bar{X}_k }{n-1} \sum \limits_{k=1} ^{n} \left( X_k \right)$ qui se calcule aisément avec des accumulateurs. En effet si note $sumX_k = \sum \limits_{k=1} ^{n} X_k$ et $sumX2_{k} = \sum \limits_{k=1} ^{n} X_k ^2$ alors $\widehat{\sigma}^2 = \frac{sumX2_k}{n-1} - \frac{sumX_k ^2}{n(n-1)}$. Mais pour que ces formules soient valides il faut que $n > 1$ donc on force toujours le premier tour de boucle.\\
+Mais pour éviter de refaire des calculs et d'avoir à mémoriser toutes les valeurs obtenues nous avons utilisé une forme développé de cette dernière : $\widehat{\sigma}^2 = \frac{1}{n-1} \sum \limits_{k=0} ^n \left( X_k ^2 \right) - \frac{ \bar{X}_k }{n-1} \sum \limits_{k=1} ^{n} \left( X_k \right)$ qui se calcule aisément avec des accumulateurs. En effet si note $sumX_k = \sum \limits_{k=1} ^{n} X_k$ et $sumX2_{k} = \sum \limits_{k=1} ^{n} X_k ^2$ alors $\widehat{\sigma}^2 = \frac{sumX2_k}{n-1} - \frac{sumX_k ^2}{n(n-1)}$. Mais pour que ces formules soient valides il faut que $n > 1$ donc on force toujours le premier tour de boucle.\\
 
-Si l'on souhaite s’arrêter dès que la probabilité de trouver une meilleure solution est inférieur à $\alpha$ il faut calculer cette dernière. La probabilité d'avoir une solution d'une taille de moins de x une est égal à $F_{N(\mu,\sigma^2)} (x) = \int _{- \infty} ^{x} \frac{1}{\sqrt{2 \pi \sigma ^2}} e^{ \frac{\left( x - \mu \right)^2}{2 \sigma^2} } dx$. Or on ne peux exprimé cela sans intégrale. Mais on certaine valeur approché de $F_{N(0,1)}$ :
+Si l'on souhaite s’arrêter dès que la probabilité de trouver une meilleure solution est inférieur à $\alpha$ il faut calculer cette dernière. La probabilité d'avoir une solution d'une taille de moins de $x$ une est égal à $F_{N(\mu,\sigma^2)} (x) = \int _{- \infty} ^{x} \frac{1}{\sqrt{2 \pi \sigma ^2}} e^{ \frac{\left( x - \mu \right)^2}{2 \sigma^2} } dx$. Or on ne peux exprimer cela sans intégrale. Mais on certaines valeurs approchées de $F_{N(0,1)}$ :
 \begin{itemize}
 \item
 $F_{N(0,1)} (-2.06) \leqslant 0.02$
@@ -285,23 +318,23 @@ $F_{N(0,1)} (-1.48) \leqslant 0.07$
 \item
 $F_{N(0,1)} (-1.29) \leqslant 0.1$
 \end{itemize}
-De plus on sait que si $X \sim N(0,1)$ et que $Y = \mu + \sigma X$ alors $Y \sim N(\mu, \sigma ^2)$ donc $F_{N(\mu,\sigma^2)} (y) = F_{N(\mu , \sigma ^2)} (\frac{y-\mu}{\sigma})$. Donc on peut dire que si $y \leqslant \mu + \sigma F^{-1} _{N(0,1)} ( \alpha)$ alors la probabilité d'avoir une meilleur solution est inférieure à $\alpha$.\\
+De plus on sait que si $X \sim N(0,1)$ et que $Y = \mu + \sigma X$ alors $Y \sim N(\mu, \sigma ^2)$ donc $F_{N(\mu,\sigma^2)} (y) = F_{N(0 , 1)} (\frac{y-\mu}{\sigma})$. Donc on peut dire que si $y \leqslant \mu + \sigma F^{-1} _{N(0,1)} ( \alpha)$ alors la probabilité d'avoir une meilleur solution est inférieure à $\alpha$.\\
 
 En pratique on ne connais bien évidement ni $\mu$ ni $\sigma$ donc on utilise $\widehat{\mu}$ et $\widehat{\sigma}$ décrit précédemment. Et pour les valeurs de $\alpha$, on les choisis à l'avance pour fixer la valeur de $F^{-1} _{N(0,1)} ( \alpha)$ à utiliser, en effet $\alpha$ n’appairait plus.\\
 
 \subsection{Nouvelles expérimentations}
 
-Au vu de cette nouvelle il faut désormais refaire des tests. Mais on se restreindra cette fois au heuristique d'amélioration les plus prometeuses :
+Au vu de cette nouvelle idée il faut désormais refaire des tests. Mais on se restreindra cette fois aux heuristiques d'amélioration les plus prometteuses :
 \begin{itemize}
 \item
 2-opt pour sa rapidité
 \item
-vns-2 pour sa qualité de solution, sans être aussi lent que vns-ppd
+VNS-2 pour sa qualité de solution, sans être aussi lent que VNS-ppd
 \item
-vnd comme solution intermédiaire qui pourrait se révélé intéressante
+VND comme solution intermédiaire qui pourrait se révéler intéressante
 \end{itemize}
 
-Notre algorithme GRASP commence toujours par construire une solution avec un NNH déterministe avant de l’amélioré avec VND. Le but étant d'avoir une bonne solution dès le début. Mais lorsque GRASP utilise l’opérateur 2-opt on se rend compte qu'une part importante de son temps d’exécution est due à cette première recherche. En effet vnd avait été choisis pour cette tache car il produit de bonnes solutions mais il n'est pas trop lent (surtout qu'il n'est utilisé qu'une seule fois). Mais étant donné la vitesse de GRASP avec 2-opt on va remplacer, dans les exécutions avec -opt, cette amélioration par une descente avec 2-opt.
+Notre algorithme GRASP commence toujours par construire une solution avec un NNH déterministe avant de l’améliorer avec VND. Le but étant d'avoir une bonne solution dès le début. Mais lorsque GRASP utilise l’opérateur 2-opt on se rend compte qu'une part importante de son temps d’exécution est due à cette première recherche. En effet VND avait été choisis pour cette tache car il produit de bonnes solutions mais il n'est pas trop lent (surtout qu'il n'est utilisé qu'une seule fois). Mais étant donné la vitesse de GRASP avec 2-opt on va remplacer, dans les exécutions avec 2-opt, cette amélioration par une descente avec 2-opt.
 
 \begin{table}[!h]
 \centering
@@ -338,7 +371,7 @@ Notre algorithme GRASP commence toujours par construire une solution avec un NNH
 \label{recherchelocaleGRASPtemps2optproba}
 \end{table}
 
-Pour vnd et vns-2 on garde l'initialisation avec vnd, car vns-2 et vnd s’exécutent dans des temps semblables.
+Pour VND et VNS-2 on garde l'initialisation avec VND, car VNS-2 et VND s’exécutent dans des temps semblables.
 
 \begin{table}[!h]
 \centering
@@ -354,7 +387,7 @@ Pour vnd et vns-2 on garde l'initialisation avec vnd, car vns-2 et vnd s’exéc
   \hline
 \end{tabular}
 \caption{différence de valeur de GRASP en fonction de $\alpha$ avec VND}
-\label{recherchelocaleGRASPtempsvndproba}
+\label{recherchelocaleGRASPtempsVNDproba}
 \end{table}
 
 \begin{table}[!h]
@@ -371,15 +404,21 @@ Pour vnd et vns-2 on garde l'initialisation avec vnd, car vns-2 et vnd s’exéc
   \hline
 \end{tabular}
 \caption{temps de GRASP en fonction de $\alpha$ avec VND}
-\label{recherchelocaleGRASPvalvnsproba}
+\label{recherchelocaleGRASPvalVNSproba}
 \end{table}
 
 La combinaison de l’opérateur 2-opt avec l'arret probabiliste produit de bon résultats. On remarque en effet qu'avec $\alpha = 0.02$ on obtiens généralement de meilleures solution, donc on contrebalance le défaut de 2-opt, sans que cela ne prenne trop de temps, donc sans perdre son avantage.\\
+
 Avec VNS de nombreux tests ont été effectué, mais ils sont tellement mauvais que cette possibilité a été abandonné. Et avec VND ils ne sont pas probant non plus. Donc on peut désormais exclure cette combinaison : VND et VNS-2 offre de très belle qualité de solution mais fonctionne beaucoup mieux avec le critère nogood.\\
+Et on pourrai penser à associer nogood au critère probabiliste pour éviter la non terminaison (si la variance est trop importante le critère d’arrêt deviens impossible car requiert des solutions de meilleures qualité que l'optimum). Mais cela ne pressente aucun intérêt car le problème surviens quand le critère deviens impossible mais la force de ce critère est d'accepter d'attendre un peu plus longtemps en attendent une bonne solution, donc il serai coupé par le nogood avant qu'elle n’apparaisse.\\
 
 \section{Conclusion}
 Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, bien le R.G.S.C. effectue plus de comparaisons celui-ci fournit des chemins plus long d'au moins 10\%. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\
 Cet algorithme est donc moins bon qu'il n'en avait l'air. Cela dit, nous allons réfléchir à d'éventuelles améliorations basées sur le même principe.\\
 La plupart des difficultés rencontrées se situe dans l'algorithmie. En effet, estimer en permanence la taille de la solution après modification par le 3-opt était une tâche plus difficile qu'il n'en parraîssait. Ou encore, les conditions d'arrêt du VNS. Ces deux aspects sont donc à travailler et nous espérons pouvoir les améliorer avant un prochain rendu de notre travail. Une étude des instances et peut être pertinente afin d'adapter nos algorithmes d'amélioration aux caractéristiques d'un chemin fournie par une heuristique de construction pour une instance donnée.\\
-Ces aspects sont importants pour réduire l'écart de temps d'éxecution entre les algorithmes VNS et VND. En effet, cet écart est élevé et peut encore être amélioré d'après nos tests de performance.\\
+Ces aspects sont importants pour réduire l'écart de temps d’exécution entre les algorithmes VNS et VND. En effet, cet écart est élevé et peut encore être amélioré d'après nos tests de performance.\\
+
+TODO : refaire la conclusion car beaucoup a été fait depuis cette version\\
+
+Ouverture pour ma partie : étudier plus finement l'impact du choix de la première ville dans NNH, quitte à la choisir aléatoirement dans GRASP pour augmenter la diversité.
 \end{document}
