@@ -11,8 +11,8 @@
 #include "../Distancier/Distancier.hpp"
 
 /**
-* \brief Cherche une meilleure solution en comparant les voisinages entre deux solutions
-*
+* \brief Cherche une meilleure solution en comparant le voisinage (tous les swaps possibles) entre deux solutions
+* Il exclue les swaps nous éloignant de la solution objectif.
 * \param[in] solA le tableau qui contient l'ordre de parcours des villes de la solution de départ
 * \param[in] solB le tableau qui contient l'ordre de parcours des villes de la solution d'arivée
 * \param[in] dist le distancier
@@ -20,6 +20,17 @@
 * \return la solution a laquelle on a aboutit
 */
 int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *improved);
+
+/**
+* \brief Cherche une meilleure solution en comparant le voisinage (tous les swaps possibles) entre deux solutions
+* Il favorise les swaps qui améliore le plus la solution ou empire le moins la solution courante.
+* \param[in] solA le tableau qui contient l'ordre de parcours des villes de la solution de départ
+* \param[in] solB le tableau qui contient l'ordre de parcours des villes de la solution d'arivée
+* \param[in] dist le distancier
+* \param[out] improved indique si la solution a été amélioré
+* \return la solution a laquelle on a aboutit
+*/
+int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, bool *improved);
 
 /**
 * \brief Cherche une meilleure solution en comparant les voisinages entre deux solutions
@@ -32,6 +43,19 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 * \return la solution a laquelle on a aboutit
 */
 int * pathRelinkingReconstr(int *solA, int *solB, const Distancier * const dist, bool *improved, int N);
+
+/**
+* \brief Cherche une meilleure solution en comparant les voisinages entre deux solutions
+* Cet algorithme se permet de construire des solutions non réalisables pour les reconstruire
+* Il favorise les insertions qui diminuent le plus distance de la solution sans regarder la faisabilité
+* \param[in] solA le tableau qui contient l'ordre de parcours des villes de la solution de départ
+* \param[in] solB le tableau qui contient l'ordre de parcours des villes de la solution d'arivée
+* \param[in] dist le distancier
+* \param[out] improved indique si la solution a été amélioré
+* \param[in] n, nombre de permutations avant reconstruction de la solution
+* \return la solution a laquelle on a aboutit
+*/
+int * pathRelinkingReconstrSelect(int *solA, int *solB, const Distancier * const dist, bool *improved, int N);
 
 /**
  * \brief Calcule la différence de la longueur de la solution après un échange
