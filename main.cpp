@@ -24,11 +24,11 @@ int main() {
 	//variables
 		clock_t t, sumt, maxt, mint;
 		
-		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
+		Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
         //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
@@ -277,21 +277,24 @@ cout<<i<<endl;
 		//~ construireSolNNH(solB, &dist);
 		//~ afficheSol(solB, &dist);
 		
+		//~ cout << "Optimisation solA VND PPD" << endl;
+		//~ solA = vndPPD(solA, &dist);
+		//~ cout << "Optimisation solA 2-opt" << endl;
+		//~ solA = deuxoptconverge(solA, &dist);
+		//~ cout << "Optimisation solA 3-opt" << endl;
+		//~ solA = troisoptconverge(solA, &dist);
 		
-		cout << "Optimisation solA 2-opt" << endl;
-		solA = deuxoptconverge(solA, &dist);
-		cout << "Optimisation solA 3-opt" << endl;
-		solA = troisoptconverge(solA, &dist);
-		
+		cout << "Optimisation solB VND PPD" << endl;
+		solA = vndPPD(solB, &dist);
 		cout << "Optimisation solB 2-opt" << endl;
 		solB = deuxoptconverge(solB, &dist);
-		cout << "Optimisation solB 3-opt" << endl;
-		solB = troisoptconverge(solB, &dist);
+		//~ cout << "Optimisation solB 3-opt" << endl;
+		//~ solB = troisoptconverge(solB, &dist);
 		
 		cout<<"calcul pathRelinking"<<endl;
-		resultat1 = pathRelinkingReconstrSelect(solA, solB, &dist, &improved, 5);
-		resultat2 = pathRelinkingReconstrSelect(solB, solA, &dist, &improved, 5);
-		//~ resultat1 = pathRelinkingSelect(solA, solB, &dist, &improved);
+		//~ resultat1 = pathRelinkingReconstrSelect(solA, solB, &dist, &improved, 10);
+		//~ resultat2 = pathRelinkingReconstrSelect(solB, solA, &dist, &improved, 10);
+		resultat1 = pathRelinkingSelect(solA, solB, &dist, &improved);
 		//~ resultat2 = pathRelinkingSelect(solB, solA, &dist, &improved);
 		cout << endl << "SOLUTION A : " << endl;
 		afficheSol(solA, &dist);
@@ -299,8 +302,8 @@ cout<<i<<endl;
 		afficheSol(solB, &dist);
 		cout << endl << "RESULTAT A->B : " << endl;
 		afficheSol(resultat1, &dist);
-		cout << endl << "RESULTAT B->A : " << endl;
-		afficheSol(resultat2, &dist);
+		//~ cout << endl << "RESULTAT B->A : " << endl;
+		//~ afficheSol(resultat2, &dist);
 
 
 

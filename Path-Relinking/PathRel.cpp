@@ -286,7 +286,9 @@ int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, b
 	double zBest = calculerLongueurCircuitSol(solB, dist);
 	double deltaMin, delta;
 	int *solCourante = new int [N];
+	cout << "COCO N°1" << endl;
 	int *bestSol = new int [N];
+	cout << "COCO N°2" << endl;
 	int indSwapI, indSwapJ;
 	
 	for (i = 0; i < N; ++i) {	// On part de solA
