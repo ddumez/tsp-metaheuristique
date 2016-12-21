@@ -79,7 +79,8 @@ PPD designe la variante de l'algorithme utilisant la plus profonde descente.\\
 Tout ce qui concerne le VNS dans tableau \ref{NNHpourcentageperf} et \ref{NNHtemps} sont des moyennes effectuées sur 10 exécutions. Ces dernières sont données avec plus de détails dans le tableau \ref{variationVNSNNH}.\\
 
 \begin{table}[!h]
-\centering
+\leftskip -1cm
+{
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & VND & VND PPD & VNS & VNS PPD \\
@@ -91,12 +92,14 @@ Tout ce qui concerne le VNS dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
   280 & 23.3 & 10.7 & 6.86 & 7.63 & 3.04 & 6.39 & 6.64 & 5.70 & 6.62 \\
   \hline
 \end{tabular}
+}
 \caption{distance supplémentaire en pourcentage par rapport à la solution optimale}
 \label{NNHpourcentageperf}
 \end{table}
 
 \begin{table}[!h]
-\centering
+\leftskip -1.4cm
+{
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & N.N.H. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & VND & VND PPD & VNS & VNS PPD \\
@@ -108,6 +111,7 @@ Tout ce qui concerne le VNS dans tableau \ref{NNHpourcentageperf} et \ref{NNHtem
   280 & 0.0004 & 0.0122 & 2.0138 & 0.0351 & 19.013 & 1.2042 & 3.0444 & 3.695 & 5.318 \\ 
   \hline
 \end{tabular}
+}
 \caption{temps d’exécutions en secondes}
 \label{NNHtemps}
 \end{table}
@@ -153,7 +157,8 @@ Nous avons rencontré plus de difficultés que prévu lors de l'implémentation 
 Nous n'avons pas encore déterminé s'il s'agît d'une erreur de programmation ou bien de l'algorithme qui ne converge pas. En effet, l'algorithme de Gale-Shapley permet de créer un mariage stable entre deux ensembles différents, ici, nous marions les éléments d'un ensemble avec des élements de ce même ensemble. Cette différence fondamentale qui ne semble pas avoir d'impact intuitivement, pourrait en effet empêcher la convergence de l'algorithme.\\
 Nous ne présentons donc pas de statistiques avec cet algorithme pour la dernière instance, mais nous présentons les autres instances, pour lesquelles l'algorithme converge.\\
 \begin{table}[!h]
-\centering
+\leftskip -1.2cm
+{
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & R.G.S.C. & 2-opt & 3-opt & 2-opt PPD & 3-opt PPD & VND & VND PPD & VNS & VNS PPD \\
@@ -164,12 +169,14 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
   150 & 38.8 & 6.68 & 4.43 & 3,95 & 1.26 & 4.89 & 3.48 & 2.62 & 3.48 \\
   \hline
 \end{tabular}
+}
 \caption{distance supplémentaire en pourcentage par rapport à la solution optimale}
 \label{RGSCpourcentageperf}
 \end{table}
 
 \begin{table}[!h]
-\centering
+\leftskip -1.6cm
+{
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & R.G.S.C. & 2opt & 3opt & 2opt PPD & 3opt PPD & VND & VND PPD & VNS & VNS PPD \\
@@ -180,6 +187,7 @@ Nous ne présentons donc pas de statistiques avec cet algorithme pour la derniè
   150 & 0.2207 & 0.0019 & 0.1716 & 0.0087 & 2.593 & 0.1735 & 0.1914 & 0.5171 & 0.5229 \\
   \hline
 \end{tabular}
+}
 \caption{temps d’exécution en secondes}
 \label{RGSCtemps}
 \end{table}
@@ -255,14 +263,15 @@ La version classique de NNH part d'une ville, parcours toutes les autres pour tr
 
 Dans cette version l'algorithme prend en paramètre "le taux d'aléatoire" $\alpha$. On va encore parcourir toutes les villes en allant ensuite vers une ville proche. Pour décider vers quelle ville on va se diriger on parcours toutes les villes qui n'ont pas encore été visité pour trouver la plus proche et la plus loin. A partir de cela, et de $\alpha$, on détermine la distance maximale acceptable. On se dirige alors vers une ville tiré aléatoirement dans l'ensemble de celles qui ne se situe pas trop loin, selon cette distance critique. Même si cet version est un peu plus lourde elle reste en $O(nbVille ^2)$.\\
 
-\subsection{Expérimentations}
+\subsection{Premières expérimentations}
 
 On expérimente l'algorithme GRASP avec plusieurs algorithme de recherche locale. Le critère d’arrêt choisis est un nogood réglé empiriquement, et de manière constante, sur le nombre de ville divisé par 5.\\
 Les expérimentations sont, comme toujours, faites sur 10 expérimentations. Mais quand ce temps était trop grand une seule expérimentation a été faite. Ces cas sont noté d'une étoile. Les exécutions vraiment trop longue ont été arrêtés et noté par un tiret.\\
 VNS à été testé avec 1 et 2 tours, tandis que sa version plus profonde descente n'a été utilisé qu'avec 1 tours.\\
 
 \begin{table}[!h]
-\centering
+\leftskip -0.7cm
+{
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & 2opt & 3opt & 2optPPD & 3optPPD & VND & VNDPPD & VNS-1 & VNS-2 & VNSPPD \\
@@ -274,12 +283,14 @@ VNS à été testé avec 1 et 2 tours, tandis que sa version plus profonde desce
   280 & 6.32 & 3.10* & 6.01 & - & 3.06* & - & 1.99* & 1.67* & 3.51* \\
   \hline
 \end{tabular}
+}
 \caption{différence de valeur de GRASP en fonction de la recherche locale}
 \label{recherchelocaleGRASPvaleurs}
 \end{table}
 
 \begin{table}[!h]
-\centering
+\leftskip -1.1cm
+{
 \begin{tabular}{|*{10}{c|}}
   \hline
   nbVille & 2opt & 3opt & 2optPPD & 3optPPD & VND & VNDPPD & VNS-1 & VNS-2 & VNSPPD \\
@@ -291,6 +302,7 @@ VNS à été testé avec 1 et 2 tours, tandis que sa version plus profonde desce
   280 & 1.653 & 124* & 17.02 & - & 95* & - & 397* & 509* & 1103* \\
   \hline
 \end{tabular}
+}
 \caption{temps de GRASP en fonction de la recherche locale}
 \label{recherchelocaleGRASPtemps}
 \end{table}
@@ -411,6 +423,57 @@ La combinaison de l’opérateur 2-opt avec l'arret probabiliste produit de bon 
 
 Avec VNS de nombreux tests ont été effectué, mais ils sont tellement mauvais que cette possibilité a été abandonné. Et avec VND ils ne sont pas probant non plus. Donc on peut désormais exclure cette combinaison : VND et VNS-2 offre de très belle qualité de solution mais fonctionne beaucoup mieux avec le critère nogood.\\
 Et on pourrai penser à associer nogood au critère probabiliste pour éviter la non terminaison (si la variance est trop importante le critère d’arrêt deviens impossible car requiert des solutions de meilleures qualité que l'optimum). Mais cela ne pressente aucun intérêt car le problème surviens quand le critère deviens impossible mais la force de ce critère est d'accepter d'attendre un peu plus longtemps en attendent une bonne solution, donc il serai coupé par le nogood avant qu'elle n’apparaisse.\\
+
+\subsection{Stabilité des meilleures possibilités}
+
+Maintenant que l'on a dégagé des paramétrages de  GRASP qui semble le mieux fonctionner :
+\begin{itemize}
+\item
+2-opt partant de 2-opt et arrêté par critère probabiliste à 2\%
+\item
+VND partant de VND et arrêté par nogood
+\item
+VNS-1 partant de VND et arrêté par nogood. On ne prend pas VNS-2 car le critère d’arrêt probabiliste ne permet pas de réduire son temps d’exécution. Donc VNS-1 donne des solutions de légèrement moins bonne qualité mais en un temps plus raisonnable.
+\end{itemize}
+Pour conclure on va étudier la stabilité, de la qualité des solution et du temps d’exécution, de ces algorithmes.\\
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{4}{c|}}
+  \hline
+  nbVille & 2-opt & VND & VNS-1 \\
+  \hline
+  48 & 20779 & 145.3 & 263.1 \\
+  52 & 2270 & 143.0 & 165.7 \\
+  130 & 1226 & 62.86 & 149.6 \\
+  150 & 2257 & 59.68 & 75.76 \\
+  280 & 1912 & 136.1 & - \\
+  \hline
+\end{tabular}
+\caption{Variation proportionnelle du temps d’exécution}
+\label{varsolGRASP}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{4}{c|}}
+  \hline
+  nbVille & 2-opt & VND & VNS-1 \\
+  \hline
+  48 & 0.529 & 1.03 & 0.404 \\
+  52 & 3.32 & 2.53 & 2.53 \\
+  130 & 3.12 & 0.691 & 1.02 \\
+  150 & 1.03 & 0.064 & 1.14 \\
+  280 & 3.30 & 0.951 & - \\
+  \hline
+\end{tabular}
+\caption{Variation proportionnelle de la qualité des solutions}
+\label{vartempsGRASP}
+\end{table}
+
+On regrette donc le manque de stabilité du point de vue temporel des algorithme, surtout celui de 2-opt. Mais pour ce dernier cette instabilité n'est pas trop dérangeante car il reste rapide même dans ses pires exécution. Par contre, étant donné leurs gros temps d’exécution, cette instabilité est plus préjudiciable aux deux autres algorithmes.\\
+
+Tous les algorithme sont par contre stable du point de vue de la qualité de solution même si 2-opt varie un peu plus cela reste petit, et cela deviens négligeable pour les deux autres.
 
 \section{Conclusion}
 Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, bien le R.G.S.C. effectue plus de comparaisons celui-ci fournit des chemins plus long d'au moins 10\%. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\

@@ -58,7 +58,7 @@ int * vns(int * sol, const Distancier * const dist) {
 			}
 
 			//action suivante
-			if ((!improved) && (k>3)) {
+			if ((!improved) && (k>1)) {
 				stop = true; //on a pas amélioré on a aucun autre voisinage
 			} else if (!improved) {
 				++k; //on a pas amélioré mais il nous reste des voisinage

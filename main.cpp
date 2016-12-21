@@ -28,9 +28,9 @@ int main() {
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
         //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
-        //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
+        Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
         bool improved = false;
         double sumz, maxz, minz, zsol;
@@ -207,7 +207,7 @@ int main() {
         cout<<"temps minimal : "<<(double)((double)((double)mint/(double)(CLOCKS_PER_SEC)))<<" et maximal : "<<(double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)))<<endl;
         cout<<"différence proportionelle moyenne de la valeur trouve par vnsPPD : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
-
+*/
         //test du grasp
         sumt = 0; sumz = 0; maxz = 0; maxt = 0;
         cout<<"calcul reactive grasp"<<endl;
@@ -233,6 +233,7 @@ int main() {
 
             delete(sol);
 cout<<i<<endl;
+ cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
         }
         sumz = (double)((double)sumz/(double)NBITER);
         cout<<"taille minimale : "<<minz<<" et maximale : "<<maxz<<endl;
@@ -243,10 +244,10 @@ cout<<i<<endl;
 
 
 
-*/
+
 
 /// Tests de Jojo :
-
+/*
 
 
 		int *solA = new int [dist.getN()];
@@ -302,7 +303,7 @@ cout<<i<<endl;
 		cout << endl << "RESULTAT B->A : " << endl;
 		afficheSol(resultat2, &dist);
 
-
+*/
 
 	//fin
 return 0;
