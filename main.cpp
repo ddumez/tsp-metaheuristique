@@ -250,7 +250,7 @@ cout<<i<<endl;
 
 
 
-		int *solA = new int [dist.getN()];
+		/**int *solA = new int [dist.getN()];
 		int *solB = new int [dist.getN()];
 		int *resultat1, *resultat2;// = new int [dist.getN()];
 		//~ cout<<"calcul NNH"<<endl;
@@ -287,7 +287,7 @@ cout<<i<<endl;
 		
 		cout << "Optimisation solB VND PPD" << endl;
 		solA = vndPPD(solB, &dist);
-		cout << "Optimisation solB 2-opt" << endl;
+		//~ cout << "Optimisation solB 2-opt" << endl;
 		solB = deuxoptconverge(solB, &dist);
 		//~ cout << "Optimisation solB 3-opt" << endl;
 		//~ solB = troisoptconverge(solB, &dist);
@@ -304,9 +304,18 @@ cout<<i<<endl;
 		cout << endl << "RESULTAT A->B : " << endl;
 		afficheSol(resultat1, &dist);
 		//~ cout << endl << "RESULTAT B->A : " << endl;
-		//~ afficheSol(resultat2, &dist);
-
-
+		//~ afficheSol(resultat2, &dist);**/
+		
+		
+		RGSC rgsc(&dist);
+		int *rgscSol = new int [dist.getN()];
+		int *nnhSol = new int [dist.getN()];
+		cout << "RGSC" << endl;
+		rgsc.construireCircuit(rgscSol);
+		afficheSol(rgscSol, &dist);
+		cout << "NNH" << endl;
+		construireSolNNH(nnhSol, &dist);
+		afficheSol(nnhSol, &dist);
 
 	//fin
 return 0;

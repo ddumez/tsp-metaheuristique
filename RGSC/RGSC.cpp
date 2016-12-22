@@ -322,31 +322,27 @@ void RGSC::marier() {
 		indC1 = 0;
 		while (indC1 < nbSC) {
 			c1 = this->couples[iter][indC1];
-			indPref = 1;//c1.indPref;
+			indPref = c1.indPref;
 			uni = false;
-			
-			//~ afficherPreferences();
-			//~ afficherCouples();
 
 			while ((!uni) && (indPref < nbSC)) {	// Tant que c1 n'est pas relié et qu'on a pas tout essayé
-				
 				indC2 = this->preferences[indC1][indPref].destination;
 				c2 = this->couples[iter][indC2];
 				plusProchesV1V2(c1, c2, &v1, &v2, &dist);
 				if (c2.compagnon == indC1) {
 					uni = true;
-				} else if ((c2.compagnon == -1) || (dist < getDistance(c2.vDom, this->couples[iter][c2.compagnon].vDom))) {
+				} else if ((c2.compagnon == -1)/* || (dist < getDistance(c2.vDom, this->couples[iter][c2.compagnon].vDom))*/) {
 					unir(indC1, indC2, v1, v2, dist);
 					uni = true;
 				} else {
 					indPref = indPref + 1;
 				}
 			}
-			//~ if (indPref == nbSC) {
-				//~ this->couples[iter][indC1].indPref = 1;
-			//~ } else {
+			if (indPref == nbSC) {
+				this->couples[iter][indC1].indPref = 1;
+			} else {
 				this->couples[iter][indC1].indPref = indPref;
-			//~ }
+			}
 			indC1 = indC1 + 1;
 		}
 	}
