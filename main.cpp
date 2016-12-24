@@ -27,8 +27,8 @@ int main() {
 		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
-		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
+		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
         //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
