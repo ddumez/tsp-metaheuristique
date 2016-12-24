@@ -150,6 +150,7 @@ int * reacgrasp(const Distancier * const dist) {
 		//mise a jour de best et zbest
 		if (tmp + 0.000001 < zbest) { //ajout d'un epsilon pour eviter les imprecisions de calcul
 			pathRel = pathRelinkingSelect(sol, best, dist, &improved);
+		//	pathRel = pathRelinking(sol, best, dist, &improved);
 			if (tmp < calculerLongueurCircuitSol(pathRel, dist)) {
 				cout << "PATH REL EST MEILLEUR" << endl;
 				tmpPath = calculerLongueurCircuitSol(pathRel, dist);
@@ -168,6 +169,7 @@ int * reacgrasp(const Distancier * const dist) {
 			}
 		} else {
 			pathRel = pathRelinkingSelect(best, sol, dist, &improved);
+		//	pathRel = pathRelinking(sol, best, dist, &improved);
 			if (improved) {
 				cout << "PATH REL EST MEILLEUR" << endl;
 				tmpPath = calculerLongueurCircuitSol(pathRel, dist);
