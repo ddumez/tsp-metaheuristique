@@ -16,7 +16,7 @@
 * \param[in] solA le tableau qui contient l'ordre de parcours des villes de la solution de départ
 * \param[in] solB le tableau qui contient l'ordre de parcours des villes de la solution d'arivée
 * \param[in] dist le distancier
-* \param[out] improved indique si la solution a été amélioré
+* \param[out] improved indique si la solution a été améliorée
 * \return la solution a laquelle on a aboutit
 */
 int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *improved);
@@ -27,7 +27,7 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 * \param[in] solA le tableau qui contient l'ordre de parcours des villes de la solution de départ
 * \param[in] solB le tableau qui contient l'ordre de parcours des villes de la solution d'arivée
 * \param[in] dist le distancier
-* \param[out] improved indique si la solution a été amélioré
+* \param[out] improved indique si la solution a été améliorée
 * \return la solution a laquelle on a aboutit
 */
 int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, bool *improved);

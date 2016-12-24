@@ -96,7 +96,10 @@ int * grasp(const Distancier * const dist, const double alpha) {
 int * reacgrasp(const Distancier * const dist) {
 	int nogood = 0; //compteur de tour depuis lequel on a pas ameliorer best
 	int * sol; double tmp; //diverses variables de calcul
-
+	
+	int *pathRel1; double tmpPath1; bool improved1;
+	int *pathRel2; double tmpPath2; bool improved2;
+	
 	int * best = new int[dist->getN()]; construireSolNNH(best, dist); //initialisation du best
 	//amelioration de la solution
 	/*best = deuxoptconverge(best, dist);
@@ -133,27 +136,62 @@ int * reacgrasp(const Distancier * const dist) {
 		construireSolNNHrand(sol, dist, 1 - k*0.05 - 0.01); //on laisse toujour une par d'aleatoire car la solution constuite a deja ete explore
 
 		//amelioration de la solution
-		/*sol = deuxoptconverge(sol, dist);
-		sol = troisoptconverge(sol, dist);
-		sol = deuxoptPPDconverge(sol, dist);
-		sol = troisoptPPDconverge(sol, dist);
-		*/sol = vnd(sol, dist);/*
-		sol = vndPPD(sol, dist);
-		sol = vns(sol, dist);
-		sol = vnsPPD(sol, dist);*/
+		sol = deuxoptconverge(sol, dist);
+		//~ sol = troisoptconverge(sol, dist);
+		//~ sol = deuxoptPPDconverge(sol, dist);
+		//~ sol = troisoptPPDconverge(sol, dist);
+		//~ sol = vnd(sol, dist);
+		//~ sol = vndPPD(sol, dist);
+		//~ sol = vns(sol, dist);
+		//~ sol = vnsPPD(sol, dist);
+		
+		tmp = calculerLongueurCircuitSol(sol, dist);
+		
+		
+		// Path relinkings
+		pathRel1 = pathRelinkingSelect(sol, best, dist, &improved1);
+		pathRel2 = pathRelinkingSelect(best, sol, dist, &improved2);
 		
 		++compt; //compteur du nombre de tours
-
 		//mise a jour de best et zbest
-		if ( (tmp = calculerLongueurCircuitSol(sol, dist)) + 0.000001 < zbest) { //ajout d'un apsilon pour eviter les imprecisions de calcul
+		if (improved1 || improved2) {
+			cout << "PATH REL EST MEILLEUR" << endl;
+			tmpPath1 = calculerLongueurCircuitSol(pathRel1, dist);
+			tmpPath2 = calculerLongueurCircuitSol(pathRel2, dist);
+
+		if (tmpPath1 < tmpPath2) {
+			cout << "1 MEILLEUR " << endl;
+		} else {
+			cout << "2 MEILLEUR " << endl;
+		}
+
 			delete(best);
-			zbest = tmp;
-			best = sol;
-			nogood = 0;
+			delete(sol);
+			//~ nogood = 0;
+			
+			if (tmpPath1 < tmpPath2) {
+				delete(pathRel2);
+				zbest = tmpPath1;
+				best = pathRel1;
+			} else {
+				delete(pathRel1);
+				zbest = tmpPath2;
+				best = pathRel2;
+			}
+		} else if (tmp + 0.000001 < zbest) { //ajout d'un epsilon pour eviter les imprecisions de calcul
+				cout << "SOL EST MEILLEUR" << endl;
+				delete(best);
+				delete(pathRel2);
+				zbest = tmp;
+				best = sol;
+				nogood = 0;
 		} else {
 			delete(sol);
+			delete(pathRel1);
+			delete(pathRel2);
 			++nogood;
 		}
+
 /*
 		//mise a jour des estimateur
 		sumXk += tmp;

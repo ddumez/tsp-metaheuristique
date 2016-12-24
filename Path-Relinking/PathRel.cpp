@@ -13,9 +13,7 @@ double deltaSwap(int *sol, const Distancier * const dist, int i, int j) {
 	Sj = sol[j];
 	N = dist->getN();
 	
-	//~ cout << "i=" << i << " j="<<j<<endl;
 	if (i > j) {
-		//~ cout << "Harricot" << endl;
 		i = i - j;
 		j = i + j;
 		i = j - i;
@@ -218,12 +216,14 @@ double reparerSolution(int *sol, int *solB, const Distancier *const dist, int *d
 }
 
 int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *improved) {
+	*improved = false;
 	bool termine;
 	int Si, Sj;
 	int i, j, k;
 	int N = dist->getN();
 	double zCourant = calculerLongueurCircuitSol(solA, dist);
 	double zBest = calculerLongueurCircuitSol(solB, dist);
+	double delta;
 	int *solCourante = new int [N];
 	int *bestSol = new int [N];
 	
@@ -247,28 +247,37 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 		termine = true;
 		for (i = 0; i < N; ++i) {	// Tester toutes les permutations possibles
 			for (j = i+1; j < N; ++j) {
-				//~ if (solCourante[i]==solB[j] || solCourante[j]==solB[i]) {
+				delta = deltaSwap(solCourante, dist, i, j);
 				if ((solCourante[i]==solB[j]) || (solCourante[j]==solB[i]) || ((solCourante[i]!=solB[i]) && (solCourante[j]!=solB[j]))) {
-				// Alors on swap
-				
-				Si = solCourante[i];
-				Sj = solCourante[j];
-				
-				termine = false;						
-				zCourant = zCourant + deltaSwap(solCourante, dist, i, j);
-				
-				solCourante[i] = Sj;
-				solCourante[j] = Si;
-				
-				if (zCourant < zBest) {	// Si la solution trouvée est meilleure
-					//Alors on l'enregistre;
-					zBest = zCourant;
+					// Alors on swap
+					
+					Si = solCourante[i];
+					Sj = solCourante[j];
+					
+					termine = false;						
+					zCourant = zCourant + deltaSwap(solCourante, dist, i, j);
+					
+					solCourante[i] = Sj;
+					solCourante[j] = Si;
+					
+					if (zCourant+0.000001 < zBest) {	// Si la solution trouvée est meilleure
+						//Alors on l'enregistre;
+						//~ cout << "zCourant = " << zCourant << endl;
+						//~ cout << "zBest    = " << zBest << endl;
+						zBest = zCourant;
+						for (k = 0; k < N; ++k) {
+							bestSol[k] = solCourante[k];
+						}
+						*improved = true;
+					}
+				}  else if (zCourant+delta+0.000001 < zBest) {
+					zBest = zCourant+delta;
 					for (k = 0; k < N; ++k) {
 						bestSol[k] = solCourante[k];
-						}
 					}
-					/*afficheSol(solCourante, dist);
-					cout << " zCoura : " << zCourant << endl;*/
+					bestSol[i] = solCourante[j];
+					bestSol[j] = solCourante[i];
+					*improved = true;
 				}
 			}
 		}
@@ -278,6 +287,8 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 }
 
 int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, bool *improved) {
+	*improved = false;
+	int iter = 0;
 	bool termine;
 	int Si, Sj;
 	int i, j, k;
@@ -286,9 +297,9 @@ int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, b
 	double zBest = calculerLongueurCircuitSol(solB, dist);
 	double deltaMin, delta;
 	int *solCourante = new int [N];
-	cout << "COCO N°1" << endl;
+	//~ cout << "COCO N°1" << endl;
 	int *bestSol = new int [N];
-	cout << "COCO N°2" << endl;
+	//~ cout << "COCO N°2" << endl;
 	int indSwapI, indSwapJ;
 	
 	for (i = 0; i < N; ++i) {	// On part de solA
@@ -308,36 +319,26 @@ int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, b
 	
 	// Tant qu'il existe une permutation permettant d'aprocher solCourante de solB
 	do {
-		/*cout << "Best solution" << endl;
-		afficheSol(bestSol, dist);
-		cout << "Solution courante" << endl;
-		afficheSol(solCourante, dist);
-		cout << "Solution objectif" << endl;
-		afficheSol(solB, dist);
-		cout << endl;*/
-		
 		termine = true;
 		i = 0;
 		do {
 			j = i+1;
 			do {
 				delta = deltaSwap(solCourante, dist, i, j);
-				if ((solCourante[i] == solB[j]) || (solCourante[j] == solB[i])) {
-					/*cout << "i="<<i<< endl;
-					cout << "j="<<j<< endl;*/
+				if ((solCourante[i] == solB[j]) && (solCourante[j] == solB[i])) {
 					termine = false;
 					indSwapI = i;
 					indSwapJ = j;
 					deltaMin = delta;
-				} else if (zCourant+delta < zBest) {
-					//cout << "OPTIMUM PROCHE TROUVE : " << endl;
+				} else if (zCourant+delta+0.000001 < zBest) {
+					//~ cout << "OPTIMUM PROCHE TROUVE : " << endl;
 					zBest = zCourant+delta;
 					for (k = 0; k < N; ++k) {
 						bestSol[k] = solCourante[k];
 					}
 					bestSol[i] = solCourante[j];
 					bestSol[j] = solCourante[i];
-					//afficheSol(bestSol, dist);
+					*improved = true;
 				}
 				++j;
 			} while (termine && (j < N));
@@ -348,27 +349,26 @@ int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, b
 			for (i=indSwapI; i < N; ++i) {
 				for (j=i+1; j < N; ++j) {
 					delta = deltaSwap(solCourante, dist, i, j);
-					if ((solCourante[i] == solB[j]) || (solCourante[j] == solB[i])) {
+					if ((solCourante[i] == solB[j]) && (solCourante[j] == solB[i])) {
 						if (delta < deltaMin) {
 							indSwapI = i;
 							indSwapJ = j;
 							deltaMin = delta;
 						}
-					} else if (zCourant+delta < zBest) {
-						//cout << "OPTIMUM PROCHE TROUVE : " << endl;
+					} else if (zCourant+delta+0.000001 < zBest) {
+						//~ cout << "OPTIMUM PROCHE TROUVE : " << endl;
 						zBest = zCourant+delta;
 						for (k = 0; k < N; ++k) {
 							bestSol[k] = solCourante[k];
 						}
 						bestSol[i] = solCourante[j];
 						bestSol[j] = solCourante[i];
+						*improved = true;
 						//afficheSol(bestSol, dist);
 					}
 				}
 			}
 			
-			/*cout << "indSwap I = " << indSwapI << endl;
-			cout << "indSwap J = " << indSwapJ << endl;*/
 			Si = solCourante[indSwapI];
 			Sj = solCourante[indSwapJ];
 			
@@ -377,24 +377,22 @@ int * pathRelinkingSelect(int *solA, int *solB, const Distancier * const dist, b
 			solCourante[indSwapI] = Sj;
 			solCourante[indSwapJ] = Si;
 			
-			/*cout << "zBest="<<zBest << endl;
-			cout << "zCourant="<<zCourant << endl;*/
-			
 			if (zCourant < zBest) {	// Si la solution trouvée est meilleure
-				//cout << "Enregistrement de la solution" << endl;
 				zBest = zCourant;	//Alors on l'enregistre;
 				for (k = 0; k < N; ++k) {
 					bestSol[k] = solCourante[k];
 				}
 			}
 		}
-		
+		//~ cout << iter << endl;
+		++iter;
 	} while (!termine);
 	
 	return bestSol;
 }
 
 int * pathRelinkingReconstrSelect(int *solA, int *solB, const Distancier * const dist, bool *improved, int n) {
+	*improved = false;
 	int i, j, nb, sortant, entrant, indS, indE, indMin;
 	bool estSorti, estDouble, termine;
 	int N = dist->getN();
@@ -484,23 +482,23 @@ int * pathRelinkingReconstrSelect(int *solA, int *solB, const Distancier * const
 				}
 				
 				if (nb == n) {
-					//cout << "REPARATION" << endl;
 					zCourant = zCourant + reparerSolution(solCourante, solB, dist, doubles, absents, nb);
 					nb = 0;
 				}
-				if ((nb == 0) && (zCourant < zBest)) {
+				if ((nb == 0) && (zCourant+0.000001 < zBest)) {
 					zBest = zCourant;
 					for (i = 0; i < N; ++i) {
 						bestSol[i] = solCourante[i];
 					}
+					*improved = true;
 				}
 			//}
 		}
 	} while (!termine);
 	
 	
-	free(absents);
-	free(doubles);
+	delete(absents);
+	delete(doubles);
 
 	return bestSol;
 }
@@ -587,8 +585,8 @@ int * pathRelinkingReconstr(int *solA, int *solB, const Distancier * const dist,
 	}
 	
 	
-	free(absents);
-	free(doubles);
+	delete(absents);
+	delete(doubles);
 
 	return bestSol;
 }

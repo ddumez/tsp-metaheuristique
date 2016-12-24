@@ -18,17 +18,17 @@
 
 using namespace std;
 
-#define NBITER 10
+#define NBITER 100
 
 int main() {
 	//variables
 		clock_t t, sumt, maxt, mint;
 		
-		Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
+		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
-        //Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
+		//Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
 		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
-		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
+		Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
         //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
@@ -38,9 +38,9 @@ int main() {
         srand(0);
         		
         //dist.afficher();
-/*
+
 		//test du RGSC
-		cout<<"calcul RGSC"<<endl;
+		/*cout<<"calcul RGSC"<<endl;
 		t = clock();
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit(sol);
@@ -209,7 +209,7 @@ int main() {
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
 */
         //test du grasp
-       /* sumt = 0; sumz = 0; maxz = 0; maxt = 0;
+        sumt = 0; sumz = 0; maxz = 0; maxt = 0;
         cout<<"calcul reactive grasp"<<endl;
         for(int i = 0; i<NBITER; ++i) {
             t = clock();
@@ -220,6 +220,7 @@ int main() {
 //            cout<<"\n"<<endl;
             
             zsol = calculerLongueurCircuitSol(sol, &dist);
+            //~ cout << "RESULTAT = " << zsol << endl;
             if (0 == sumt) { //premiere iteration
                 minz = zsol;
                 mint = t;
@@ -240,17 +241,15 @@ cout<<i<<endl;
         cout<<"temps minimal : "<<mint<<" et maximal : "<<maxt<<endl;
         cout<<"différence proportionelle moyenne de la valeur trouve par grasp : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
+		cout << "moyenne : " << sumz << endl;
 
 
-*/
 
 
 
 /// Tests de Jojo :
 
-
-
-		/**int *solA = new int [dist.getN()];
+/**		int *solA = new int [dist.getN()];
 		int *solB = new int [dist.getN()];
 		int *resultat1, *resultat2;// = new int [dist.getN()];
 		//~ cout<<"calcul NNH"<<endl;
@@ -295,8 +294,8 @@ cout<<i<<endl;
 		cout<<"calcul pathRelinking"<<endl;
 		//~ resultat1 = pathRelinkingReconstrSelect(solA, solB, &dist, &improved, 10);
 		//~ resultat2 = pathRelinkingReconstrSelect(solB, solA, &dist, &improved, 10);
-		resultat1 = pathRelinkingSelect(solA, solB, &dist, &improved);
-		//~ resultat2 = pathRelinkingSelect(solB, solA, &dist, &improved);
+		resultat1 = pathRelinking(solA, solB, &dist, &improved);
+		//~ resultat2 = pathRelinking(solB, solA, &dist, &improved);
 		cout << endl << "SOLUTION A : " << endl;
 		afficheSol(solA, &dist);
 		cout << endl << "SOLUTION B : " << endl;
@@ -307,7 +306,7 @@ cout<<i<<endl;
 		//~ afficheSol(resultat2, &dist);**/
 		
 		
-		RGSC rgsc(&dist);
+		/*RGSC rgsc(&dist);
 		int *rgscSol = new int [dist.getN()];
 		int *nnhSol = new int [dist.getN()];
 		cout << "RGSC" << endl;
@@ -315,7 +314,7 @@ cout<<i<<endl;
 		afficheSol(rgscSol, &dist);
 		cout << "NNH" << endl;
 		construireSolNNH(nnhSol, &dist);
-		afficheSol(nnhSol, &dist);
+		afficheSol(nnhSol, &dist);*/
 
 	//fin
 return 0;
