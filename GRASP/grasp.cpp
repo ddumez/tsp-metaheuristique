@@ -94,8 +94,8 @@ int * grasp(const Distancier * const dist, const double alpha) {
 }
 
 int * reacgrasp(const Distancier * const dist) {
-	int nogood = 0; //compteur de tour depuis lequel on a pas ameliorer best
-	int * sol; double tmp; //diverses variables de calcul
+	int nogood = 0; // Nombre de tours consécutifs sans amélioration de la solution
+	int * sol; double tmp; // diverses variables de calcul
 	
 	int *pathRel; double tmpPath; bool improved;
 	
@@ -132,7 +132,7 @@ int * reacgrasp(const Distancier * const dist) {
 		k = 0; while(p[k] <= choix) {++k;}
 
 		//construction pseudo aleatoire de la solution
-		construireSolNNHrand(sol, dist, 1 - k*0.05 - 0.01); //on laisse toujour une par d'aleatoire car la solution constuite a deja ete explore
+		construireSolNNHrand(sol, dist, 1 - k*0.05 - 0.01); //on laisse toujour une part d'aleatoire car la solution constuite a deja ete explore
 
 		//amelioration de la solution
 		sol = deuxoptconverge(sol, dist);
@@ -145,13 +145,12 @@ int * reacgrasp(const Distancier * const dist) {
 		//~ sol = vnsPPD(sol, dist);
 		
 		tmp = calculerLongueurCircuitSol(sol, dist);
-				
+		
 		++compt; //compteur du nombre de tours
 		//mise a jour de best et zbest
-		
 		if (tmp + 0.000001 < zbest) { //ajout d'un epsilon pour eviter les imprecisions de calcul
 			pathRel = pathRelinkingSelect(sol, best, dist, &improved);
-			if (improved) {
+			if (tmp < calculerLongueurCircuitSol(pathRel, dist)) {
 				cout << "PATH REL EST MEILLEUR" << endl;
 				tmpPath = calculerLongueurCircuitSol(pathRel, dist);
 				delete(best);

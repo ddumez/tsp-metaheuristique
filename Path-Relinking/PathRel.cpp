@@ -248,7 +248,7 @@ int * pathRelinking(int *solA, int *solB, const Distancier * const dist, bool *i
 		for (i = 0; i < N; ++i) {	// Tester toutes les permutations possibles
 			for (j = i+1; j < N; ++j) {
 				delta = deltaSwap(solCourante, dist, i, j);
-				if ((solCourante[i]==solB[j]) || (solCourante[j]==solB[i]) || ((solCourante[i]!=solB[i]) && (solCourante[j]!=solB[j]))) {
+				if ((solCourante[i]==solB[j]) && (solCourante[j]==solB[i])) {
 					// Alors on swap
 					
 					Si = solCourante[i];
