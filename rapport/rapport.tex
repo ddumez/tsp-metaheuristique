@@ -1,27 +1,30 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[toc,page]{appendix}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage[overload]{empheq}
-\usepackage{color}
-\usepackage[dvipsnames]{xcolor}
 \usepackage{fullpage}
+\usepackage[linktocpage]{hyperref}
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
 
 \title{Méthodes de résolution approchées du T.S.P.}
 \author{Dorian Dumez \and Jocelin Cailloux}
 
 \begin{document}
+
 \maketitle
+\tableofcontents
+
 \section{Heuristiques de constructions}
 \subsection{N.N.H.}
 Cet algorithme est une heuristique de construction gloutonne qui, partant d'une ville donnée, construit le cycle hamiltonien de proche en proche. A partir d'une ville d'origine, l'algorithme sélectionne comme prochaine ville celle qui est la plus proche de la ville courante.\\
 
-On vois tout de suite l'impact du choix de la ville de départ sur la solution. Mais estimer la qualité de la solution en fonction de chaque ville est compliqué donc elle est choisie de manière arbitraire. En effet on prend toujours comme point de départ la première ville située dans le tableau de notre distancier.\\
+Nous remarquons tout de suite l'impact du choix de la ville de départ sur la solution, mais estimer la qualité de la solution en fonction de chaque ville est compliqué, nous choisissons donc le point de départ de manière arbitraire. En effet, nous sélectionnons toujours comme point de départ la première ville située dans le tableau de notre distancier.\\
 
-Notre distancier représentant le graphe sous forme d'une matrice d'adjacence on dispose toujours de la distance entre deux ville en temps constant. Cet algorithme va, pour chaque ville (on les parcours toutes une unique fois étant donne que l'on construit un cycle hamiltonien), parcourir toutes les villes non déjà parcourues pour trouver la plus proche. On en déduit que cet algorithme à une complexité temporelle en $O(nbVille^2)$. De plus sa complexité spatiale est en $O(nbVille)$, en effet on ne fait qu’allouer le parcours correspondant à la permutation identité avant de le modifier sur place.\\
+Notre distancier représentant le graphe sous forme d'une matrice d'adjacence, nous disposons toujours de la distance entre deux ville en temps constant. Cet algorithme énumère pour chaque ville (nous parcourons chaque ville une et une seule fois étant donné la construction d'un cycle hamiltonien), toutes les villes non déjà parcourues pour trouver la plus proche. Nous déduisons que cet algorithme a une complexité temporelle en $O(nbVille^2)$. De plus sa complexité spatiale est en $O(nbVille)$, en effet, il n’alloue que le parcours correspondant à la permutation identité avant de le modifier sur place.\\
 
 \subsection{R.G.S.C}
 Nous avons choisi d'implémenter une heuristique de construction de notre invention, en effet, nous voulions essayer quelque chose d'original. Nous avons donc imaginé un algorithme qui se base sur celui de Gale et Shapley qui résout le problème du mariage stable. Nous l'avons donc appelé ainsi, Recursive Gale-Shapley Circuit.\\
@@ -30,28 +33,29 @@ Nous avons pensé qu'il est pertinent de construire des couples de villes de tel
 
 Chaque ville (puis chaque sous-couple par la suite), possède une liste de préférences des autres couples triés par ordre décroissant des distances. Nous avons supposé que la complexité de cet algorithme serait du même ordre que celui de Gale-Shapley multiplié par log(n), log(n) étant le nombre d'itérations effecutées. L'algorithme de Gale-Shapley s'effectue en $O(n^2)$, nous avons donc pour notre algorithme RGSC une complexité de $O(log(nbVille) \times nbVille ^2)$.\\
 
+Après avoir implémenté la méthode, nous avons pu constater que celle-ci ne converge pas. En effet, pour certaines instances, quelques groupes ne pouvaient être reliés, ils perdaient leur liaison au dépit d'autres groupes. Ce phénomène ne survient pas dans le cadre d'utilisation de l'algorithme du mariage stable (deux groupes distincts avec des unions entre les éléments de chaque groupe). Nous avons donc choisi de modifier cet algorithme pour le faire converger. Ainsi, une fois relié, un groupe ne cherche pas à se relier à un autre groupe plus proche. Seuls les groupes non reliés cherche à se relier avec l'autre groupe le plus proche et peuvent casser une laison si la leur est plus favorable. Avec cette méthode, nous avons pu faire converger l'algorithme, de plus, nous obtenons de meilleurs résultats. Cependant, l'heuristique de construction NNH reste plus efficace.\\
 \section{Opérateurs de modification}
+
 \subsection{2-opt}
+Cet opérateur consiste à sélectionner deux arcs (i.e. deux paires de villes adjacentes dans le parcours) et à tester si leur croisement fournit une meilleure solution. Si nous posons iD, iF les extrémités du premier arc et jD, jF celle du deuxième arc, nous entendons par croiser les arcs allers de iD à jD puis de iF à jF au lieu de iD à iF puis de jD à jF comme c’était le cas dans la solution. Graphiquement nous observons que c'est en réalité l'inverse qui améliore la solution, en effet si les deux arcs s’intersectent dans le plan (d'une carte où les villes sont positionnées dans un repère par exemple) alors les inverser fait disparaître cette intersection et réduit la taille du chemin parcouru.\\
 
-Cet opérateur consiste à sélectionner deux arc (i.e. deux paire de ville adjacente dans le parcours) et à tester si leurs croisement fournit une meilleure solution. Si on pose iD, iF les extrémités du premier arc et jD, jF celle du deuxième arc, on entend par croiser les arcs aller de iD à jD puis de iF à jF au lieu de iD à iF puis de jD à jF comme c’était le cas dans la solution. Graphiquement on observe que c'est en réalité l'inverse qui améliore la solution, en effet si les deux arcs s’intersectent dans le plan (d'une carte où les villes sont positionnées dans un repère par exemple) alors les inverser fait disparaître cette intersection et réduit la taille du chemin parcouru.\\
-
-Il est alors évident que les 4 villes (iD, iF, jD, jF) doivent êtres différentes car sinon on ne fait que modifier l'ordre de parcours de ces villes (on ne fait qu'inverser une permutation) mais le T.S.P. sur lequel on travaille est symétrique donc cela ne change rien. Il est aussi évident que l'on considère des paires d'arc et non des couples car cela reviendrai à tester deux fois le même changement.\\
+Il est alors évident que les 4 villes (iD, iF, jD, jF) doivent êtres différentes, autrement, nous ne ferions que modifier l'ordre de parcours de ces villes (on ne fait qu'inverser une permutation) mais le T.S.P. sur lequel nous travaillons est symétrique donc cela ne change rien. Il est aussi évident que nous considèrons des paires d'arcs et non des couples car cela reviendrait à tester deux fois le même changement.\\
 
 Nous avons implémenté cet opérateur sous deux formes : en descente et en plus profonde descente.
 En plus profonde descente on teste toute les paires d'arc et on applique seulement celle qui conduit à la meilleure solution, ici celle dont le parcours est le plus cour.\\
 
-En descente on teste aussi toutes le paires d'arc mais cette fois ci on applique la modification dès qu'elle améliore la solution. On ne s’arrête pas à la première solution trouvé pour éviter de s'appesantir sur le début du cycle et pour éviter de le re-tester un trop grand nombre de fois à partir du moment où il se serait stabilisé.\\
+En descente on teste aussi toutes le paires d'arc mais cette fois ci on applique la modification dès qu'elle améliore la solution. L'algorithme ne s’arrête pas à la première solution trouvée pour éviter de s'appesantir sur le début du cycle et pour éviter de le re-tester un trop grand nombre de fois à partir du moment où il se serait stabilisé.\\
 
-Dans les deux cas on va tester $O(nbVille^2)$ changement mais appliquer l'opérateur 2-opt s’effectue en $O(nbVille)$ car on doit inverser le sens de parcours des villes situé entre iF et jD. Donc l'algorithme de descente est en $O(nbVille^3)$ tandis que celui de plus profonde descente est en $O(nbVille^2)$. Mais cette complexité n'est que celle de amelioreSol2opt et amelioreSol2optPPD, donc ne prend pas en compte la vitesse de convergence de la solution vers un minimum local.\\
-Ces complexité sont permise par le fait que l'on peut connaître à l'avance et en temps constant la taille du cycle hamiltonien après la modification.
+Dans les deux cas nous testons $O(nbVille^2)$ changement mais appliquer l'opérateur 2-opt s’effectue en $O(nbVille)$ car nous devons inverser le sens de parcours des villes situées entre iF et jD. Donc l'algorithme de descente est en $O(nbVille^3)$ tandis que celui de plus profonde descente est en $O(nbVille^2)$. Mais cette complexité n'est que celle de amelioreSol2opt et amelioreSol2optPPD, donc ne prend pas en compte la vitesse de convergence de la solution vers un minimum local.\\
+Ces complexités sont permises grâce l'obtention en avance et en temps constant la taille du cycle hamiltonien après la modification.
  
 \subsection{3-opt}
-Cet opérateur est une généralisation du 2-opt avec 3 arc. Tout les mouvements permis par le 2-opt le sont donc aussi par le 3-opt. Donc contrairement au 2-opt qui n'offre qu'une seule possibilité de modification, le 3-opt en offre 7 don certaines ne peuvent pas être réalisé par une succession de 2-opt.\\
+Cet opérateur est une généralisation du 2-opt avec 3 arc. Tout les mouvements permis par le 2-opt le sont donc aussi par le 3-opt. Donc contrairement au 2-opt qui n'offre qu'une seule possibilité de modification, le 3-opt en offre 7 dont certaines ne peuvent pas être réalisées par une succession de 2-opt.\\
 
 Cet opérateur a aussi été implémenté en descente et en plus profonde descente.\\
-Pour les même raison que pour le 2-opt, dans l'algorithme de descente on teste toutes les triplet possible à chaque fois au lieu de s’arrêter au premier mouvement améliorant trouvé.\\
+Pour les mêmes raisons que pour le 2-opt, dans l'algorithme de descente nous testons tous les triplet possibles à chaque fois au plutôt que de s’arrêter au premier mouvement améliorant trouvé.\\
 
-Dans les deux cas on va tester tous les triplets d'arcs possible, il y en a $O(nbVille ^3)$. De même que pour le 2-opt appliquer une modification s'effectue en $O(nbVille)$ car des inversions du sens de parcours sont parfois nécessaire. Donc selon le même principe que pour le 2-opt l'opérateur 3-opt est en $O(nbVille^4)$ pour la version classique et en $O(nbVille^3)$ pour la plus profonde descente. Mais cela ne tien toujours pas compte de la vitesse de convergence vers un minimum local.\\
+Dans les deux cas nous testons tous les triplets d'arcs possibles, il y en a $O(nbVille ^3)$. De même que pour le 2-opt appliqué, une modification s'effectue en $O(nbVille)$ car des inversions du sens de parcours sont parfois nécessaires. Donc selon le même principe que pour le 2-opt l'opérateur 3-opt est en $O(nbVille^4)$ pour la version classique et en $O(nbVille^3)$ pour la plus profonde descente. Mais cela ne prend pas en considération la vitesse de convergence vers un minimum local.\\
 
 \section{Algorithmes de recherche locale}
 
@@ -75,7 +79,7 @@ Cette fonction implémente un algorithme V.N.S utilisant les opérateurs 2 et 3 
 
 \section{Expérimentation}
 \subsection{En partant de N.N.H.}
-PPD designe la variante de l'algorithme utilisant la plus profonde descente.\\
+PPD désigne la variante de l'algorithme utilisant la plus profonde descente.\\
 Tout ce qui concerne le VNS dans tableau \ref{NNHpourcentageperf} et \ref{NNHtemps} sont des moyennes effectuées sur 10 exécutions. Ces dernières sont données avec plus de détails dans le tableau \ref{variationVNSNNH}.\\
 
 \begin{table}[!h]
@@ -356,7 +360,7 @@ Notre algorithme GRASP commence toujours par construire une solution avec un NNH
   \hline
   48 & 216 & 217 & 218 & 219 & 217 \\
   52 & 1.34 & 3.03 & 3.47 & 4.61 & 2.98 \\
-  130 & 1.34 & 3.51 & 4.49 & 4.57 & 3.67 \\
+  130 & 2.87 & 3.51 & 4.49 & 4.57 & 3.67 \\
   150 & 3.38 & 3.68 & 3.71 & 3.73 & 3.75 \\
   280 & 7.33 & 7.81 & 8.15 & 8.27 & 6.64 \\
   \hline
@@ -374,7 +378,7 @@ Notre algorithme GRASP commence toujours par construire une solution avec un NNH
   \hline
   48 & 0.1599 & 0.0105 & 0.0070 & 0.0051 & 0.0033 \\ 
   52 & 0.0250 & 0.0137 & 0.0046 & 0.0042 & 0.0041 \\
-  130 & 0.0318 & 0.0594 & 0.0344 & 0.0278 & 0.0743 \\
+  130 & 0.2038 & 0.0594 & 0.0344 & 0.0278 & 0.0743 \\
   150 & 0.1390 & 0.0501 & 0.0523 & 0.0293 & 0.0727 \\  
   280 & 0.4688 & 0.2335 & 0.1735 & 0.1181 & 0.8435 \\
   \hline
@@ -475,7 +479,111 @@ On regrette donc le manque de stabilité du point de vue temporel des algorithme
 
 Tous les algorithme sont par contre stable du point de vue de la qualité de solution même si 2-opt varie un peu plus cela reste petit, et cela deviens négligeable pour les deux autres.
 
-\section{Conclusion}
+\section{Path-relinking}
+
+Nous avons expérimenté deux manières différentes d'implémenter un path-relinking. Le premier, le plus naturel, consiste à inverser l'emplacement de deux villes. De cette manière on conserve l'admissibilité de la solution. Le second, plus arbitraire, consiste à remplacer certaines villes par une autre. Cette dernière solution recquiert une réparation régulière.
+
+\subsection{Mouvement swap}
+
+Ce path-relinking a pour voisinage toutes les permutations possibles de deux villes. On a donc un voisinage en $O(N^2)$. Dans sa première version, l'algorithme parcourt la liste des permutations et l'effectue si celle-ci n'éloigne pas la solution courante de la solution objectif. Un tel sous-ensemble de voisinage permet de ne jamais s'éloigner de la fonction objectif tout en offrant une grande liberté de mouvement afin d'explorer de nombreuses solutions.\\
+
+Pour la deuxième version de cet algorithme, nous nous sommes inspirés d'un travail de Mauricio Resende et de Paola Festa. Dans cette version, nous parcourons tous les voisins possibles et nous effectuons celui qui améliore le mieux la solution tout en nous approchant d'au moins une ville de la solution objectif.\\
+
+De plus, comme nous listons toutes les permutations possibles, nous nous permettons d'enregistrer une solution sans effectuer le mouvement si la solution améliore la fonction objectif.\\
+
+Après expérimentations, nous avons constaté que le path-relinking ralentit de manière excessive le GRASP. Utiliser comme voisinage la liste des permutations consécutives ne garantit pas la convergence de l'algorithme, nous avons donc décider d'accélerer la convergence de l'algorithme. En effet, la dernière version de notre algorithme n'effectue un mouvement que si celui-ci permet d'approcher la fonction objectif avec les deux villes. Ce choix a permis de beaucoup accélérer le path-relinking en affectant peu son efficacité.\\
+
+Cet algorithme est donc en $O(N^2)$ sans prendre en compte la vitesse de convergence, nécessitant au maximum $N/2$ swaps, nous avons donc une complexité en $O(N^3/2)$, soit $O(N^3)$.\\
+
+\subsection{Mouvement insertion}
+
+Ce path-relinking a pour voisinage toutes les insertions possibles d'une ville à la place d'une autre de telle manière que la nouvelle ville à l'emplacement i est celle de la ville objectif à l'emplacement i. Nous avons donc un voisinage en $O(N)$. Ce type de mouvement ne garantit pas l'admissibilité de la solution, ainsi, un algorithme glouton replace les villes manquantes (ou doublées) lorsqu'il y a un certain nombre nb de villes absentes de la solution (nb étant un paramètre de la fonction).\\
+
+Nous avons aussi tenté une version dans laquelle nous choisissons l'insertion améliorant le plus la solution. Cet algorithme cet avéré peu efficace, même s'il réussit parfois à trouver une meilleure solution. Nous avons donc préféré le path-relinking avec swaps.\\
+
+Cet algorithme a donc une complexité de $O(N^)$ sans considérer la vitesse de convergence ni la réparation. Il y a au plus $N$ itérations, nous obtenons donc une complexité de $O(N^2)$ plus la réparation dont le coût dépend du paramètre donné (une valeur plus élevée permet des réparations plus longues mais moins régulières et inversement). Le coût de la réparation étant en $O(N*nb)$ avec $nb<N/2$, la réparation n'affecte pas la complexité algorithmique totale.\\
+
+\subsection{Inclusion dans GRASP}
+
+On commence par tester le path-relinking avec la version de GRASP qui pourrais le plus en bénéficier : 2-opt à arrêt probabiliste à 2\%. En effet cette version est rapide mais elle soufre d'un manque de qualité de ses solutions. Donc un ralentissement peu être acceptable et de meilleures solutions corrigerai son défaut.
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{4}{c|}}
+\hline
+nbVille & en plus profonde descente & en descente & sans path-relinking \\
+\hline
+48 & 215 & 215 & 216 \\
+52 & 1.33 & 1.09 & 1.34 \\
+130 & 2.80 & 2.87 & 2.87 \\
+150 & 3.34 & 3.34 & 3.38 \\
+280 & 7.33 & 7.16 & 7.33 \\
+\hline
+\end{tabular}
+\caption{différence de valeur de 2-opt probabiliste en fonction du path-relinking}
+\label{val2optgraspPR}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{4}{c|}}
+\hline
+nbVille & en plus profonde descente & en descente & sans path-relinking \\
+\hline
+48 & 0.2546 & 0.1317 & 0.1599 \\
+52 & 0.0390 & 0.0369 & 0.0250 \\
+130 & 0.2683 & 0.2410 & 0.2038 \\
+150 & 0.3009 & 0.1947 & 0.1390 \\
+280 & 0.5504 & 0.6139 & 0.4688 \\
+\hline
+\end{tabular}
+\caption{temps d’exécution de 2-opt probabiliste en fonction du path-relinking}
+\label{temps2optgraspPR}
+\end{table}
+
+Donc le path-relinking n’améliore que très peu la qualité des solutions mais il ne ralentit pratiquement l'algorithme.\\
+
+Dans cet optique de payer un peu plus de temps pour avoir de meilleures solutions le test a été fait avec 2-opt en plus profonde descente, toujours en arrêt probabiliste à 2\%. Dans cette configuration la meilleure solution initiale généré par NNH est amélioré par 2-opt PPD.\\
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{4}{c|}}
+\hline
+nbVille & en plus profonde descente & en descente & sans path-relinking \\
+\hline
+48 & 215 & 215 & 215 \\
+52 & 0.4947 & 0.5664 & 0.5664 \\
+130 & 2.16 & 2.15 & 2.22 \\
+150 & 1.27 & 1.28 & 1.29 \\
+280 & 6.00 & 6.00 & 6.00 \\
+\hline
+\end{tabular}
+\caption{différence de valeur de 2-opt PPD probabiliste en fonction du path-relinking}
+\label{val2optPPDgraspPR}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|*{4}{c|}}
+\hline
+nbVille & en plus profonde descente & en descente & sans path-relinking \\
+\hline
+48 & 0.3901 & 0.392 & 0.3715 \\
+52 & 0.1152 & 0.109 & 0.1143 \\
+130 & 2.105 & 2.595 & 2.649 \\
+150 & 1.506 & 1.285 & 1.311 \\
+280 & 16.47 & 16.47 & 16.55 \\
+\hline
+\end{tabular}
+\caption{temps d’exécution de 2-opt PPD probabiliste en fonction du path-relinking}
+\label{temps2optPPDgraspPR}
+\end{table}
+
+On a donc une nouvelle configuration intéressante de GRASP : 2-opt PPD avec l’arrêt probabiliste à 2\% et un path-relinking en plus profonde descente. En effet dans cette configuration l'algorithme se termine en un temps respectable et trouve des solutions de bonne qualité. Et on notera que le path-relinking permet de faire ressortir l’arrêt probabiliste car les bonnes solutions trouvé par ce dernier permettent d’arrêter plus vite l'algorithme. De ce fait le coût supplémentaire du path-relinking se compense tellement bien de cette manière que l'algorithme est parfois plus rapide avec.\\
+
+L'ajout du path-relinking ralentit peu GRASP mais il le fait tout de même donc la possibilité de l'ajouter aux autres configuration à été rejeté car ces dernières sont déjà très lentes.\\
+
+\section*{Conclusion}
 Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, bien le R.G.S.C. effectue plus de comparaisons celui-ci fournit des chemins plus long d'au moins 10\%. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\
 Cet algorithme est donc moins bon qu'il n'en avait l'air. Cela dit, nous allons réfléchir à d'éventuelles améliorations basées sur le même principe.\\
 La plupart des difficultés rencontrées se situe dans l'algorithmie. En effet, estimer en permanence la taille de la solution après modification par le 3-opt était une tâche plus difficile qu'il n'en parraîssait. Ou encore, les conditions d'arrêt du VNS. Ces deux aspects sont donc à travailler et nous espérons pouvoir les améliorer avant un prochain rendu de notre travail. Une étude des instances et peut être pertinente afin d'adapter nos algorithmes d'amélioration aux caractéristiques d'un chemin fournie par une heuristique de construction pour une instance donnée.\\
@@ -483,5 +591,13 @@ Ces aspects sont importants pour réduire l'écart de temps d’exécution entre
 
 TODO : refaire la conclusion car beaucoup a été fait depuis cette version\\
 
-Ouverture pour ma partie : étudier plus finement l'impact du choix de la première ville dans NNH, quitte à la choisir aléatoirement dans GRASP pour augmenter la diversité.
+Ouverture pour ma partie : étudier plus finement l'impact du choix de la première ville dans NNH, quitte à la choisir aléatoirement dans GRASP pour augmenter la diversité.\\
+
+conclusion de GRASP : plusieurs configurations intéressantes. Selon le temps don on dispose on peut avoir de plus ou moins bonnes solutions (par ordre croissant de temps dispo) :
+\begin{itemize}
+\item 2-opt à 2\% path-relinking en descente et init par 2-opt
+\item 2-opt PPD à 2\% path-relinking en plus profonde descente et init par 2opt PPD
+\item vnd avec nogood de nbVille/5
+\item vns-2 avec nogood de bnVille/5, dans l'absolu on peut y adjoindre le path-relinking pour tenter d'avoir de meilleures solutions. Mais on renforce alors encore plus son coté extrême.
+\end{itemize}
 \end{document}

@@ -1,0 +1,25 @@
+\contentsline {section}{\numberline {1}Heuristiques de constructions}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}N.N.H.}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}R.G.S.C}{3}{subsection.1.2}
+\contentsline {section}{\numberline {2}Op\IeC {\'e}rateurs de modification}{5}{section.2}
+\contentsline {subsection}{\numberline {2.1}2-opt}{5}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}3-opt}{5}{subsection.2.2}
+\contentsline {section}{\numberline {3}Algorithmes de recherche locale}{7}{section.3}
+\contentsline {subsection}{\numberline {3.1}Descente avec 2-opt}{7}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Descente avec 3-opt}{7}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}VND}{7}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}VNS}{7}{subsection.3.4}
+\contentsline {section}{\numberline {4}Exp\IeC {\'e}rimentation}{8}{section.4}
+\contentsline {subsection}{\numberline {4.1}En partant de N.N.H.}{8}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}En partant de R.G.S.C}{9}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Modification du crit\IeC {\`e}re d\IeC {\textquoteright }arr\IeC {\^e}t de VNS}{10}{subsection.4.3}
+\contentsline {section}{\numberline {5}GRASP}{12}{section.5}
+\contentsline {subsection}{\numberline {5.1}Construction des solutions}{12}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Premi\IeC {\`e}res exp\IeC {\'e}rimentations}{12}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Arr\IeC {\^e}t probabiliste}{13}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}Nouvelles exp\IeC {\'e}rimentations}{14}{subsection.5.4}
+\contentsline {subsection}{\numberline {5.5}Stabilit\IeC {\'e} des meilleures possibilit\IeC {\'e}s}{15}{subsection.5.5}
+\contentsline {section}{\numberline {6}Path-relinking}{17}{section.6}
+\contentsline {subsection}{\numberline {6.1}Mouvement swap}{17}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Mouvement insertion}{17}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Inclusion dans GRASP}{18}{subsection.6.3}

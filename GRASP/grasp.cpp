@@ -94,19 +94,19 @@ int * grasp(const Distancier * const dist, const double alpha) {
 }
 
 int * reacgrasp(const Distancier * const dist) {
-	int nogood = 0; // Nombre de tours consécutifs sans amélioration de la solution
+//	int nogood = 0; // Nombre de tours consécutifs sans amélioration de la solution
 	int * sol; double tmp; // diverses variables de calcul
 	
-	int *pathRel; double tmpPath; bool improved;
+	int *pathRel; bool improved;
 	
 	int * best = new int[dist->getN()]; construireSolNNH(best, dist); //initialisation du best
 	//amelioration de la solution
 	/*best = deuxoptconverge(best, dist);
 	best = troisoptconverge(best, dist);
-	best = deuxoptPPDconverge(best, dist);
+	*/best = deuxoptPPDconverge(best, dist);/*
 	best = troisoptPPDconverge(best, dist);
-	*/best = vnd(best, dist); //choix de celle ci car elle plutot rapide et de bonne qualite
-	/*best = vndPPD(best, dist);
+	best = vnd(best, dist); //choix de celle ci car elle plutot rapide et de bonne qualite
+	best = vndPPD(best, dist);
 	best = vns(best, dist);
 	best = vnsPPD(best, dist);*/
 
@@ -118,12 +118,12 @@ int * reacgrasp(const Distancier * const dist) {
 	double zworst = zbest; //pour l'instant seule une solution est disponible
 	double avg[20]; for (k = 0; k<20; ++k){avg[k] = zbest;} //initialisation des moyennes
 	double choix; //valeur aleatoire du choix de la valeur de alpha
-/*
+
 	//variable pour l'arret probabiliste
 	double sumXk = 0; //somme des valeur de la taille des solutions
 	double sumXk2 = 0; //somme des valeur de la taille des solutions au carre
 	double mu, sigma2; //estimateur des moments de la loi normale
-*/
+
 	do {
 		sol = new int[dist->getN()];
 		
@@ -135,63 +135,62 @@ int * reacgrasp(const Distancier * const dist) {
 		construireSolNNHrand(sol, dist, 1 - k*0.05 - 0.01); //on laisse toujour une part d'aleatoire car la solution constuite a deja ete explore
 
 		//amelioration de la solution
-		sol = deuxoptconverge(sol, dist);
-		//~ sol = troisoptconverge(sol, dist);
-		//~ sol = deuxoptPPDconverge(sol, dist);
-		//~ sol = troisoptPPDconverge(sol, dist);
-		//~ sol = vnd(sol, dist);
-		//~ sol = vndPPD(sol, dist);
-		//~ sol = vns(sol, dist);
-		//~ sol = vnsPPD(sol, dist);
+		/*sol = deuxoptconverge(sol, dist);
+		sol = troisoptconverge(sol, dist);
+		*/sol = deuxoptPPDconverge(sol, dist);/*
+		sol = troisoptPPDconverge(sol, dist);
+		sol = vnd(sol, dist);
+		sol = vndPPD(sol, dist);
+		sol = vns(sol, dist);
+		sol = vnsPPD(sol, dist);*/
 		
 		tmp = calculerLongueurCircuitSol(sol, dist);
 		
 		++compt; //compteur du nombre de tours
+		
 		//mise a jour de best et zbest
 		if (tmp + 0.000001 < zbest) { //ajout d'un epsilon pour eviter les imprecisions de calcul
 			pathRel = pathRelinkingSelect(sol, best, dist, &improved);
-		//	pathRel = pathRelinking(sol, best, dist, &improved);
+			//pathRel = pathRelinking(sol, best, dist, &improved);
 			if (tmp < calculerLongueurCircuitSol(pathRel, dist)) {
-				cout << "PATH REL EST MEILLEUR" << endl;
-				tmpPath = calculerLongueurCircuitSol(pathRel, dist);
+				tmp = calculerLongueurCircuitSol(pathRel, dist);
 				delete(best);
 				delete(sol);
-				zbest = tmpPath;
+				zbest = tmp;
 				best = pathRel;
-				//~ nogood = 0;
+				//nogood = 0;
 			} else {
-				cout << "SOL EST MEILLEUR" << endl;
 				delete(best);
 				delete(pathRel);
 				zbest = tmp;
 				best = sol;
-				nogood = 0;
+				//nogood = 0;
 			}
 		} else {
 			pathRel = pathRelinkingSelect(best, sol, dist, &improved);
-		//	pathRel = pathRelinking(sol, best, dist, &improved);
+			//pathRel = pathRelinking(best, sol, dist, &improved);
 			if (improved) {
-				cout << "PATH REL EST MEILLEUR" << endl;
-				tmpPath = calculerLongueurCircuitSol(pathRel, dist);
+				tmp = calculerLongueurCircuitSol(pathRel, dist);
+				
 				delete(best);
 				delete(sol);
-				zbest = tmpPath;
+				zbest = tmp;
 				best = pathRel;
-				//~ nogood = 0;
+				//nogood = 0;
 			} else {
 				delete(sol);
 				delete(pathRel);
-				++nogood;
+				//++nogood;
 			}
 		}
 
-/*
+
 		//mise a jour des estimateur
 		sumXk += tmp;
 		sumXk2 += tmp*tmp;
 		mu = (double)(sumXk / (double)(compt));
 		sigma2 = (sumXk2 / (double)(compt-1)) - ( (sumXk * sumXk) / (double)(compt*(compt-1)));
-*/
+
 		//mise a jour de zworst
 		if (tmp > zworst) {zworst = tmp;}
 
@@ -204,8 +203,8 @@ int * reacgrasp(const Distancier * const dist) {
 		p[0] = q[0] / sumq;
 		for(k = 1; k<20; ++k) {p[k] = p[k-1] + (q[k] / sumq);}
 
-	} while (nogood < dist->getN()/5); //critère d'arret
-	//} while( (compt == 1) || ( tmp > mu - sqrt(sigma2)*2.06 ) ); //la proba d'avoir une meilleure solution est trop faible 2% ->2.06 ; 5% ->1.65 ; 7% ->1.46 ; 10% ->1.29
+	//} while (nogood < dist->getN()/5); //critère d'arret
+	} while( (compt == 1) || ( tmp > mu - sqrt(sigma2)*2.06 ) ); //la proba d'avoir une meilleure solution est trop faible 2% ->2.06 ; 5% ->1.65 ; 7% ->1.46 ; 10% ->1.29
 
 	return best;
 }
