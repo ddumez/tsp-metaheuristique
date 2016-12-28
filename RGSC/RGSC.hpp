@@ -79,22 +79,35 @@ class RGSC {
 	
 	// Methodes
 		private :
+			/*! Calcule la liste des tailles (nombre de couples) de chaque itération */
 			void calculerTailles();
+			/*! Alloue la mémoire et initialise la première itération*/
 			void initialiserCouples();
+			/*! Crée la liste triée par ordre croissant des distances de chaque sous-couple avec les autres*/
 			void genererPreferences();
+			/*! Trie la liste des préférences */
 			void trierPreferences();
+			/*! Renvoie vrai si dist(depart,v1) < dist(depart,v2)*/
 			bool plusPres(const int depart, const int v1, const int v2) const;
+			/*! Calcule la distance de c1 à c2 et insère dans v1 et v2 les villes les plus proches des deux sous-couples*/
 			void plusProchesV1V2(const couple c1, const couple c2, int *v1, int *v2, double *dist) const;
+			/*! Relie les deux sous-couples aux indices indC1 et indC2 par les villes v1 et v2*/
 			void unir(int indC1, int indC2, int v1, int v2, double dist);
+			/*! Une fois tous les sous-couples liés, initialise l'itération suivante*/
 			void initNextIter();
+			/*! Ferme le circuit trouvé de manière à créer une solution tsp-admissible*/
 			void fermerCircuit();
+			/*! Relie les sous-couples selon l'algorithme décrit dans le rapport*/
 			void marier();
+			/*! Insère dans sol la solution trouvée par l'algorithme*/
 			void deroulerSolution(int *sol) const;
+			/*! Désalloue les couples*/
 			void deleteCouples();
 			
 		public :
 			int getN() const;
 			double getDistance(const int v1, const int v2) const;
+			/*! Appelle la méthode marier() jusqu'à ce qu'il n'y ai plus qu'un couple et ferme le circuit*/
 			void construireCircuit(int *sol);
 			double getDistance(const couple c1, const couple c2) const;
 };
