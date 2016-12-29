@@ -101,9 +101,9 @@ int * reacgrasp(const Distancier * const dist) {
 	
 	int * best = new int[dist->getN()]; construireSolNNH(best, dist); //initialisation du best
 	//amelioration de la solution
-	/*best = deuxoptconverge(best, dist);
-	best = troisoptconverge(best, dist);
-	*/best = deuxoptPPDconverge(best, dist);/*
+	best = deuxoptconverge(best, dist);
+	/*best = troisoptconverge(best, dist);
+	best = deuxoptPPDconverge(best, dist);
 	best = troisoptPPDconverge(best, dist);
 	best = vnd(best, dist); //choix de celle ci car elle plutot rapide et de bonne qualite
 	best = vndPPD(best, dist);
@@ -135,9 +135,9 @@ int * reacgrasp(const Distancier * const dist) {
 		construireSolNNHrand(sol, dist, 1 - k*0.05 - 0.01); //on laisse toujour une part d'aleatoire car la solution constuite a deja ete explore
 
 		//amelioration de la solution
-		/*sol = deuxoptconverge(sol, dist);
-		sol = troisoptconverge(sol, dist);
-		*/sol = deuxoptPPDconverge(sol, dist);/*
+		sol = deuxoptconverge(sol, dist);
+		/*sol = troisoptconverge(sol, dist);
+		sol = deuxoptPPDconverge(sol, dist);
 		sol = troisoptPPDconverge(sol, dist);
 		sol = vnd(sol, dist);
 		sol = vndPPD(sol, dist);

@@ -27,10 +27,10 @@ int main() {
 		//Distancier dist ("./Datas/distancier20.dat"); int zbest = 1; //pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/ouest.dat"); int zbest = 1;//pas de test de perf possible car valeur optimale inconnue
 		//Distancier dist ("./Datas/att48.dat"); int zbest = 10628;
-		//Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
+		Distancier dist ("./Datas/berlin52.dat"); int zbest = 7542;
 		//Distancier dist ("./Datas/ch130.dat"); int zbest = 6110;
         //Distancier dist ("./Datas/ch150.dat"); int zbest = 6528;
-        Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
+        //Distancier dist ("./Datas/a280.dat"); int zbest = 2579;
         int * sol = new int[dist.getN()];
         bool improved = false;
         double sumz, maxz, minz, zsol;
@@ -40,7 +40,7 @@ int main() {
         //dist.afficher();
 
 		//test du RGSC
-		/*cout<<"calcul RGSC"<<endl;
+		cout<<"calcul RGSC"<<endl;
 		t = clock();
 		RGSC rgsc(&dist);
 		rgsc.construireCircuit(sol);
@@ -72,8 +72,8 @@ int main() {
 
     	//test du 3-opt
         sol = new int[dist.getN()];
-//    	construireSolNNH(sol, &dist);
-    	rgsc.construireCircuit(sol);
+    	construireSolNNH(sol, &dist);
+//    	rgsc.construireCircuit(sol);
     	cout<<"calcul 3-opt"<<endl;
     	t = clock();
 		sol = troisoptconverge(sol, &dist);
@@ -86,8 +86,8 @@ int main() {
 
     	//test du 2-opt plus profonde descente
         sol = new int[dist.getN()];
-//		construireSolNNH(sol, &dist);
-		rgsc.construireCircuit(sol);
+		construireSolNNH(sol, &dist);
+//		rgsc.construireCircuit(sol);
 		cout<<"calcul 2-opt PPD"<<endl;
 		t = clock();
 		sol = deuxoptPPDconverge(sol, &dist);
@@ -100,8 +100,8 @@ int main() {
 
     	//test du 3-opt plus profonde descente
         sol = new int[dist.getN()];
-//		construireSolNNH(sol, &dist);
-		rgsc.construireCircuit(sol);
+		construireSolNNH(sol, &dist);
+//		rgsc.construireCircuit(sol);
 		cout<<"calcul 3-opt PPD"<<endl;
 		t = clock();
 		sol = troisoptPPDconverge(sol, &dist);
@@ -114,8 +114,8 @@ int main() {
 
     	//test du vnd avec 2 et 3 opt
         sol = new int[dist.getN()];
-//		construireSolNNH(sol, &dist);
-		rgsc.construireCircuit(sol);
+		construireSolNNH(sol, &dist);
+//		rgsc.construireCircuit(sol);
     	cout<<"calcul vnd"<<endl;
     	t = clock();
 		sol = vnd(sol, &dist);
@@ -128,8 +128,8 @@ int main() {
 
     	//test du vnd avec 2 et 3 opt plus profonde descente
         sol = new int[dist.getN()];
-//		construireSolNNH(sol, &dist);
-		rgsc.construireCircuit(sol);
+		construireSolNNH(sol, &dist);
+//		rgsc.construireCircuit(sol);
     	cout<<"calcul vndPPD"<<endl;
     	t = clock();
 		sol = vndPPD(sol, &dist);
@@ -207,7 +207,7 @@ int main() {
         cout<<"temps minimal : "<<(double)((double)((double)mint/(double)(CLOCKS_PER_SEC)))<<" et maximal : "<<(double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)))<<endl;
         cout<<"différence proportionelle moyenne de la valeur trouve par vnsPPD : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
-*/
+
         //test du grasp
         sumt = 0; sumz = 0; maxz = 0; maxt = 0;
         cout<<"calcul reactive grasp"<<endl;
@@ -233,23 +233,22 @@ int main() {
             sumz += zsol;
 
             delete(sol);
-cout<<i<<endl;
- cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
+//cout<<i<<endl;
+//cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
         }
         sumz = (double)((double)sumz/(double)NBITER);
         cout<<"taille minimale : "<<minz<<" et maximale : "<<maxz<<endl;
         cout<<"temps minimal : "<<mint<<" et maximal : "<<maxt<<endl;
         cout<<"différence proportionelle moyenne de la valeur trouve par grasp : "<<(double)( sumz * 100)/(double)(zbest) - 100<<" en "<<(double)((double)sumt/(double)(CLOCKS_PER_SEC*NBITER))<<endl;       
         cout<<"difference proportionelle de temps : "<< (double)((double)((double)maxt/(double)(CLOCKS_PER_SEC)) * 100)/(double)((double)((double)mint/(double)(CLOCKS_PER_SEC))) - 100 <<" et de valeur : "<<(double)(maxz * 100)/(double)(minz) - 100<<"\n"<<endl;
-		cout << "moyenne : " << sumz << endl;
 
 
 
 
 
-/// Tests de Jojo :
-
-/**		int *solA = new int [dist.getN()];
+// Tests du path-relinking :
+/*
+		int *solA = new int [dist.getN()];
 		int *solB = new int [dist.getN()];
 		int *resultat1, *resultat2;// = new int [dist.getN()];
 		//~ cout<<"calcul NNH"<<endl;
@@ -292,7 +291,7 @@ cout<<i<<endl;
 		//~ solB = troisoptconverge(solB, &dist);
 		
 		cout<<"calcul pathRelinking"<<endl;
-		//~ resultat1 = pathRelinkingReconstrSelect(solA, solB, &dist, &improved, 10);
+		resultat1 = pathRelinkingReconstrSelect(solA, solB, &dist, &improved, 10);
 		//~ resultat2 = pathRelinkingReconstrSelect(solB, solA, &dist, &improved, 10);
 		resultat1 = pathRelinking(solA, solB, &dist, &improved);
 		//~ resultat2 = pathRelinking(solB, solA, &dist, &improved);
@@ -303,10 +302,10 @@ cout<<i<<endl;
 		cout << endl << "RESULTAT A->B : " << endl;
 		afficheSol(resultat1, &dist);
 		//~ cout << endl << "RESULTAT B->A : " << endl;
-		//~ afficheSol(resultat2, &dist);**/
+		//~ afficheSol(resultat2, &dist);
 		
 		
-		/*RGSC rgsc(&dist);
+		RGSC rgsc(&dist);
 		int *rgscSol = new int [dist.getN()];
 		int *nnhSol = new int [dist.getN()];
 		cout << "RGSC" << endl;
@@ -314,8 +313,8 @@ cout<<i<<endl;
 		afficheSol(rgscSol, &dist);
 		cout << "NNH" << endl;
 		construireSolNNH(nnhSol, &dist);
-		afficheSol(nnhSol, &dist);*/
-
+		afficheSol(nnhSol, &dist);
+*/
 	//fin
 return 0;
 }

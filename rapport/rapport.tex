@@ -148,11 +148,11 @@ De ces première expérimentation nous pouvons déduire que :
 \item
 la version plus profonde descente augmente bien la qualité des solutions (surtout pour 2 et 3-opt seul) mais cela se ressent fortement sur le temps d’exécution.
 \item
-3-opt seul ne semble présenter aucun intérêt car vnd le surpasse en tout point. Mais il sera tout de même gardé pour la suite car il pourrai réagir différemment face à la diversité de solution proposé par GRASP.
+3-opt seul ne semble présenter aucun intérêt car VND le surpasse en tout point. Mais il sera tout de même gardé pour la suite car il pourrai réagir différemment face à la diversité de solution proposé par GRASP.
 \item
 3-opt PPD seul propose les solutions de meilleures qualité, malheureusement son utilisation est très compromise par le temps de calcul qu'il requiert. Au contraire 2-opt PPD propose de bonnes solutions, sans être aussi bonne, mais sont temps d’exécution est des plus compétitif.
 \item
-Quand a vnd et vns il propose des solutions de qualités, légèrement meilleures que celles de 2-opt PPD, mais son plus lent que ce dernier. Et entre eux ils sont difficilement comparable car la comparaison dépend des instances.
+Quand a VND et VNS il propose des solutions de qualités, légèrement meilleures que celles de 2-opt PPD, mais son plus lent que ce dernier. Et entre eux ils sont difficilement comparable car la comparaison dépend des instances.
 \item
 VND est relativement stable du point de vue de la qualité des solutions mais ne l'est pas du tout selon le temps d’exécution.
 \item
@@ -587,7 +587,7 @@ Nous avons donc une nouvelle configuration intéressante de GRASP : 2-opt PPD av
 L'ajout du path-relinking ralentit peu GRASP mais il le fait tout de même donc la possibilité de l'ajouter aux autres configuration à été rejeté car ces dernières sont déjà très lentes.\\
 
 \section{Conclusion}
-Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, alors que le R.G.S.C. effectue plus de comparaisons, celui-ci fournit des chemins plus longs. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stopée.\\
+Bien que pertinente, nous remarquons que notre heuristique de construction R.G.S.C. donne globalement une solution moins bonne que celle du N.N.H. En effet, alors que le R.G.S.C. effectue plus de comparaisons, celui-ci fournit des chemins plus longs. De plus, celui-ci donne une solution de départ plus difficile à améliorer avec les algorithmes que nous avons implémentés. Pour certaines instances, l'amélioration n'a pas pu se terminer en un temps raisonnable et a été stoppée.\\
 Cet algorithme est donc moins bon que nous l'avons espéré. Nous l'avons modifié afin qu'il converge systématiquement. Nous l'avons modifié en nous rapprochant plus d'un algorithme glouton et moins de l'algorithme du mariage stable. \\
 La plupart des difficultés rencontrées se situent dans l'algorithmie. En effet, estimer en permanence la taille de la solution après modification par le 3-opt était une tâche plus difficile qu'il n'en parraîssait. Ou encore, les conditions d'arrêt du VNS.\\
 Ces aspects sont importants pour réduire l'écart de temps d’exécution entre les algorithmes VNS et VND.\\
@@ -595,10 +595,12 @@ Une étude sur l'impact du choix de la ville de départ pour le NNH peut-être i
 Nous avons choisi deux types de voisinages différents pour les appliquer au path-relinking. Parmi ces deux voisinages, nous avons créé une variante en plus profonde descente et une variante gloutonne. Celle qui améliore le plus souvent la solution est le path-relinking en plus profonde descente avec énumération exhaustive des swaps de la solution courante.
 Plusieurs configurations intéressantes son retenues pour le GRASP. Selon notre exigence de temps, nous obtenons de plus ou moins bonnes solutions. Ainsi, par ordre croissant de temps disponible, nous retenons les configurations suivantes :
 \begin{itemize}
-\item 2-opt à 2\% path-relinking en descente et init par 2-opt
-\item 2-opt PPD à 2\% path-relinking en plus profonde descente et init par 2opt PPD
-\item vnd avec nogood de nbVille/5
-\item vns-2 avec nogood de nbVille/5, dans l'absolu nous pouvons y adjoindre le path-relinking pour tenter d'avoir de meilleures solutions. Mais nous renforçons alors encore plus son côté extrême.
+\item 2-opt à 2\% path-relinking en descente et une solution initiale amélioré par par 2-opt
+\item 2-opt PPD à 2\% path-relinking en plus profonde descente et une solution initiale amélioré par 2opt PPD
+\item VND avec nogood de nbVille/5
+\item VNS-2 avec nogood de nbVille/5, dans l'absolu nous pouvons y adjoindre le path-relinking pour tenter d'avoir de meilleures solutions. Mais nous renforçons alors encore plus son côté extrême.
 \end{itemize}
-Cet exercice nous a permis d'expérimenter différentes méthodes de reherche locale appliquées au TSP, de comparer leur efficacité et de prendre conscience de l'utilité de la rapidité des méthodes approchées lors de leur usage dans la méthode GRASP.\\
+Cet exercice nous a permis d'expérimenter différentes méthodes de recherche locale appliquées au TSP, de comparer leur efficacité et de prendre conscience de l'utilité de la rapidité des méthodes approchées lors de leur usage dans la méthode GRASP.\\
+
+P.S. : pour l'instant le code de GRASP est réglé sur le 2-opt à 2\%, ceux de VNS et VNS PPD sur leurs versions à 1 tours. Le main lancera les exécutions sur les différentes méthodes en partant de solutions construite par NNH, et l'instance est la berlin52. Les tests sont faits sur des moyennes de 10 exécutions pour les méthodes comprenant de l’aléatoire. Toutes les expériences sont reproductibles car le générateur aléatoire est initialisé avec une graine constante au début du main.
 \end{document}
